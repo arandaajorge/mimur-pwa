@@ -17,6 +17,14 @@ const demo=[{id:"d1",name:"Mariachi Sol de México",genre:"Mariachi",zone:"Coyoa
   const registro = document.getElementById("signUp");
   const login = document.getElementById("signIn");
 
+  alert(
+  "Diagnóstico MiMuR: " +
+  "formulario=" + !!form +
+  ", mensaje=" + !!mensaje +
+  ", registro=" + !!registro +
+  ", login=" + !!login
+);
+
   if (!form || !mensaje || !registro || !login) {
     console.error("Faltan elementos del formulario de MiMuR.");
     return;
