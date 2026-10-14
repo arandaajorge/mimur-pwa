@@ -41,5 +41,73 @@ supabaseClient
       "Error inesperado: " + error.message;
   });
 
+(async function configurarAutenticacionMiMuR() {
+  const form = document.getElementById("authForm");
+  const mensaje = document.getElementById("authMsg");
+  const botonRegistro = document.getElementById("signUp");
+  const botonLogin = document.getElementById("signIn");
+
+  if (!form || !mensaje || !botonRegistro || !botonLogin) {
+    console.error("No se encontró el formulario de cuenta de MiMuR.");
+    return;
+  }
+
+  botonRegistro.addEventListener("click", async () => {
+    const email = form.elements.email.value.trim();
+    const password = form.elements.password.value;
+
+    if (!form.elements.email.reportValidity()) return;
+    if (!form.elements.password.reportValidity()) return;
+
+    mensaje.textContent = "Creando cuenta...";
+
+    const { data, error } = await supabaseClient.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          display_name: email.split("@")[0]
+        }
+      }
+    });
+
+    if (error) {
+      mensaje.textContent = "No se pudo crear la cuenta: " + error.message;
+      return;
+    }
+
+    if (data.session) {
+      mensaje.textContent = "Cuenta creada e inicio de sesión correcto.";
+    } else {
+      mensaje.textContent =
+        "Registro recibido. Revisa tu correo para confirmar la cuenta antes de iniciar sesión.";
+    }
+  });
+
+  botonLogin.addEventListener("click", async () => {
+    const email = form.elements.email.value.trim();
+    const password = form.elements.password.value;
+
+    if (!form.elements.email.reportValidity()) return;
+    if (!form.elements.password.reportValidity()) return;
+
+    mensaje.textContent = "Iniciando sesión...";
+
+    const { data, error } =
+      await supabaseClient.auth.signInWithPassword({
+        email,
+        password
+      });
+
+    if (error) {
+      mensaje.textContent = "No se pudo iniciar sesión: " + error.message;
+      return;
+    }
+
+    mensaje.textContent =
+      "Sesión iniciada correctamente: " + data.user.email;
+  });
+})();
+
 
 
