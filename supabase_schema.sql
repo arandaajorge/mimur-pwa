@@ -13,7 +13,11 @@ create table public.bookings(id uuid primary key default gen_random_uuid(),event
 alter table public.profiles enable row level security;alter table public.musicians enable row level security;alter table public.event_requests enable row level security;alter table public.offers enable row level security;alter table public.bookings enable row level security;
 create policy "Users read own profile" on public.profiles for select to authenticated using(auth.uid()=id);
 create policy "Users insert own profile" on public.profiles for insert to authenticated with check(auth.uid()=id and role='customer');
-create policy "Users update own profile" on public.profiles for update to authenticated using(auth.uid()=id) with check(auth.uid()=id);
+create policy "Users update own profile"
+ON public.profiles
+FOR UPDATE TO authenticated
+USING (auth.uid() = id)
+WITH CHECK (auth.uid() = id AND role <> 'admin');
 create policy "Musicians read own row"
 on public.musicians for select to authenticated
 using (user_id = auth.uid());
