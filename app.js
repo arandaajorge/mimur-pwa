@@ -20,9 +20,6 @@ const demo=[{id:"d1",name:"Mariachi Sol de México",genre:"Mariachi",zone:"Coyoa
   if (!form || !mensaje || !registro || !login) {
     console.log("Formulario de cuenta no instalado todavía.");
     return;
-  }{
-    console.error("Faltan elementos del formulario de MiMuR.");
-    return;
   }
 
   registro.addEventListener("click", async function () {
