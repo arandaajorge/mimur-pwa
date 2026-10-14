@@ -12,6 +12,7 @@ const demo=[{id:"d1",name:"Mariachi Sol de México",genre:"Mariachi",zone:"Coyoa
 
 
 (function configurarAutenticacionMiMuR() {
+  alert("MiMuR: entré al bloque de autenticación");
   const form = document.getElementById("authForm");
   const mensaje = document.getElementById("authMsg");
   const registro = document.getElementById("signUp");
