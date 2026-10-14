@@ -88,3 +88,5 @@ const demo=[{id:"d1",name:"Mariachi Sol de México",genre:"Mariachi",zone:"Coyoa
     }
   });
 })();
+console.log("MiMuR: app.js llegó al final");
+alert("MiMuR: app.js se está ejecutando");
