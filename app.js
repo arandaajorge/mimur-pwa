@@ -12,28 +12,33 @@ const demo=[{id:"d1",name:"Mariachi Sol de México",genre:"Mariachi",zone:"Coyoa
 
 
 
+
 const connectionStatus = document.createElement("pre");
 connectionStatus.style.cssText =
   "padding:12px;margin:12px;border:1px solid #888;white-space:pre-wrap;";
-connectionStatus.textContent = "Probando conexión directa...";
+connectionStatus.textContent = "Probando tabla musicians...";
 document.body.prepend(connectionStatus);
 
-fetch(SUPABASE_URL + "/rest/v1/", {
-  method: "GET",
-  headers: {
-    apikey: SUPABASE_PUBLISHABLE_KEY
+fetch(
+  SUPABASE_URL +
+    "/rest/v1/musicians?select=id&approved=eq.true&limit=1",
+  {
+    method: "GET",
+    headers: {
+      apikey: SUPABASE_PUBLISHABLE_KEY
+    }
   }
-})
+)
   .then(async (response) => {
     const body = await response.text();
     connectionStatus.textContent =
-      "Respuesta HTTP: " + response.status +
-      "\nRespuesta del servidor: " + body.slice(0, 300);
+      "HTTP: " + response.status +
+      "\nRespuesta: " + body.slice(0, 500);
   })
   .catch((error) => {
     connectionStatus.textContent =
-      "Falló la conexión directa.\n" +
-      error.name + ": " + error.message;
+      "Error: " + error.name + ": " + error.message;
   });
+
 
 
