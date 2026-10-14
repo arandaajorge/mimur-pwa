@@ -12,9 +12,15 @@ const demo=[{id:"d1",name:"Mariachi Sol de México",genre:"Mariachi",zone:"Coyoa
 
 
 (function configurarAutenticacionMiMuR() {
-  
+  const form = document.getElementById("authForm");
+  const mensaje = document.getElementById("authMsg");
+  const registro = document.getElementById("signUp");
+  const login = document.getElementById("signIn");
 
   if (!form || !mensaje || !registro || !login) {
+    console.log("Formulario de cuenta no instalado todavía.");
+    return;
+  }{
     console.error("Faltan elementos del formulario de MiMuR.");
     return;
   }
