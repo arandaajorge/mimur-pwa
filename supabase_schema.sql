@@ -12,8 +12,19 @@ create table public.offers(id uuid primary key default gen_random_uuid(),event_r
 create table public.bookings(id uuid primary key default gen_random_uuid(),event_request_id uuid not null unique references public.event_requests(id),accepted_offer_id uuid not null unique references public.offers(id),agreed_total_mxn int not null check(agreed_total_mxn>0),commission_mxn int not null check(commission_mxn>=0),musician_payout_mxn int not null check(musician_payout_mxn>=0),status text not null default 'pending_confirmation' check(status in ('pending_confirmation','confirmed','cancelled','completed','disputed')),created_at timestamptz not null default now());
 alter table public.profiles enable row level security;alter table public.musicians enable row level security;alter table public.event_requests enable row level security;alter table public.offers enable row level security;alter table public.bookings enable row level security;
 create policy "Users read own profile" on public.profiles for select to authenticated using(auth.uid()=id);
-create policy "Users insert own profile" on public.profiles for insert to authenticated with check(auth.uid()=id);
+create policy "Users insert own profile" on public.profiles for insert to authenticated with check(auth.uid()=id and role='customer');
 create policy "Users update own profile" on public.profiles for update to authenticated using(auth.uid()=id) with check(auth.uid()=id);
-create policy "Musicians manage own row" on public.musicians for all to authenticated using(user_id=auth.uid()) with check(user_id=auth.uid());
+create policy "Musicians read own row"
+on public.musicians for select to authenticated
+using (user_id = auth.uid());
+
+create policy "Musicians insert own row"
+on public.musicians for insert to authenticated
+with check (user_id = auth.uid() and approved = false);
+
+create policy "Musicians update own row"
+on public.musicians for update to authenticated
+using (user_id = auth.uid() and approved = false)
+with check (user_id = auth.uid() and approved = false);
 -- No publicar con datos reales hasta añadir y probar políticas para catálogo público,
 -- solicitudes, ofertas, reservas y administradores. No se incluyen pagos ni secretos.
