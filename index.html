@@ -1,9 +1,60 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#171321"><meta name="description" content="Encuentra músicos para tu evento con MiMuR"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="assets/icon.svg"><link rel="stylesheet" href="styles.css"><title>MiMuR — Música que se vive</title></head>
-<body><header><a class="logo" href="#">MiMu<span>R</span></a><nav><a href="#buscar">Explorar</a><a href="#registro">Soy músico</a><button id="install" hidden>Instalar app</button></nav></header>
+<body><header>
+<section id="cuenta" class="account">
+  <h2>Tu cuenta MiMuR</h2>
+  <p>Regístrate para continuar con tu solicitud o participar como músico.</p>
+
+  <form id="authForm">
+    <label>Correo electrónico
+      <input name="email" type="email" required autocomplete="email">
+    </label>
+
+    <label>Contraseña
+      <input name="password" type="password" required minlength="8" autocomplete="current-password">
+    </label>
+
+    <label>Tipo de cuenta
+      <select name="role" required>
+        <option value="customer">Quiero contratar músicos</option>
+        <option value="musician">Soy músico</option>
+      </select>
+    </label>
+
+    <button class="btn" type="button" id="signUp">Crear cuenta</button>
+    <button class="btn secondary" type="button" id="signIn">Iniciar sesión</button>
+    <p id="authMsg" role="status"></p>
+  </form>
+</section>
 <main><section class="hero"><div><p class="eyebrow">● MÚSICA PARA TUS MOMENTOS</p><h1>Encuentra la música.<br><em>Vive el momento.</em></h1><p class="lead">Conecta con músicos y agrupaciones para tu evento. Explora perfiles, filtra por estilo y envía una solicitud.</p><a class="btn" href="#buscar">Explorar músicos →</a> <a class="btn secondary" href="#registro">Soy músico</a><p class="small">Prototipo piloto. Los perfiles son de demostración.</p></div><aside><span class="tag">EJEMPLO DE SOLICITUD</span><h2>Serenata de cumpleaños</h2><p>Coyoacán, CDMX · Sábado · 8:00 PM</p><div class="stats"><b>Mariachi</b><b>1 hora</b><b>$3,500 MXN</b></div><p>Publica una solicitud y compara propuestas.</p></aside></section>
 <section id="buscar"><p class="eyebrow">DESCUBRIR</p><h2>Músicos para tu evento</h2><div class="filters"><label>Buscar<input id="q" placeholder="Nombre, estilo o zona"></label><label>Género<select id="genre"><option value="">Todos</option><option>Mariachi</option><option>DJ</option><option>Norteño</option><option>Grupo versátil</option><option>Rock / Pop</option></select></label><label>Zona<select id="zone"><option value="">Todas</option><option>Coyoacán</option><option>Benito Juárez</option><option>Centro</option><option>Azcapotzalco</option></select></label></div><div id="musicians" class="grid"></div><p id="empty" hidden>No encontramos perfiles con esos filtros.</p></section>
-<section class="how"><p class="eyebrow">SENCILLO Y DIRECTO</p><h2>De tu idea a la música</h2><div class="steps"><article><b>01</b><h3>Describe tu evento</h3><p>Fecha, zona, estilo y presupuesto.</p></article><article><b>02</b><h3>Compara opciones</h3><p>Revisa perfiles y propuestas.</p></article><article><b>03</b><h3>Elige tu favorito</h3><p>Confirma los detalles antes de contratar.</p></article></div></section>
+<section clas
+<section id="cuenta" class="account">
+  <h2>Tu cuenta MiMuR</h2>
+  <p>Regístrate para continuar con tu solicitud o participar como músico.</p>
+
+  <form id="authForm">
+    <label>Correo electrónico
+      <input name="email" type="email" required autocomplete="email">
+    </label>
+
+    <label>Contraseña
+      <input name="password" type="password" required minlength="8" autocomplete="current-password">
+    </label>
+
+    <label>Tipo de cuenta
+      <select name="role" required>
+        <option value="customer">Quiero contratar músicos</option>
+        <option value="musician">Soy músico</option>
+      </select>
+    </label>
+
+    <button class="btn" type="button" id="signUp">Crear cuenta</button>
+    <button class="btn secondary" type="button" id="signIn">Iniciar sesión</button>
+    <p id="authMsg" role="status"></p>
+  </form>
+</section>
+s="how"><p class="eyebrow">SENCILLO Y DIRECTO</p><h2>De tu idea a la música</h2><div class="steps"><article><b>01</b><h3>Describe tu evento</h3><p>Fecha, zona, estilo y presupuesto.</p></article><article><b>02</b><h3>Compara opciones</h3><p>Revisa perfiles y propuestas.</p></article><article><b>03</b><h3>Elige tu favorito</h3><p>Confirma los detalles antes de contratar.</p></article></div></section>
 <section id="registro" class="join"><div><p class="eyebrow">PARA MÚSICOS</p><h2>Haz que tu música llegue más lejos.</h2><p>Registra tu interés en el piloto. En esta versión los datos se guardan solo en este dispositivo; aún no se envían a un servidor.</p></div><form id="lead"><h3>Quiero participar</h3><label>Nombre artístico *<input name="name" required maxlength="100"></label><label>WhatsApp *<input name="phone" required type="tel"></label><label>Ciudad / zona *<input name="zone" required maxlength="100"></label><label>Género *<select name="genre" required><option value="">Selecciona</option><option>Mariachi</option><option>Banda</option><option>Norteño</option><option>Grupo versátil</option><option>DJ</option><option>Solista</option><option>Rock / Pop</option><option>Salsa / Cumbia</option><option>Otro</option></select></label><label>Enlace a video *<input name="video" type="url" required placeholder="https://..."></label><label class="check"><input type="checkbox" name="emergency"> Acepto oportunidades de emergencia.</label><label class="check"><input type="checkbox" name="consent" required> Acepto que MiMuR me contacte para el piloto.</label><button class="btn" type="submit">Guardar registro de prueba →</button><p id="leadMsg" role="status"></p><p class="small">Esta demostración no transmite datos por internet. No incluyas datos sensibles.</p></form></section></main>
 <footer><a class="logo" href="#">MiMu<span>R</span></a><span>© 2026 MiMuR · Prototipo PWA · CDMX</span></footer>
 <dialog id="request"><form id="requestForm"><button type="button" id="close" class="close">×</button><p class="eyebrow">SOLICITUD DE EVENTO</p><h2 id="requestTitle">Solicitar músico</h2><p class="small">La solicitud se guardará localmente. No se enviará al músico.</p><input type="hidden" name="musicianId"><label>Tu nombre *<input name="customer" required></label><label>WhatsApp *<input name="phone" required type="tel"></label><label>Fecha del evento *<input name="date" required type="date"></label><label>Zona *<input name="eventZone" required></label><label>Presupuesto total (MXN) *<input name="budget" type="number" min="1" required></label><label>Detalles<textarea name="details" maxlength="800"></textarea></label><button class="btn" type="submit">Guardar solicitud de prueba</button><p id="requestMsg" role="status"></p></form></dialog>
