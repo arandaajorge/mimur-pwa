@@ -17,7 +17,7 @@ const demo=[{id:"d1",name:"Mariachi Sol de México",genre:"Mariachi",zone:"Coyoa
   const registro = document.getElementById("signUp");
   const login = document.getElementById("signIn");
 
-  if (!form || !mensaje || !registro || !login) {
+    if (!form || !mensaje || !registro || !login) {
     console.log("Formulario de cuenta no instalado todavía.");
     return;
   }
