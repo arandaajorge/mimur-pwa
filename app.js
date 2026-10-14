@@ -13,31 +13,31 @@ const demo=[{id:"d1",name:"Mariachi Sol de México",genre:"Mariachi",zone:"Coyoa
 
 
 
+
 const connectionStatus = document.createElement("pre");
 connectionStatus.style.cssText =
   "padding:12px;margin:12px;border:1px solid #888;white-space:pre-wrap;";
-connectionStatus.textContent = "Probando tabla musicians...";
+connectionStatus.textContent = "Probando cliente de Supabase...";
 document.body.prepend(connectionStatus);
 
-fetch(
-  SUPABASE_URL +
-    "/rest/v1/musicians?select=id&approved=eq.true&limit=1",
-  {
-    method: "GET",
-    headers: {
-      apikey: SUPABASE_PUBLISHABLE_KEY
+supabaseClient
+  .from("musicians")
+  .select("id")
+  .eq("approved", true)
+  .limit(1)
+  .then(({ data, error }) => {
+    if (error) {
+      connectionStatus.textContent =
+        "Error del cliente: " + error.message;
+    } else {
+      connectionStatus.textContent =
+        "CLIENTE CONECTADO CORRECTAMENTE\n" +
+        "Músicos aprobados encontrados: " + data.length;
     }
-  }
-)
-  .then(async (response) => {
-    const body = await response.text();
-    connectionStatus.textContent =
-      "HTTP: " + response.status +
-      "\nRespuesta: " + body.slice(0, 500);
   })
   .catch((error) => {
     connectionStatus.textContent =
-      "Error: " + error.name + ": " + error.message;
+      "Error inesperado: " + error.message;
   });
 
 
