@@ -41,6 +41,82 @@ async function cargarMusicosAprobados() {
   catalogo = [...reales, ...demo];
   render();
 }
+
+let favoritos = new Set();
+let cargandoFavoritos = false;
+
+async function cargarFavoritos() {
+  const { data: { user }, error: authError } =
+    await supabaseClient.auth.getUser();
+
+  if (authError || !user) {
+    favoritos.clear();
+    render();
+    return;
+  }
+
+  cargandoFavoritos = true;
+
+  const { data, error } = await supabaseClient
+    .from("favorites")
+    .select("musician_id")
+    .eq("customer_id", user.id);
+
+  cargandoFavoritos = false;
+
+  if (error) {
+    console.error("Error al cargar favoritos:", error.message);
+    return;
+  }
+
+  favoritos = new Set(data.map(f => String(f.musician_id)));
+  render();
+}
+
+async function alternarFavorito(musicianId) {
+  const { data: { user }, error: authError } =
+    await supabaseClient.auth.getUser();
+
+  if (authError || !user) {
+    alert("Inicia sesión para guardar tus favoritos.");
+    return;
+  }
+
+  const id = String(musicianId);
+  const esFavorito = favoritos.has(id);
+
+  if (esFavorito) {
+    const { error } = await supabaseClient
+      .from("favorites")
+      .delete()
+      .eq("customer_id", user.id)
+      .eq("musician_id", id);
+
+    if (error) {
+      alert("No se pudo quitar el favorito: " + error.message);
+      return;
+    }
+
+    favoritos.delete(id);
+  } else {
+    const { error } = await supabaseClient
+      .from("favorites")
+      .insert({
+        customer_id: user.id,
+        musician_id: id
+      });
+
+    if (error) {
+      alert("No se pudo guardar el favorito: " + error.message);
+      return;
+    }
+
+    favoritos.add(id);
+  }
+
+  render();
+}
+
 function render(){let q=$("q").value.toLowerCase(),g=$("genre").value,z=$("zone").value;let rows=catalogo.filter(m=>(!q||(m.name+" "+m.genre+" "+m.zone).toLowerCase().includes(q))&&(!g||m.genre===g)&&(!z||m.zone===z));$("musicians").innerHTML=rows.map(m=>`<article class="musician"><div class="art">${m.icon}</div><div class="body"><h3>${safe(m.name)}</h3><div class="muted">${safe(m.genre)} · ${safe(m.zone)}</div><p class="muted">${safe(m.bio)}</p><div class="chips"><span class="chip">${m.status==="Disponible"?"🟢":m.status==="Emergencias"?"🟡":"🔴"} ${m.status}</span><span class="chip">Perfil demo</span></div><div class="cardbottom"><b>Desde ${money(m.price)}<small class="muted"> / ${m.unit}</small></b><button data-id="${m.id}">Solicitar</button></div></div></article>`).join("");$("empty").hidden=rows.length>0;document.querySelectorAll("[data-id]").forEach(b=>b.onclick=()=>openRequest(catalogo.find(m=>m.id===b.dataset.id)))}["q","genre","zone"].forEach(id=>$(id).addEventListener(id==="q"?"input":"change",render));function openRequest(m){$("requestTitle").textContent="Solicitar a "+m.name;$("requestForm").elements.musicianId.value=m.id;$("requestMsg").textContent="";$("request").showModal()}$("close").onclick=()=>$("request").close();
 $("requestForm").onsubmit = async (e) => {
   e.preventDefault();
