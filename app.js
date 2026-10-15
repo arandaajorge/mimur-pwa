@@ -392,3 +392,12 @@ cargarMusicosAprobados();
   });
 })();
 console.log("MiMuR cargado correctamente");
+
+cargarFavoritos();
+
+supabaseClient.auth.onAuthStateChange(() => {
+  setTimeout(() => {
+    cargarFavoritos();
+  }, 0);
+});
+
