@@ -157,8 +157,14 @@ function render() {
            </div>
 
 
+          
           <div class="muted">
             ${safe(m.genre)} · ${safe(m.zone)}
+          </div>
+
+          <div class="stars" aria-label="Sin calificaciones todavía">
+            <span>★★★★★</span>
+            <small>Nuevo en MiMuR</small>
           </div>
 
           <p class="muted">${safe(m.bio || "")}</p>
@@ -170,6 +176,7 @@ function render() {
             </span>
             <span class="chip">Perfil MiMuR</span>
           </div>
+
 
           <div class="cardbottom">
             <b>
