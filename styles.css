@@ -35,3 +35,22 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+.stars {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.stars span {
+  color: #f5b301;
+  font-size: 19px;
+  letter-spacing: 2px;
+}
+
+.stars small {
+  color: #777;
+  font-size: 12px;
+}
+
