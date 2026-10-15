@@ -150,6 +150,12 @@ function render() {
               title="${esFavorito ? "Quitar de favoritos" : "Guardar en favoritos"}"
             >${esFavorito ? "♥" : "♡"}</button>
           </div>
+          
+           <div class="stars" aria-label="Sin calificaciones todavía">
+                <span>★★★★★</span>
+            <small>Nuevo en MiMuR</small>
+           </div>
+
 
           <div class="muted">
             ${safe(m.genre)} · ${safe(m.zone)}
