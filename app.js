@@ -41,7 +41,73 @@ async function cargarMusicosAprobados() {
   catalogo = [...reales, ...demo];
   render();
 }
-function render(){let q=$("q").value.toLowerCase(),g=$("genre").value,z=$("zone").value;let rows=catalogo.filter(m=>(!q||(m.name+" "+m.genre+" "+m.zone).toLowerCase().includes(q))&&(!g||m.genre===g)&&(!z||m.zone===z));$("musicians").innerHTML=rows.map(m=>`<article class="musician"><div class="art">${m.icon}</div><div class="body"><h3>${safe(m.name)}</h3><div class="muted">${safe(m.genre)} · ${safe(m.zone)}</div><p class="muted">${safe(m.bio)}</p><div class="chips"><span class="chip">${m.status==="Disponible"?"🟢":m.status==="Emergencias"?"🟡":"🔴"} ${m.status}</span><span class="chip">Perfil demo</span></div><div class="cardbottom"><b>Desde ${money(m.price)}<small class="muted"> / ${m.unit}</small></b><button data-id="${m.id}">Solicitar</button></div></div></article>`).join("");$("empty").hidden=rows.length>0;document.querySelectorAll("[data-id]").forEach(b=>b.onclick=()=>openRequest(catalogo.find(m=>m.id===b.dataset.id)))}["q","genre","zone"].forEach(id=>$(id).addEventListener(id==="q"?"input":"change",render));function openRequest(m){$("requestTitle").textContent="Solicitar a "+m.name;$("requestForm").elements.musicianId.value=m.id;$("requestMsg").textContent="";$("request").showModal()}$("close").onclick=()=>$("request").close();$("requestForm").onsubmit=e=>{e.preventDefault();let f=e.currentTarget;if(!f.reportValidity())return;let d=Object.fromEntries(new FormData(f));d.createdAt=new Date().toISOString();d.status="Solicitud local de demostración";try{let a=read("mimur_demo_requests");a.push(d);save("mimur_demo_requests",a);$("requestMsg").textContent="Guardada en este navegador; no se notificó al músico.";f.reset();setTimeout(()=>$("request").close(),1600)}catch{$("requestMsg").textContent="No se pudo guardar en este navegador."}};
+function render(){let q=$("q").value.toLowerCase(),g=$("genre").value,z=$("zone").value;let rows=catalogo.filter(m=>(!q||(m.name+" "+m.genre+" "+m.zone).toLowerCase().includes(q))&&(!g||m.genre===g)&&(!z||m.zone===z));$("musicians").innerHTML=rows.map(m=>`<article class="musician"><div class="art">${m.icon}</div><div class="body"><h3>${safe(m.name)}</h3><div class="muted">${safe(m.genre)} · ${safe(m.zone)}</div><p class="muted">${safe(m.bio)}</p><div class="chips"><span class="chip">${m.status==="Disponible"?"🟢":m.status==="Emergencias"?"🟡":"🔴"} ${m.status}</span><span class="chip">Perfil demo</span></div><div class="cardbottom"><b>Desde ${money(m.price)}<small class="muted"> / ${m.unit}</small></b><button data-id="${m.id}">Solicitar</button></div></div></article>`).join("");$("empty").hidden=rows.length>0;document.querySelectorAll("[data-id]").forEach(b=>b.onclick=()=>openRequest(catalogo.find(m=>m.id===b.dataset.id)))}["q","genre","zone"].forEach(id=>$(id).addEventListener(id==="q"?"input":"change",render));function openRequest(m){$("requestTitle").textContent="Solicitar a "+m.name;$("requestForm").elements.musicianId.value=m.id;$("requestMsg").textContent="";$("request").showModal()}$("close").onclick=()=>$("request").close();
+$("requestForm").onsubmit = async (e) => {
+  e.preventDefault();
+
+  const f = e.currentTarget;
+  if (!f.reportValidity()) return;
+
+  const mensaje = $("requestMsg");
+  const boton = f.querySelector('[type="submit"]');
+
+  try {
+    const { data: { user }, error: userError } =
+      await supabaseClient.auth.getUser();
+
+    if (userError || !user) {
+      mensaje.textContent =
+        "Inicia sesión para enviar una solicitud de evento.";
+      return;
+    }
+
+    const d = Object.fromEntries(new FormData(f));
+    const fecha = new Date(d.date + "T12:00:00");
+
+    const perfil = catalogo.find(m => m.id === d.musicianId);
+
+    if (!perfil) {
+      mensaje.textContent = "No se encontró el músico seleccionado.";
+      return;
+    }
+
+    const solicitud = {
+      customer_id: user.id,
+      customer_name: d.customer.trim(),
+      customer_phone: d.phone.trim(),
+      event_type: "Contratación musical",
+      event_date: fecha.toISOString(),
+      zone: d.eventZone.trim(),
+      genre: perfil.genre,
+      budget_mxn: Number(d.budget),
+      details: d.details.trim() || null,
+      status: "open"
+    };
+
+    if (boton) boton.disabled = true;
+    mensaje.textContent = "Enviando solicitud a MiMuR...";
+
+    const { error } = await supabaseClient
+      .from("event_requests")
+      .insert(solicitud);
+
+    if (error) {
+      mensaje.textContent = "No se pudo guardar: " + error.message;
+      return;
+    }
+
+    mensaje.textContent =
+      "¡Solicitud guardada en MiMuR correctamente!";
+    f.reset();
+
+    setTimeout(() => $("request").close(), 1800);
+
+  } catch (error) {
+    mensaje.textContent = "Error: " + error.message;
+  } finally {
+    if (boton) boton.disabled = false;
+  }
+};
 $("lead").onsubmit = async (e) => {
   e.preventDefault();
 
