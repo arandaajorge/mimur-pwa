@@ -194,9 +194,9 @@ function render() {
     b.onclick = () => alternarFavorito(b.dataset.favoriteId);
   });
 }
-["q", "genre", "zone"].forEach(id => {
-  $(id).addEventListener("input", render);
-});
+$("q").addEventListener("input", render);
+$("genre").addEventListener("change", render);
+$("zone").addEventListener("change", render);
 function openRequest(m){$("requestTitle").textContent="Solicitar a "+m.name;$("requestForm").elements.musicianId.value=m.id;$("requestMsg").textContent="";$("request").showModal()}$("close").onclick=()=>$("request").close();
 $("requestForm").onsubmit = async (e) => {
   e.preventDefault();
