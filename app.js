@@ -45,39 +45,7 @@ async function cargarMusicosAprobados() {
 let favoritos = new Set();
 let cargandoFavoritos = false;
 
-async function cargarFavoritos() async function responderOferta(offerId, decision) {
-  if (!supabaseClient) {
-    alert("No se pudo conectar con el servidor.");
-    return;
-  }
-
-  if (!["accepted", "declined"].includes(decision)) {
-    alert("Decisión no válida.");
-    return;
-  }
-
-  const { error } = await supabaseClient.rpc(
-    "responder_oferta_musico",
-    {
-      p_offer_id: offerId,
-      p_decision: decision
-    }
-  );
-
-  if (error) {
-    console.error("Error al responder oferta:", error);
-    alert("No se pudo responder la oferta: " + error.message);
-    return;
-  }
-
-  alert(
-    decision === "accepted"
-      ? "Oferta aceptada correctamente."
-      : "Oferta rechazada correctamente."
-  );
-
-  // Actualizaremos aquí la lista de ofertas en el siguiente paso.
-}{
+async function cargarFavoritos() {
   const { data: { user }, error: authError } =
     await supabaseClient.auth.getUser();
 
@@ -105,6 +73,40 @@ async function cargarFavoritos() async function responderOferta(offerId, decisio
   render();
 }
 
+async function responderOferta(offerId, decision) {
+  if (!["accepted", "declined"].includes(decision)) {
+    alert("Decisión no válida.");
+    return;
+  }
+
+  const { data: { user }, error: authError } =
+    await supabaseClient.auth.getUser();
+
+  if (authError || !user) {
+    alert("Inicia sesión para responder ofertas.");
+    return;
+  }
+
+  const { error } = await supabaseClient.rpc(
+    "responder_oferta_musico",
+    {
+      p_offer_id: offerId,
+      p_decision: decision
+    }
+  );
+
+  if (error) {
+    console.error("Error al responder oferta:", error);
+    alert("No se pudo responder la oferta: " + error.message);
+    return;
+  }
+
+  alert(
+    decision === "accepted"
+      ? "Oferta aceptada correctamente."
+      : "Oferta rechazada correctamente."
+  );
+}
 async function alternarFavorito(musicianId) {
   const { data: { user }, error: authError } =
     await supabaseClient.auth.getUser();
