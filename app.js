@@ -344,9 +344,22 @@ $("lead").onsubmit = async (e) => {
       .insert(perfil);
 
     if (error) {
-      mensaje.textContent = "No se pudo guardar: " + error.message;
-      return;
-    }
+  console.error("Error al registrar músico:", error);
+
+  if (
+    error.code === "23505" &&
+    error.message.includes("musicians_user_id_key")
+  ) {
+    mensaje.textContent =
+      "Esta cuenta ya tiene un perfil de músico registrado. " +
+      "Inicia sesión con la cuenta correspondiente para administrarlo.";
+  } else {
+    mensaje.textContent =
+      "No se pudo guardar el perfil. Inténtalo de nuevo.";
+  }
+
+  return;
+}
 
     mensaje.textContent =
       "¡Perfil registrado en MiMuR! Está pendiente de aprobación.";
