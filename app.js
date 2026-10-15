@@ -117,7 +117,78 @@ async function alternarFavorito(musicianId) {
   render();
 }
 
-function render(){let q=$("q").value.toLowerCase(),g=$("genre").value,z=$("zone").value;let rows=catalogo.filter(m=>(!q||(m.name+" "+m.genre+" "+m.zone).toLowerCase().includes(q))&&(!g||m.genre===g)&&(!z||m.zone===z));$("musicians").innerHTML=rows.map(m=>`<article class="musician"><div class="art">${m.icon}</div><div class="body"><h3>${safe(m.name)}</h3><div class="muted">${safe(m.genre)} · ${safe(m.zone)}</div><p class="muted">${safe(m.bio)}</p><div class="chips"><span class="chip">${m.status==="Disponible"?"🟢":m.status==="Emergencias"?"🟡":"🔴"} ${m.status}</span><span class="chip">Perfil demo</span></div><div class="cardbottom"><b>Desde ${money(m.price)}<small class="muted"> / ${m.unit}</small></b><button data-id="${m.id}">Solicitar</button></div></div></article>`).join("");$("empty").hidden=rows.length>0;document.querySelectorAll("[data-id]").forEach(b=>b.onclick=()=>openRequest(catalogo.find(m=>m.id===b.dataset.id)))}["q","genre","zone"].forEach(id=>$(id).addEventListener(id==="q"?"input":"change",render));function openRequest(m){$("requestTitle").textContent="Solicitar a "+m.name;$("requestForm").elements.musicianId.value=m.id;$("requestMsg").textContent="";$("request").showModal()}$("close").onclick=()=>$("request").close();
+
+function render() {
+  let q = $("q").value.toLowerCase();
+  let g = $("genre").value;
+  let z = $("zone").value;
+
+  let rows = catalogo.filter(m =>
+    (!q || (m.name + " " + m.genre + " " + m.zone).toLowerCase().includes(q)) &&
+    (!g || m.genre === g) &&
+    (!z || m.zone === z)
+  );
+
+  $("musicians").innerHTML = rows.map(m => {
+    const id = String(m.id);
+    const esFavorito = favoritos.has(id);
+
+    return `
+      <article class="musician">
+        <div class="art">${m.icon}</div>
+
+        <div class="body">
+          <div class="cardheading">
+            <h3>${safe(m.name)}</h3>
+
+            <button
+              type="button"
+              class="favorite-btn"
+              data-favorite-id="${safe(id)}"
+              aria-label="${esFavorito ? "Quitar de favoritos" : "Guardar en favoritos"}"
+              aria-pressed="${esFavorito}"
+              title="${esFavorito ? "Quitar de favoritos" : "Guardar en favoritos"}"
+            >${esFavorito ? "♥" : "♡"}</button>
+          </div>
+
+          <div class="muted">
+            ${safe(m.genre)} · ${safe(m.zone)}
+          </div>
+
+          <p class="muted">${safe(m.bio || "")}</p>
+
+          <div class="chips">
+            <span class="chip">
+              ${m.status === "Disponible" ? "🟢" : m.status === "Emergencias" ? "🟡" : "🔴"}
+              ${safe(m.status)}
+            </span>
+            <span class="chip">Perfil MiMuR</span>
+          </div>
+
+          <div class="cardbottom">
+            <b>
+              Desde ${money(m.price)}
+              <small class="muted"> / ${safe(m.unit)}</small>
+            </b>
+            <button type="button" data-id="${safe(id)}">Solicitar</button>
+          </div>
+        </div>
+      </article>
+    `;
+  }).join("");
+
+  $("empty").hidden = rows.length > 0;
+
+  document.querySelectorAll("[data-id]").forEach(b => {
+    b.onclick = () =>
+      openRequest(catalogo.find(m => String(m.id) === b.dataset.id));
+  });
+
+  document.querySelectorAll("[data-favorite-id]").forEach(b => {
+    b.onclick = () => alternarFavorito(b.dataset.favoriteId);
+  });
+}
+function openRequest(m){$("requestTitle").textContent="Solicitar a "+m.name;$("requestForm").elements.musicianId.value=m.id;$("requestMsg").textContent="";$("request").showModal()}$("close").onclick=()=>$("request").close();
 $("requestForm").onsubmit = async (e) => {
   e.preventDefault();
 
