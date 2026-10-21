@@ -430,12 +430,14 @@ $("lead").onsubmit = async (e) => {
       return;
     }
 
+
+    await cargarMiPerfilMusico();
+    await cargarMusicosAprobados();
+
     mensaje.textContent = existente
       ? "¡Perfil actualizado correctamente en MiMuR!"
       : "¡Perfil registrado! Está pendiente de aprobación.";
 
-    await cargarMiPerfilMusico();
-    await cargarMusicosAprobados();
 
   } catch (error) {
     console.error("Error en el registro de músico:", error);
