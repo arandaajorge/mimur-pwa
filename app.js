@@ -500,9 +500,12 @@ console.log("MiMuR cargado correctamente");
 
 cargarFavoritos();
 
-supabaseClient.auth.onAuthStateChange(() => {
-  setTimeout(() => {
-    cargarFavoritos();
+supabaseClient.auth.onAuthStateChange((event, session) => {
+  setTimeout(async () => {
+    await cargarFavoritos();
+
+    if (session?.user) {
+      await cargarMiPerfilMusico();
+    }
   }, 0);
 });
-
