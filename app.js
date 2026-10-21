@@ -564,3 +564,75 @@ supabaseClient.auth.onAuthStateChange((event, session) => {
     }
   });
 })();
+
+/* MiMuR: mantener actualizado el estado de la cuenta */
+(() => {
+  const botonCuenta = document.getElementById("openAccount");
+  const botonCerrarSesion = document.getElementById("signOut");
+  const botonCrear = document.getElementById("signUp");
+  const botonEntrar = document.getElementById("signIn");
+  const ventanaCuenta = document.getElementById("accountDialog");
+  const mensaje = document.getElementById("authMsg");
+
+  function actualizarInterfaz(sesion) {
+    const conectado = Boolean(sesion?.user);
+
+    if (botonCuenta) {
+      botonCuenta.textContent = conectado ? "Mi cuenta ✓" : "Mi cuenta";
+    }
+
+    if (botonCerrarSesion) {
+      botonCerrarSesion.hidden = !conectado;
+    }
+
+    if (botonCrear) {
+      botonCrear.hidden = conectado;
+    }
+
+    if (botonEntrar) {
+      botonEntrar.hidden = conectado;
+    }
+  }
+
+  // Recuperar la sesión existente al cargar la página
+  supabaseClient.auth.getSession().then(({ data, error }) => {
+    if (error) {
+      console.error("MiMuR: no se pudo consultar la sesión.", error);
+      return;
+    }
+
+    actualizarInterfaz(data.session);
+  });
+
+  // Actualizar la interfaz cuando cambie la sesión
+  supabaseClient.auth.onAuthStateChange((_evento, sesion) => {
+    actualizarInterfaz(sesion);
+  });
+
+  // Cerrar la sesión actual
+  if (botonCerrarSesion) {
+    botonCerrarSesion.addEventListener("click", async () => {
+      botonCerrarSesion.disabled = true;
+
+      const { error } = await supabaseClient.auth.signOut();
+
+      botonCerrarSesion.disabled = false;
+
+      if (error) {
+        if (mensaje) {
+          mensaje.textContent =
+            "No se pudo cerrar la sesión: " + error.message;
+        }
+        return;
+      }
+
+      if (ventanaCuenta?.open) {
+        ventanaCuenta.close();
+      }
+
+      if (mensaje) {
+        mensaje.textContent = "Has cerrado sesión correctamente.";
+      }
+    });
+  }
+})();
