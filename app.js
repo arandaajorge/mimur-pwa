@@ -21,6 +21,38 @@ async function cargarMusicosAprobados() {
     console.error("Error al cargar músicos:", error.message);
     return;
   }
+
+async function cargarMusicosAprobados() {
+  const { data, error } = await supabaseClient
+    .from("musicians")
+    .select("*")
+    .eq("approved", true);
+
+  if (error) {
+    console.error("Error al cargar músicos:", error.message);
+    return;
+  }
+
+  const reales = data.map(m => ({
+    id: m.id,
+    name: m.artist_name,
+    genre: m.genres?.[0] || "Otro",
+    zone: m.zone,
+    price: m.minimum_price_mxn,
+    unit: "evento",
+    icon: "🎤",
+    bio: m.bio || "Músico registrado en MiMuR.",
+    status: m.availability === "available"
+      ? "Disponible"
+      : m.availability === "emergency_only"
+        ? "Emergencias"
+        : "Ocupado"
+  }));
+
+  catalogo = [...reales, ...demo];
+  render();
+}
+
 async function cargarMiPerfilMusico() {
   const mensaje = $("leadMsg");
   const formulario = $("lead");
@@ -63,25 +95,6 @@ async function cargarMiPerfilMusico() {
   mensaje.textContent = perfil.approved
     ? "Tu perfil está aprobado. Puedes editar tus datos."
     : "Tu perfil está pendiente de aprobación. Puedes editar tus datos.";
-}
-  const reales = data.map(m => ({
-    id: m.id,
-    name: m.artist_name,
-    genre: m.genres?.[0] || "Otro",
-    zone: m.zone,
-    price: m.minimum_price_mxn,
-    unit: "evento",
-    icon: "🎤",
-    bio: m.bio || "Músico registrado en MiMuR.",
-    status: m.availability === "available"
-      ? "Disponible"
-      : m.availability === "emergency_only"
-        ? "Emergencias"
-        : "Ocupado"
-  }));
-
-  catalogo = [...reales, ...demo];
-  render();
 }
 
 let favoritos = new Set();
