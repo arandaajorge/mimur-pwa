@@ -490,8 +490,28 @@ cargarMusicosAprobados();
         return;
       }
 
-      mensaje.textContent = "Sesión iniciada: " + data.user.email;
-            await cargarMiPerfilMusico();
+      
+mensaje.textContent = "¡Bienvenido a MiMuR!";
+
+await cargarMiPerfilMusico();
+
+// Cerrar la ventana de cuenta después de iniciar sesión
+const ventanaCuenta = document.getElementById("accountDialog");
+
+if (ventanaCuenta && ventanaCuenta.open) {
+  ventanaCuenta.close();
+}
+
+// Actualizar el botón de cuenta
+const botonCuenta = document.getElementById("openAccount");
+
+if (botonCuenta) {
+  botonCuenta.textContent = "Mi cuenta ✓";
+}
+
+// Mostrar bienvenida
+alert("¡Bienvenido a MiMuR, " + (data.user.email || "usuario") + "!");
+
     } catch (error) {
       mensaje.textContent = "Error: " + error.message;
     }
