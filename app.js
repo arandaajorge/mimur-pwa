@@ -21,7 +21,49 @@ async function cargarMusicosAprobados() {
     console.error("Error al cargar músicos:", error.message);
     return;
   }
+async function cargarMiPerfilMusico() {
+  const mensaje = $("leadMsg");
+  const formulario = $("lead");
 
+  const { data: { user }, error: authError } =
+    await supabaseClient.auth.getUser();
+
+  if (authError || !user) {
+    mensaje.textContent =
+      "Inicia sesión para consultar o editar tu perfil de músico.";
+    return;
+  }
+
+  const { data: perfil, error } = await supabaseClient
+    .from("musicians")
+    .select("*")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Error al cargar perfil:", error);
+    mensaje.textContent =
+      "No se pudo cargar tu perfil. Inténtalo de nuevo.";
+    return;
+  }
+
+  if (!perfil) {
+    mensaje.textContent =
+      "Todavía no tienes un perfil de músico. Puedes registrarte aquí.";
+    return;
+  }
+
+  formulario.elements.name.value = perfil.artist_name || "";
+  formulario.elements.zone.value = perfil.zone || "";
+  formulario.elements.genre.value = perfil.genres?.[0] || "";
+  formulario.elements.video.value = perfil.video_url || "";
+  formulario.elements.emergency.checked =
+    perfil.emergency_opt_in === true;
+
+  mensaje.textContent = perfil.approved
+    ? "Tu perfil está aprobado. Puedes editar tus datos."
+    : "Tu perfil está pendiente de aprobación. Puedes editar tus datos.";
+}
   const reales = data.map(m => ({
     id: m.id,
     name: m.artist_name,
