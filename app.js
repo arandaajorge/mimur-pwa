@@ -75,6 +75,11 @@ async function cargarMiPerfilMusico() {
   }
 
   formulario.elements.name.value = perfil.artist_name || "";
+  
+if (formulario.elements.phone) {
+  formulario.elements.phone.value = perfil.phone || "";
+}
+
   formulario.elements.zone.value = perfil.zone || "";
   formulario.elements.genre.value = perfil.genres?.[0] || "";
   formulario.elements.video.value = perfil.video_url || "";
