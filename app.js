@@ -663,6 +663,21 @@ supabaseClient.auth.onAuthStateChange((event, session) => {
         ventanaCuenta.close();
       }
 
+const formularioMusico = document.getElementById("lead");
+
+if (formularioMusico) {
+  formularioMusico.reset();
+}
+
+const mensajeMusico = document.getElementById("leadMsg");
+
+if (mensajeMusico) {
+  mensajeMusico.textContent =
+    "Inicia sesión para consultar o editar tu perfil de músico.";
+}
+
+
+      
       if (mensaje) {
         mensaje.textContent = "Has cerrado sesión correctamente.";
       }
