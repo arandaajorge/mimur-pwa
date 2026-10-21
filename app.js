@@ -404,12 +404,23 @@ $("lead").onsubmit = async (e) => {
 
     if (existente) {
       // Actualizar el perfil sin alterar su aprobación.
-      const resultado = await supabaseClient
-        .from("musicians")
-        .update(perfil)
-        .eq("user_id", user.id);
 
-      errorGuardado = resultado.error;
+const resultado = await supabaseClient
+  .from("musicians")
+  .update(perfil)
+  .eq("user_id", user.id)
+  .select("id, artist_name, phone, approved");
+
+console.log("MiMuR: resultado de actualización:", resultado);
+
+if (resultado.error) {
+  errorGuardado = resultado.error;
+} else if (!resultado.data || resultado.data.length === 0) {
+  errorGuardado = new Error(
+    "Supabase no actualizó ninguna fila. Comprueba el usuario y los permisos."
+  );
+}
+
     } else {
       // Crear un perfil nuevo, pendiente de aprobación.
       const resultado = await supabaseClient
