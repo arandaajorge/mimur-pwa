@@ -636,3 +636,48 @@ footer .logo {
     transition-duration: .01ms !important;
   }
 }
+
+/* Animación de entrada del título principal MiMuR */
+.title-left {
+  display: inline-block;
+  opacity: 0;
+  animation: mimur-entra-izquierda 1s ease-out 0.2s forwards;
+}
+
+.title-right {
+  display: inline-block;
+  opacity: 0;
+  animation: mimur-entra-derecha 1s ease-out 0.65s forwards;
+}
+
+@keyframes mimur-entra-izquierda {
+  from {
+    opacity: 0;
+    transform: translateX(-70px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes mimur-entra-derecha {
+  from {
+    opacity: 0;
+    transform: translateX(70px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Respeta la preferencia de movimiento reducido del dispositivo */
+@media (prefers-reduced-motion: reduce) {
+  .title-left,
+  .title-right {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
