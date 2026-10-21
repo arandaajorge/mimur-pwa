@@ -490,6 +490,7 @@ cargarMusicosAprobados();
       }
 
       mensaje.textContent = "Sesión iniciada: " + data.user.email;
+            await cargarMiPerfilMusico();
     } catch (error) {
       mensaje.textContent = "Error: " + error.message;
     }
