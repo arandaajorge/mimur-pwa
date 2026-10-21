@@ -446,70 +446,7 @@ $("lead").onsubmit = async (e) => {
 };
 
 
-  const f = e.currentTarget;
-  if (!f.reportValidity()) return;
-
-  const mensaje = $("leadMsg");
-  const boton = f.querySelector('[type="submit"]');
-
-  try {
-    const { data: { user }, error: userError } =
-      await supabaseClient.auth.getUser();
-
-    if (userError || !user) {
-      mensaje.textContent =
-        "Inicia sesión antes de registrar tu perfil de músico.";
-      return;
-    }
-
-    const d = Object.fromEntries(new FormData(f));
-
-    const perfil = {
-      user_id: user.id,
-      artist_name: d.name.trim(),
-      genres: [d.genre],
-      zone: d.zone.trim(),
-      video_url: d.video?.trim() || null,
-      availability: "available",
-      emergency_opt_in: f.elements.emergency.checked,
-      approved: false
-    };
-
-    if (boton) boton.disabled = true;
-    mensaje.textContent = "Guardando perfil en MiMuR...";
-
-    const { error } = await supabaseClient
-      .from("musicians")
-      .insert(perfil);
-
-    if (error) {
-  console.error("Error al registrar músico:", error);
-
-  if (
-    error.code === "23505" &&
-    error.message.includes("musicians_user_id_key")
-  ) {
-    mensaje.textContent =
-      "Esta cuenta ya tiene un perfil de músico registrado. " +
-      "Inicia sesión con la cuenta correspondiente para administrarlo.";
-  } else {
-    mensaje.textContent =
-      "No se pudo guardar el perfil. Inténtalo de nuevo.";
-  }
-
-  return;
-}
-
-    mensaje.textContent =
-      "¡Perfil registrado en MiMuR! Está pendiente de aprobación.";
-    f.reset();
-
-  } catch (error) {
-    mensaje.textContent = "Error: " + error.message;
-  } finally {
-    if (boton) boton.disabled = false;
-  }
-};
+  
 let installEvent;
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();installEvent=e;$("install").hidden=false});$("install").onclick=async()=>{if(!installEvent){alert("Usa el menú del navegador y busca Instalar aplicación o Añadir a pantalla de inicio. Requiere HTTPS o localhost.");return}installEvent.prompt();await installEvent.userChoice;installEvent=null;$("install").hidden=true};if("serviceWorker"in navigator&&(location.protocol==="https:"||location.hostname==="localhost"))addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(console.warn));render();
 cargarMusicosAprobados();
