@@ -347,8 +347,99 @@ if (error) {
     if (boton) boton.disabled = false;
   }
 };
+
 $("lead").onsubmit = async (e) => {
   e.preventDefault();
+
+  const f = e.currentTarget;
+  if (!f.reportValidity()) return;
+
+  const mensaje = $("leadMsg");
+  const boton = f.querySelector('[type="submit"]');
+
+  try {
+    const {
+      data: { user },
+      error: userError
+    } = await supabaseClient.auth.getUser();
+
+    if (userError || !user) {
+      mensaje.textContent =
+        "Inicia sesión en Mi cuenta antes de registrar tu perfil de músico.";
+      return;
+    }
+
+    const d = Object.fromEntries(new FormData(f));
+
+    const perfil = {
+      artist_name: d.name.trim(),
+      phone: d.phone.trim(),
+      genres: [d.genre],
+      zone: d.zone.trim(),
+      video_url: d.video.trim(),
+      emergency_opt_in: f.elements.emergency.checked
+    };
+
+    if (boton) boton.disabled = true;
+    mensaje.textContent = "Guardando perfil en MiMuR...";
+
+    // Comprobar si este usuario ya tiene un perfil.
+    const { data: existente, error: consultaError } =
+      await supabaseClient
+        .from("musicians")
+        .select("id, approved")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+    if (consultaError) {
+      throw consultaError;
+    }
+
+    let errorGuardado;
+
+    if (existente) {
+      // Actualizar el perfil sin alterar su aprobación.
+      const resultado = await supabaseClient
+        .from("musicians")
+        .update(perfil)
+        .eq("user_id", user.id);
+
+      errorGuardado = resultado.error;
+    } else {
+      // Crear un perfil nuevo, pendiente de aprobación.
+      const resultado = await supabaseClient
+        .from("musicians")
+        .insert({
+          ...perfil,
+          user_id: user.id,
+          approved: false
+        });
+
+      errorGuardado = resultado.error;
+    }
+
+    if (errorGuardado) {
+      console.error("Error al guardar perfil:", errorGuardado);
+      mensaje.textContent =
+        "No se pudo guardar el perfil: " + errorGuardado.message;
+      return;
+    }
+
+    mensaje.textContent = existente
+      ? "¡Perfil actualizado correctamente en MiMuR!"
+      : "¡Perfil registrado! Está pendiente de aprobación.";
+
+    await cargarMiPerfilMusico();
+    await cargarMusicosAprobados();
+
+  } catch (error) {
+    console.error("Error en el registro de músico:", error);
+    mensaje.textContent = "Error al guardar: " + error.message;
+  } finally {
+    if (boton) boton.disabled = false;
+  }
+};
+
 
   const f = e.currentTarget;
   if (!f.reportValidity()) return;
