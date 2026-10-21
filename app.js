@@ -22,17 +22,6 @@ async function cargarMusicosAprobados() {
     return;
   }
 
-async function cargarMusicosAprobados() {
-  const { data, error } = await supabaseClient
-    .from("musicians")
-    .select("*")
-    .eq("approved", true);
-
-  if (error) {
-    console.error("Error al cargar músicos:", error.message);
-    return;
-  }
-
   const reales = data.map(m => ({
     id: m.id,
     name: m.artist_name,
