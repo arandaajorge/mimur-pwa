@@ -34,10 +34,13 @@
       <input name="password" type="password" required minlength="8" autocomplete="current-password" placeholder="Mínimo 8 caracteres">
     </label>
 
-    <div class="actions">
-      <button class="btn" id="signUp" type="button">Crear cuenta</button>
-      <button class="btn secondary" id="signIn" type="button">Iniciar sesión</button>
-    </div>
+    
+<div class="actions">
+  <button class="btn" id="signUp" type="button">Crear cuenta</button>
+  <button class="btn secondary" id="signIn" type="button">Iniciar sesión</button>
+  <button class="btn secondary" id="signOut" type="button" hidden>Cerrar sesión</button>
+</div>
+
 
     <p id="authMsg" role="status" aria-live="polite"></p>
   </form>
