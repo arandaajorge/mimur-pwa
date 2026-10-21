@@ -510,3 +510,37 @@ supabaseClient.auth.onAuthStateChange((event, session) => {
     }
   }, 0);
 });
+
+/* Ventana emergente de MiMuR */
+(() => {
+  const abrir = document.getElementById("openAccount");
+  const cerrar = document.getElementById("closeAccount");
+  const ventana = document.getElementById("accountDialog");
+
+  if (!abrir || !cerrar || !ventana) {
+    console.error("MiMuR: falta el botón o la ventana de cuenta.");
+    return;
+  }
+
+  abrir.addEventListener("click", () => {
+    if (typeof ventana.showModal === "function") {
+      ventana.showModal();
+    } else {
+      ventana.setAttribute("open", "");
+    }
+  });
+
+  cerrar.addEventListener("click", () => {
+    if (typeof ventana.close === "function") {
+      ventana.close();
+    } else {
+      ventana.removeAttribute("open");
+    }
+  });
+
+  ventana.addEventListener("click", (evento) => {
+    if (evento.target === ventana) {
+      ventana.close();
+    }
+  });
+})();
