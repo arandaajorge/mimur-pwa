@@ -96,7 +96,6 @@ async function cargarMiPerfilMusico() {
     ? "Tu perfil está aprobado. Puedes editar tus datos."
     : "Tu perfil está pendiente de aprobación. Puedes editar tus datos.";
 }
-
 let favoritos = new Set();
 let cargandoFavoritos = false;
 
