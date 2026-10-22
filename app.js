@@ -55,24 +55,6 @@ async function cargarMiPerfilMusico() {
     return;
   }
 
-function actualizarPanelMusico(perfil, usuario) {
-  const panel = $("panelMusico");
-  const estado = $("estadoPerfilMusico");
-
-  if (!panel) return;
-
-  const mostrar = Boolean(usuario && perfil);
-
-  panel.hidden = !mostrar;
-
-  if (!mostrar) return;
-
-  if (estado) {
-    estado.textContent = perfil.approved
-      ? `Bienvenido, ${perfil.artist_name}. Tu perfil está aprobado.`
-      : `Bienvenido, ${perfil.artist_name}. Tu perfil está pendiente de aprobación.`;
-  }
-}
 
   const { data: perfil, error } = await supabaseClient
     .from("musicians")
@@ -114,6 +96,25 @@ if (formulario.elements.phone) {
     ? "Tu perfil está aprobado. Puedes editar tus datos."
     : "Tu perfil está pendiente de aprobación. Puedes editar tus datos.";
 }
+function actualizarPanelMusico(perfil, usuario) {
+  const panel = $("panelMusico");
+  const estado = $("estadoPerfilMusico");
+
+  if (!panel) return;
+
+  const mostrar = Boolean(usuario && perfil);
+
+  panel.hidden = !mostrar;
+
+  if (!mostrar) return;
+
+  if (estado) {
+    estado.textContent = perfil.approved
+      ? `Bienvenido, ${perfil.artist_name}. Tu perfil está aprobado.`
+      : `Bienvenido, ${perfil.artist_name}. Tu perfil está pendiente de aprobación.`;
+  }
+}
+
 let favoritos = new Set();
 let cargandoFavoritos = false;
 
