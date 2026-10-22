@@ -134,17 +134,225 @@ if (botonEditarPerfilMusico) {
   };
 }
 
+
+async function cargarSolicitudesMusico() {
+  const contenido = $("contenidoSolicitudesMusico");
+
+  if (!contenido) return;
+
+  contenido.hidden = false;
+  contenido.innerHTML = "<p>Cargando tus ofertas...</p>";
+
+  const {
+    data: { user },
+    error: authError
+  } = await supabaseClient.auth.getUser();
+
+  if (authError || !user) {
+    contenido.innerHTML =
+      "<p>Inicia sesión para consultar tus ofertas.</p>";
+    return;
+  }
+
+  const { data: musico, error: errorMusico } =
+    await supabaseClient
+      .from("musicians")
+      .select("id")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+  if (errorMusico || !musico) {
+    console.error("Error al consultar músico:", errorMusico);
+    contenido.innerHTML =
+      "<p>No se encontró tu perfil de músico.</p>";
+    return;
+  }
+
+  const { data: ofertas, error } = await supabaseClient
+    .from("offers")
+    .select(`
+      id,
+      musician_price_mxn,
+      customer_total_mxn,
+      status,
+      musician_note,
+      created_at,
+      event_requests (
+        event_type,
+        event_date,
+        zone,
+        genre,
+        duration_minutes,
+        budget_mxn,
+        details,
+        customer_name
+      )
+    `)
+    .eq("musician_id", musico.id)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Error al cargar ofertas:", error);
+    contenido.innerHTML =
+      "<p>No se pudieron cargar las ofertas. Verifica los permisos de lectura de Supabase.</p>";
+    return;
+  }
+
+  if (!ofertas || ofertas.length === 0) {
+    contenido.innerHTML = `
+      <h3>Mis solicitudes</h3>
+      <p>Aún no tienes ofertas de contratación.</p>
+    `;
+    return;
+  }
+
+  const escapar = (valor) =>
+    String(valor ?? "").replace(/[&<>"']/g, (caracter) => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    })[caracter]);
+
+  const pesos = (cantidad) =>
+    cantidad == null
+      ? "No especificado"
+      : "$" + Number(cantidad).toLocaleString("es-MX") + " MXN";
+
+  const fecha = (valor) => {
+    if (!valor) return "Fecha por confirmar";
+
+    const fechaEvento = new Date(valor);
+
+    if (Number.isNaN(fechaEvento.getTime())) {
+      return "Fecha por confirmar";
+    }
+
+    return fechaEvento.toLocaleString("es-MX", {
+      dateStyle: "medium",
+      timeStyle: "short"
+    });
+  };
+
+  contenido.innerHTML = `
+    <h3>Mis solicitudes (${ofertas.length})</h3>
+    <div id="listaOfertasMusico"></div>
+  `;
+
+  const lista = $("listaOfertasMusico");
+
+  ofertas.forEach((oferta) => {
+    const evento = Array.isArray(oferta.event_requests)
+      ? oferta.event_requests[0]
+      : oferta.event_requests;
+
+    const tarjeta = document.createElement("article");
+    tarjeta.className = "oferta-musico-card";
+
+    const estado = {
+      pending: "Pendiente de respuesta",
+      accepted: "Aceptada",
+      declined: "Rechazada",
+      withdrawn: "Retirada"
+    }[oferta.status] || oferta.status;
+
+    tarjeta.innerHTML = `
+      <h4>${escapar(evento?.event_type || "Evento musical")}</h4>
+      <p><strong>Fecha:</strong> ${escapar(fecha(evento?.event_date))}</p>
+      <p><strong>Zona:</strong> ${escapar(evento?.zone || "No especificada")}</p>
+      <p><strong>Género:</strong> ${escapar(evento?.genre || "No especificado")}</p>
+      <p><strong>Duración:</strong> ${escapar(evento?.duration_minutes ?? "No especificada")} minutos</p>
+      <p><strong>Presupuesto del cliente:</strong> ${escapar(pesos(evento?.budget_mxn))}</p>
+      <p><strong>Tu precio:</strong> ${escapar(pesos(oferta.musician_price_mxn))}</p>
+      <p><strong>Precio al cliente:</strong> ${escapar(pesos(oferta.customer_total_mxn))}</p>
+      <p><strong>Estado:</strong> ${escapar(estado)}</p>
+      ${evento?.customer_name ? `<p><strong>Cliente:</strong> ${escapar(evento.customer_name)}</p>` : ""}
+      ${evento?.details ? `<p><strong>Detalles:</strong> ${escapar(evento.details)}</p>` : ""}
+      ${oferta.musician_note ? `<p><strong>Nota:</strong> ${escapar(oferta.musician_note)}</p>` : ""}
+      <div class="acciones-oferta"></div>
+    `;
+
+    const acciones = tarjeta.querySelector(".acciones-oferta");
+
+    if (oferta.status === "pending") {
+      const aceptar = document.createElement("button");
+      aceptar.type = "button";
+      aceptar.textContent = "Aceptar oferta";
+
+      const rechazar = document.createElement("button");
+      rechazar.type = "button";
+      rechazar.textContent = "Rechazar oferta";
+
+      aceptar.onclick = () =>
+        responderOfertaMusico(oferta.id, "accepted", aceptar, rechazar);
+
+      rechazar.onclick = () =>
+        responderOfertaMusico(oferta.id, "declined", aceptar, rechazar);
+
+      acciones.append(aceptar, rechazar);
+    }
+
+    lista.appendChild(tarjeta);
+  });
+}
+
+async function responderOfertaMusico(
+  ofertaId,
+  decision,
+  botonAceptar,
+  botonRechazar
+) {
+  const confirmacion = decision === "accepted"
+    ? "¿Confirmas que deseas aceptar esta oferta?"
+    : "¿Confirmas que deseas rechazar esta oferta?";
+
+  if (!confirm(confirmacion)) return;
+
+  botonAceptar.disabled = true;
+  botonRechazar.disabled = true;
+
+  const { error } = await supabaseClient.rpc(
+    "responder_oferta_musico",
+    {
+      p_offer_id: ofertaId,
+      p_decision: decision
+    }
+  );
+
+  if (error) {
+    console.error("Error al responder oferta:", error);
+    alert("No se pudo responder la oferta: " + error.message);
+    botonAceptar.disabled = false;
+    botonRechazar.disabled = false;
+    return;
+  }
+
+  alert(
+    decision === "accepted"
+      ? "Oferta aceptada correctamente."
+      : "Oferta rechazada correctamente."
+  );
+
+  await cargarSolicitudesMusico();
+}
+
 const botonVerSolicitudesMusico = $("verSolicitudesMusico");
 
 if (botonVerSolicitudesMusico) {
-  botonVerSolicitudesMusico.onclick = () => {
+  botonVerSolicitudesMusico.onclick = async () => {
     const contenido = $("contenidoSolicitudesMusico");
 
-    if (contenido) {
-      contenido.hidden = !contenido.hidden;
+    if (!contenido) return;
+
+    if (contenido.hidden) {
+      await cargarSolicitudesMusico();
+    } else {
+      contenido.hidden = true;
     }
   };
-};
+}
+
 let favoritos = new Set();
 let cargandoFavoritos = false;
 
