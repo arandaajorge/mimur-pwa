@@ -376,14 +376,20 @@ $("lead").onsubmit = async (e) => {
 
     const d = Object.fromEntries(new FormData(f));
 
-    const perfil = {
-      artist_name: d.name.trim(),
-      phone: d.phone.trim(),
-      genres: [d.genre],
-      zone: d.zone.trim(),
-      video_url: d.video.trim(),
-      emergency_opt_in: f.elements.emergency.checked
-    };
+
+const perfil = {
+  artist_name: d.name.trim(),
+  phone: d.phone.trim(),
+  genres: [d.genre],
+  zone: d.zone.trim(),
+  video_url: d.video.trim(),
+  minimum_price_mxn:
+    d.price !== undefined && d.price.trim() !== ""
+      ? Number(d.price)
+      : null,
+  emergency_opt_in: f.elements.emergency.checked
+};
+
 
     if (boton) boton.disabled = true;
     mensaje.textContent = "Guardando perfil en MiMuR...";
