@@ -573,6 +573,7 @@ function render() {
   });
 }
 
+
 $("q").addEventListener("input", render);
 $("genre").addEventListener("change", render);
 $("zone").addEventListener("change", render);
