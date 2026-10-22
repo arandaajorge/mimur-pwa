@@ -42,6 +42,7 @@ async function cargarMusicosAprobados() {
   render();
 }
 
+
 async function cargarMiPerfilMusico() {
   const mensaje = $("leadMsg");
   const formulario = $("lead");
@@ -52,9 +53,9 @@ async function cargarMiPerfilMusico() {
   if (authError || !user) {
     mensaje.textContent =
       "Inicia sesión para consultar o editar tu perfil de músico.";
+    actualizarPanelMusico(null, null);
     return;
   }
-
 
   const { data: perfil, error } = await supabaseClient
     .from("musicians")
@@ -66,25 +67,27 @@ async function cargarMiPerfilMusico() {
     console.error("Error al cargar perfil:", error);
     mensaje.textContent =
       "No se pudo cargar tu perfil. Inténtalo de nuevo.";
+    actualizarPanelMusico(null, user);
     return;
   }
 
   if (!perfil) {
     mensaje.textContent =
       "Todavía no tienes un perfil de músico. Puedes registrarte aquí.";
+    actualizarPanelMusico(null, user);
     return;
   }
 
   formulario.elements.name.value = perfil.artist_name || "";
-  
-if (formulario.elements.price) {
-  formulario.elements.price.value =
-    perfil.minimum_price_mxn ?? "";
-}
 
-if (formulario.elements.phone) {
-  formulario.elements.phone.value = perfil.phone || "";
-}
+  if (formulario.elements.price) {
+    formulario.elements.price.value =
+      perfil.minimum_price_mxn ?? "";
+  }
+
+  if (formulario.elements.phone) {
+    formulario.elements.phone.value = perfil.phone || "";
+  }
 
   formulario.elements.zone.value = perfil.zone || "";
   formulario.elements.genre.value = perfil.genres?.[0] || "";
@@ -95,7 +98,10 @@ if (formulario.elements.phone) {
   mensaje.textContent = perfil.approved
     ? "Tu perfil está aprobado. Puedes editar tus datos."
     : "Tu perfil está pendiente de aprobación. Puedes editar tus datos.";
+
+  actualizarPanelMusico(perfil, user);
 }
+
 function actualizarPanelMusico(perfil, usuario) {
   const panel = $("panelMusico");
   const estado = $("estadoPerfilMusico");
@@ -103,7 +109,6 @@ function actualizarPanelMusico(perfil, usuario) {
   if (!panel) return;
 
   const mostrar = Boolean(usuario && perfil);
-
   panel.hidden = !mostrar;
 
   if (!mostrar) return;
