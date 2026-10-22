@@ -463,24 +463,53 @@ async function alternarFavorito(musicianId) {
 }
 
 
+
 function render() {
-  let q = $("q").value.toLowerCase();
-  let g = $("genre").value;
-  let z = $("zone").value;
+  const campoBusqueda = $("q");
+  const filtroGenero = $("genre");
+  const filtroZona = $("zone");
 
-  let rows = catalogo.filter(m =>
-    (!q || (m.name + " " + m.genre + " " + m.zone).toLowerCase().includes(q)) &&
-    (!g || m.genre === g) &&
-    (!z || m.zone === z)
-  );
+  const q = (campoBusqueda?.value || "")
+    .trim()
+    .toLocaleLowerCase("es-MX");
 
-  $("musicians").innerHTML = rows.map(m => {
+  const g = filtroGenero?.value || "";
+  const z = filtroZona?.value || "";
+
+  const normalizar = (valor) =>
+    String(valor || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .trim()
+      .toLocaleLowerCase("es-MX");
+
+  const filas = catalogo.filter((m) => {
+    const nombre = normalizar(m.name);
+    const genero = normalizar(m.genre);
+    const zona = normalizar(m.zone);
+
+    const coincideBusqueda =
+      !q ||
+      normalizar(`${m.name} ${m.genre} ${m.zone}`).includes(
+        normalizar(q)
+      );
+
+    const coincideGenero =
+      !g || genero === normalizar(g);
+
+    const coincideZona =
+      !z || zona === normalizar(z);
+
+    return coincideBusqueda && coincideGenero && coincideZona;
+  });
+
+  $("musicians").innerHTML = filas.map((m) => {
     const id = String(m.id);
     const esFavorito = favoritos.has(id);
 
     return `
       <article class="musician">
-        <div class="art">${m.icon}</div>
+        <div class="art">${safe(m.icon)}</div>
 
         <div class="body">
           <div class="cardheading">
@@ -515,7 +544,6 @@ function render() {
             <span class="chip">Perfil MiMuR</span>
           </div>
 
-
           <div class="cardbottom">
             <b>
               Desde ${money(m.price)}
@@ -528,17 +556,23 @@ function render() {
     `;
   }).join("");
 
-  $("empty").hidden = rows.length > 0;
+  $("empty").hidden = filas.length > 0;
 
-  document.querySelectorAll("[data-id]").forEach(b => {
-    b.onclick = () =>
-      openRequest(catalogo.find(m => String(m.id) === b.dataset.id));
+  document.querySelectorAll("#musicians [data-id]").forEach((b) => {
+    b.onclick = () => {
+      const musico = catalogo.find(
+        (m) => String(m.id) === b.dataset.id
+      );
+
+      if (musico) openRequest(musico);
+    };
   });
 
-  document.querySelectorAll("[data-favorite-id]").forEach(b => {
+  document.querySelectorAll("#musicians [data-favorite-id]").forEach((b) => {
     b.onclick = () => alternarFavorito(b.dataset.favoriteId);
   });
 }
+
 $("q").addEventListener("input", render);
 $("genre").addEventListener("change", render);
 $("zone").addEventListener("change", render);
