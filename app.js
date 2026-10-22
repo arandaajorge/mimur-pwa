@@ -43,6 +43,7 @@ async function cargarMusicosAprobados() {
 }
 
 
+
 async function cargarMiPerfilMusico() {
   const mensaje = $("leadMsg");
   const formulario = $("lead");
@@ -108,10 +109,9 @@ function actualizarPanelMusico(perfil, usuario) {
 
   if (!panel) return;
 
-  const mostrar = Boolean(usuario && perfil);
-  panel.hidden = !mostrar;
+  panel.hidden = !(usuario && perfil);
 
-  if (!mostrar) return;
+  if (!usuario || !perfil) return;
 
   if (estado) {
     estado.textContent = perfil.approved
