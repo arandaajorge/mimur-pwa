@@ -578,15 +578,31 @@ console.log("MiMuR cargado correctamente");
 
 cargarFavoritos();
 
+
 supabaseClient.auth.onAuthStateChange((event, session) => {
   setTimeout(async () => {
-    await cargarFavoritos();
-
     if (session?.user) {
       await cargarMiPerfilMusico();
+      await cargarFavoritos();
+    } else {
+      const formulario = document.getElementById("lead");
+
+      if (formulario) {
+        formulario.reset();
+      }
+
+      const mensaje = document.getElementById("leadMsg");
+
+      if (mensaje) {
+        mensaje.textContent =
+          "Inicia sesión para consultar o editar tu perfil de músico.";
+      }
+
+      await cargarFavoritos();
     }
   }, 0);
 });
+
 
 /* Ventana emergente de MiMuR */
 (() => {
