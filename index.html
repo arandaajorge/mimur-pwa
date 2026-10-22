@@ -46,6 +46,35 @@
   </form>
 </dialog>
 
+<section id="panelMusico" class="join" hidden>
+  <div>
+    <p class="eyebrow">MI MIMUR</p>
+    <h2>Panel del músico</h2>
+    <p>Administra tu perfil artístico y prepara tu música para nuevos eventos.</p>
+  </div>
+
+  <div class="panel-musico-content">
+    <h3>Mi perfil artístico</h3>
+    <p id="estadoPerfilMusico">
+      Cargando información de tu perfil...
+    </p>
+
+    <div class="panel-musico-actions">
+      <button type="button" id="editarPerfilMusico">
+        Editar mi perfil
+      </button>
+      <button type="button" id="verSolicitudesMusico">
+        Mis solicitudes
+      </button>
+    </div>
+
+    <div id="contenidoSolicitudesMusico" hidden>
+      <h3>Mis solicitudes</h3>
+      <p>Próximamente podrás consultar aquí las solicitudes de contratación que recibas.</p>
+    </div>
+  </div>
+</section>
+
 <section id="registro" class="join"><div><p class="eyebrow">PARA MÚSICOS</p><h2>Haz que tu música llegue más lejos.</h2><p>Registra tu interés en el piloto. En esta versión los datos se guardan solo en este dispositivo; aún no se envían a un servidor.</p></div><form id="lead"><h3>Quiero participar</h3><label>Nombre artístico *<input name="name" required maxlength="100"></label><label>WhatsApp *<input name="phone" required type="tel"></label><label>Ciudad / zona *<input name="zone" required maxlength="100"></label><label>Género *<select name="genre" required><option value="">Selecciona</option><option>Mariachi</option><option>Banda</option><option>Norteño</option><option>Grupo versátil</option><option>DJ</option><option>Solista</option><option>Rock / Pop</option><option>Salsa / Cumbia</option><option>Otro</option></select></label>
 <label>Precio mínimo por evento (MXN)
   <input
