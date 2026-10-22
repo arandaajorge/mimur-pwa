@@ -119,7 +119,32 @@ function actualizarPanelMusico(perfil, usuario) {
       : `Bienvenido, ${perfil.artist_name}. Tu perfil está pendiente de aprobación.`;
   }
 }
+const botonEditarPerfilMusico = $("editarPerfilMusico");
 
+if (botonEditarPerfilMusico) {
+  botonEditarPerfilMusico.onclick = () => {
+    const registro = $("registro");
+
+    if (registro) {
+      registro.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }
+  };
+}
+
+const botonVerSolicitudesMusico = $("verSolicitudesMusico");
+
+if (botonVerSolicitudesMusico) {
+  botonVerSolicitudesMusico.onclick = () => {
+    const contenido = $("contenidoSolicitudesMusico");
+
+    if (contenido) {
+      contenido.hidden = !contenido.hidden;
+    }
+  };
+};
 let favoritos = new Set();
 let cargandoFavoritos = false;
 
