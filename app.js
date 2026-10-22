@@ -76,6 +76,11 @@ async function cargarMiPerfilMusico() {
 
   formulario.elements.name.value = perfil.artist_name || "";
   
+if (formulario.elements.price) {
+  formulario.elements.price.value =
+    perfil.minimum_price_mxn ?? "";
+}
+
 if (formulario.elements.phone) {
   formulario.elements.phone.value = perfil.phone || "";
 }
