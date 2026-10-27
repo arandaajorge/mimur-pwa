@@ -1464,3 +1464,411 @@ footer {
     transition-duration: .01ms !important;
   }
 }
+
+/* =========================================
+   MiMuR — NEGRO + AMARILLO ELÉCTRICO
+   Identidad visual y registro para músicos
+   ========================================= */
+
+:root {
+  --bg: #080808;
+  --panel: #121212;
+  --panel-soft: #1b1a14;
+  --text: #fffdf5;
+  --muted: #bdb9ad;
+
+  --green: #ffd400;
+  --green-hover: #ffe866;
+
+  --line: rgba(255, 212, 0, 0.23);
+  --mimur-yellow: #ffd400;
+  --mimur-gold: #ff9f1c;
+  --mimur-purple: #a78bfa;
+  --mimur-white: #fffdf5;
+}
+
+/* Fondo y tipografía */
+body {
+  background:
+    radial-gradient(ellipse at 85% 0%, rgba(255, 212, 0, .09), transparent 32%),
+    radial-gradient(ellipse at 0% 35%, rgba(167, 139, 250, .055), transparent 30%),
+    var(--bg);
+  color: var(--text);
+}
+
+h1, h2, h3, h4 {
+  color: var(--mimur-white);
+}
+
+.logo span {
+  color: var(--mimur-yellow);
+}
+
+.eyebrow {
+  color: var(--mimur-yellow);
+}
+
+/* Navegación */
+header {
+  background: rgba(8, 8, 8, .94);
+  border-bottom: 1px solid rgba(255, 212, 0, .32);
+  box-shadow: 0 5px 24px rgba(0, 0, 0, .3);
+}
+
+nav a:hover {
+  color: var(--mimur-yellow);
+}
+
+/* Botones principales */
+button, .btn {
+  background: var(--mimur-yellow);
+  color: #111;
+  border: 1px solid var(--mimur-yellow);
+  font-weight: 800;
+  box-shadow: 0 4px 18px rgba(255, 212, 0, .08);
+}
+
+button:hover, .btn:hover {
+  background: var(--green-hover);
+  border-color: #fff0a3;
+  color: #080808;
+  box-shadow: 0 6px 25px rgba(255, 212, 0, .2);
+}
+
+.btn.secondary,
+button.secondary,
+#openAccount,
+#install,
+#volverCatalogoMusicos,
+#perfilPublicoCompartir,
+#perfilPublicoFavorito,
+#close,
+#closeAccount {
+  color: var(--mimur-white);
+  background: #171717;
+  border: 1px solid rgba(167, 139, 250, .65);
+  box-shadow: none;
+}
+
+.btn.secondary:hover,
+#openAccount:hover,
+#install:hover,
+#volverCatalogoMusicos:hover,
+#perfilPublicoCompartir:hover,
+#perfilPublicoFavorito:hover {
+  background: #24202e;
+  border-color: var(--mimur-yellow);
+  color: var(--mimur-yellow);
+}
+
+/* Presentación principal */
+.hero h1 em {
+  color: var(--mimur-yellow);
+  text-shadow: 0 0 30px rgba(255, 212, 0, .13);
+}
+
+.hero aside {
+  background:
+    linear-gradient(145deg, rgba(255, 212, 0, .09), transparent 55%),
+    #111;
+  border: 1px solid rgba(255, 212, 0, .42);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, .35);
+}
+
+.stats b {
+  background: #211e12;
+  border: 1px solid rgba(255, 212, 0, .18);
+}
+
+/* Buscador */
+.filters {
+  background: #111;
+  border: 1px solid rgba(167, 139, 250, .45);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, .18);
+}
+
+input, select, textarea {
+  background: #090909;
+  border-color: #39352b;
+  color: var(--text);
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--mimur-yellow);
+  outline-color: var(--mimur-yellow);
+}
+
+/* Tarjetas de músicos */
+.musician {
+  background: linear-gradient(155deg, #191919, #0d0d0d 85%);
+  border: 1px solid rgba(255, 212, 0, .23);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .22);
+}
+
+.musician:hover {
+  border-color: var(--mimur-yellow);
+  box-shadow: 0 15px 38px rgba(255, 212, 0, .08);
+}
+
+.musician .art {
+  background:
+    radial-gradient(circle at 50% 100%, rgba(255, 212, 0, .16), transparent 70%),
+    #171717;
+  border-bottom: 1px solid rgba(167, 139, 250, .22);
+}
+
+.favorite-btn {
+  color: var(--mimur-yellow);
+  background: #211d12;
+  border-color: rgba(255, 212, 0, .4);
+}
+
+.muted, .small {
+  color: var(--muted);
+}
+
+.chip, .tag {
+  color: #e8e1d0;
+  background: #1a1915;
+  border-color: rgba(167, 139, 250, .35);
+}
+
+.cardbottom {
+  border-top-color: rgba(255, 212, 0, .2);
+}
+
+.cardbottom button[data-profile-id] {
+  background: #171717;
+  color: var(--mimur-white);
+  border-color: rgba(167, 139, 250, .7);
+}
+
+.cardbottom button[data-profile-id]:hover {
+  color: var(--mimur-yellow);
+  border-color: var(--mimur-yellow);
+}
+
+.cardbottom button[data-id] {
+  background: var(--mimur-yellow);
+  color: #101010;
+}
+
+/* Pasos */
+.steps article {
+  background: #111;
+  border-color: rgba(167, 139, 250, .35);
+}
+
+.steps article:hover {
+  border-color: var(--mimur-yellow);
+}
+
+.steps article > b {
+  color: var(--mimur-yellow);
+}
+
+/* =========================================
+   SECCIÓN DESTACADA: PARA MÚSICOS
+   ========================================= */
+
+#registro.join {
+  position: relative;
+  isolation: isolate;
+  grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr);
+  align-items: start;
+  gap: clamp(28px, 5vw, 64px);
+  margin-top: 90px;
+  padding: clamp(26px, 5vw, 56px);
+  overflow: hidden;
+
+  background:
+    radial-gradient(ellipse at 0% 0%, rgba(255, 212, 0, .13), transparent 45%),
+    linear-gradient(135deg, #19170e, #101010 60%, #151020);
+
+  border: 1px solid rgba(255, 212, 0, .72);
+  border-radius: 28px;
+  box-shadow:
+    0 0 0 5px rgba(255, 212, 0, .035),
+    0 22px 60px rgba(0, 0, 0, .36);
+}
+
+/* Acento violeta decorativo en el borde superior */
+#registro.join::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(
+    90deg,
+    var(--mimur-yellow),
+    var(--mimur-gold),
+    var(--mimur-purple),
+    var(--mimur-yellow)
+  );
+}
+
+#registro.join > div {
+  position: sticky;
+  top: 100px;
+  padding-top: 8px;
+}
+
+/* Etiqueta más grande y visible */
+#registro.join .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 22px;
+  padding: 12px 16px;
+  color: #111;
+  background: var(--mimur-yellow);
+  border-radius: 8px;
+  box-shadow: 0 7px 24px rgba(255, 212, 0, .12);
+  font-size: .9rem;
+  font-weight: 950;
+  letter-spacing: .16em;
+}
+
+#registro.join .eyebrow::before {
+  content: "♫";
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+#registro.join h2 {
+  max-width: 530px;
+  margin: 0 0 22px;
+  font-size: clamp(2.25rem, 5vw, 3.65rem);
+  line-height: 1.08;
+  letter-spacing: -.055em;
+}
+
+#registro.join > div > p:not(.eyebrow) {
+  max-width: 470px;
+  color: #c7c0b0;
+  font-size: 1.06rem;
+  line-height: 1.85;
+}
+
+/* Formulario musical */
+#registro.join form {
+  gap: 18px;
+  padding: clamp(19px, 3vw, 30px);
+  background: rgba(7, 7, 7, .72);
+  border: 1px solid rgba(167, 139, 250, .42);
+  border-radius: 20px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, .22);
+}
+
+#registro.join form h3 {
+  margin: 0 0 5px;
+  font-size: 1.5rem;
+}
+
+#registro.join form label {
+  color: #f2ead8;
+}
+
+#registro.join form input,
+#registro.join form select {
+  min-height: 48px;
+}
+
+#registro.join form button[type="submit"] {
+  width: 100%;
+  min-height: 54px;
+  margin-top: 6px;
+  font-size: 1rem;
+}
+
+#registro.join form .check {
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+#registro.join form .check input {
+  width: 19px;
+  min-width: 19px;
+  min-height: 19px;
+  accent-color: var(--mimur-yellow);
+}
+
+#registro.join #leadMsg {
+  overflow-wrap: anywhere;
+  color: var(--mimur-yellow);
+}
+
+/* Perfil público */
+.perfil-publico-videos,
+.perfil-publico-info {
+  background: #111;
+  border-color: rgba(167, 139, 250, .38);
+}
+
+.perfil-publico-header {
+  padding-bottom: 22px;
+  border-bottom: 1px solid rgba(255, 212, 0, .24);
+}
+
+#perfilPublicoNombre {
+  color: var(--mimur-white);
+}
+
+#perfilPublicoPrecio {
+  color: var(--mimur-yellow);
+}
+
+#perfilPublicoResenas {
+  background: #1a1915;
+  border: 1px solid rgba(255, 212, 0, .16);
+}
+
+#perfilPublicoSolicitar {
+  background: var(--mimur-yellow);
+  color: #101010;
+}
+
+/* Ventanas */
+dialog {
+  background: #111;
+  border-color: rgba(255, 212, 0, .5);
+}
+
+dialog::backdrop {
+  background: rgba(0, 0, 0, .82);
+}
+
+/* Adaptación a pantallas pequeñas */
+@media (max-width: 700px) {
+  #registro.join {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+    margin-top: 58px;
+    padding: 23px 17px;
+    border-radius: 21px;
+  }
+
+  #registro.join > div {
+    position: static;
+  }
+
+  #registro.join .eyebrow {
+    font-size: .78rem;
+    letter-spacing: .12em;
+  }
+
+  #registro.join h2 {
+    font-size: clamp(2.15rem, 10vw, 3rem);
+  }
+
+  #registro.join > div > p:not(.eyebrow) {
+    font-size: 1rem;
+  }
+
+  #registro.join form {
+    padding: 18px 14px;
+  }
+}
