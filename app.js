@@ -22,21 +22,28 @@ async function cargarMusicosAprobados() {
     return;
   }
 
-  const reales = data.map(m => ({
-    id: m.id,
-    name: m.artist_name,
-    genre: m.genres?.[0] || "Otro",
-    zone: m.zone,
-    price: m.minimum_price_mxn,
-    unit: "evento",
-    icon: "🎤",
-    bio: m.bio || "Músico registrado en MiMuR.",
-    status: m.availability === "available"
-      ? "Disponible"
-      : m.availability === "emergency_only"
-        ? "Emergencias"
-        : "Ocupado"
-  }));
+  
+const reales = data.map(m => ({
+  id: m.id,
+  name: m.artist_name,
+  genre: m.genres?.[0] || "Otro",
+  genres: m.genres || [],
+  zone: m.zone || "",
+  serviceRadiusKm: m.service_radius_km ?? null,
+  price: m.minimum_price_mxn,
+  unit: "evento",
+  icon: "🎤",
+  bio: m.bio || "Este músico aún no ha agregado su biografía.",
+  videoUrl: m.video_url || "",
+  socialUrl: m.social_url || "",
+  emergencyOptIn: m.emergency_opt_in === true,
+  status: m.availability === "available"
+    ? "Disponible"
+    : m.availability === "emergency_only"
+      ? "Emergencias"
+      : "Ocupado"
+}));
+
 
   catalogo = [...reales, ...demo];
   render();
