@@ -75,6 +75,64 @@
   </div>
 </section>
 
+<section id="perfilPublicoMusico" class="join" hidden>
+  <div class="perfil-publico-header">
+    <button type="button" id="volverCatalogoMusicos">
+      ← Volver al catálogo
+    </button>
+
+    <p class="eyebrow">PERFIL ARTÍSTICO · MIMUR</p>
+    <h2 id="perfilPublicoNombre">Perfil del músico</h2>
+    <p id="perfilPublicoGenero" class="muted"></p>
+  </div>
+
+  <div class="perfil-publico-content">
+    <div class="perfil-publico-videos">
+      <h3>🎬 Videos y presentaciones</h3>
+      <div id="perfilPublicoVideo">
+        <p>Este músico todavía no ha agregado un video.</p>
+      </div>
+
+      <p>
+        Conoce su estilo y escucha cómo suena antes de contratarlo.
+      </p>
+    </div>
+
+    <div class="perfil-publico-info">
+      <h3>Sobre el artista</h3>
+      <p id="perfilPublicoBio"></p>
+
+      <h3>Zona de servicio</h3>
+      <p id="perfilPublicoZona"></p>
+
+      <h3>Precio desde</h3>
+      <p id="perfilPublicoPrecio"></p>
+
+      <h3>Disponibilidad</h3>
+      <p id="perfilPublicoDisponibilidad"></p>
+
+      <h3>Reseñas de clientes</h3>
+      <div id="perfilPublicoResenas">
+        <p>Aún no hay reseñas verificadas para este músico.</p>
+      </div>
+
+      <div class="perfil-publico-acciones">
+        <button type="button" id="perfilPublicoFavorito">
+          ♡ Guardar en favoritos
+        </button>
+
+        <button type="button" id="perfilPublicoCompartir">
+          Compartir perfil
+        </button>
+
+        <button type="button" id="perfilPublicoSolicitar">
+          Solicitar contratación
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="registro" class="join"><div><p class="eyebrow">PARA MÚSICOS</p><h2>Haz que tu música llegue más lejos.</h2><p>Registra tu interés en el piloto. En esta versión los datos se guardan solo en este dispositivo; aún no se envían a un servidor.</p></div><form id="lead"><h3>Quiero participar</h3><label>Nombre artístico *<input name="name" required maxlength="100"></label><label>WhatsApp *<input name="phone" required type="tel"></label><label>Ciudad / zona *<input name="zone" required maxlength="100"></label><label>Género *<select name="genre" required><option value="">Selecciona</option><option>Mariachi</option><option>Banda</option><option>Norteño</option><option>Grupo versátil</option><option>DJ</option><option>Solista</option><option>Rock / Pop</option><option>Salsa / Cumbia</option><option>Otro</option></select></label>
 <label>Precio mínimo por evento (MXN)
   <input
