@@ -862,9 +862,41 @@ $("requestForm").onsubmit = async (e) => {
     if (boton) boton.disabled = true;
     mensaje.textContent = "Enviando solicitud a MiMuR...";
 
-    const { error } = await supabaseClient
-      .from("event_requests")
-      .insert(solicitud);
+    
+const { data: solicitudGuardada, error } = await supabaseClient
+  .from("event_requests")
+  .insert(solicitud)
+  .select("id")
+  .single();
+
+if (error) {
+  console.error("Error al guardar solicitud:", error);
+  mensaje.textContent =
+    "No se pudo guardar la solicitud: " + error.message;
+  return;
+}
+
+mensaje.textContent = "Solicitud guardada. Buscando músicos compatibles...";
+
+const { data: cantidad, error: errorDistribucion } =
+  await supabaseClient.rpc("distribuir_solicitud_musical", {
+    p_event_request_id: solicitudGuardada.id
+  });
+
+if (errorDistribucion) {
+  console.error("Error al distribuir solicitud:", errorDistribucion);
+  mensaje.textContent =
+    "La solicitud se guardó, pero no se pudo avisar a los músicos: " +
+    errorDistribucion.message;
+  return;
+}
+
+mensaje.textContent = cantidad > 0
+  ? `¡Solicitud publicada! Se notificó a ${cantidad} músico(s) compatible(s).`
+  : "La solicitud se guardó, pero todavía no hay músicos aprobados disponibles que coincidan con el género y la zona.";
+f.reset();
+
+setTimeout(() => $("request").close(), 3000);
 
     
 
