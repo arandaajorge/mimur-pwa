@@ -470,6 +470,220 @@ async function alternarFavorito(musicianId) {
 }
 
 
+function abrirPerfilPublicoMusico(musico) {
+  if (!musico) return;
+
+  const catalogoSection = document.getElementById("musicians");
+  const perfil = document.getElementById("perfilPublicoMusico");
+
+  if (!perfil) return;
+
+  document.getElementById("perfilPublicoNombre").textContent =
+    musico.name || "Artista MiMuR";
+
+  document.getElementById("perfilPublicoGenero").textContent =
+    (musico.genres || [musico.genre || "Otro"]).join(" · ");
+
+  document.getElementById("perfilPublicoBio").textContent =
+    musico.bio || "Este artista todavía no ha agregado una biografía.";
+
+  document.getElementById("perfilPublicoZona").textContent =
+    musico.zone || "Zona por confirmar";
+
+  const precio = document.getElementById("perfilPublicoPrecio");
+  precio.textContent =
+    musico.price != null
+      ? `Desde ${money(musico.price)} / ${musico.unit || "evento"}`
+      : "Precio por confirmar";
+
+  document.getElementById("perfilPublicoDisponibilidad").textContent =
+    musico.status || "Disponibilidad por confirmar";
+
+  const videoContenedor = document.getElementById("perfilPublicoVideo");
+  videoContenedor.replaceChildren();
+
+  const videoUrl = musico.videoUrl || musico.video_url || "";
+
+  if (videoUrl) {
+    let url;
+
+    try {
+      url = new URL(videoUrl);
+    } catch {
+      url = null;
+    }
+
+    if (url && ["https:", "http:"].includes(url.protocol)) {
+      if (
+        url.hostname === "www.youtube.com" ||
+        url.hostname === "youtube.com" ||
+        url.hostname === "m.youtube.com"
+      ) {
+        const videoId = url.searchParams.get("v");
+
+        if (videoId && /^[\w-]{11}$/.test(videoId)) {
+          const iframe = document.createElement("iframe");
+          iframe.src = `https://www.youtube-nocookie.com/embed/${videoId}`;
+          iframe.title = `Video de ${musico.name || "artista MiMuR"}`;
+          iframe.loading = "lazy";
+          iframe.allow =
+            "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+          iframe.allowFullscreen = true;
+          iframe.style.width = "100%";
+          iframe.style.aspectRatio = "16 / 9";
+          iframe.style.border = "0";
+          videoContenedor.appendChild(iframe);
+        }
+      } else if (
+        url.hostname === "youtu.be"
+      ) {
+        const videoId = url.pathname.split("/").filter(Boolean)[0];
+
+        if (videoId && /^[\w-]{11}$/.test(videoId)) {
+          const iframe = document.createElement("iframe");
+          iframe.src = `https://www.youtube-nocookie.com/embed/${videoId}`;
+          iframe.title = `Video de ${musico.name || "artista MiMuR"}`;
+          iframe.loading = "lazy";
+          iframe.allowFullscreen = true;
+          iframe.style.width = "100%";
+          iframe.style.aspectRatio = "16 / 9";
+          iframe.style.border = "0";
+          videoContenedor.appendChild(iframe);
+        }
+      } else if (/\.(mp4|webm|ogg)$/i.test(url.pathname)) {
+        const video = document.createElement("video");
+        video.src = url.href;
+        video.controls = true;
+        video.preload = "metadata";
+        video.playsInline = true;
+        video.style.width = "100%";
+        videoContenedor.appendChild(video);
+      }
+
+      if (!videoContenedor.children.length) {
+        const enlace = document.createElement("a");
+        enlace.href = url.href;
+        enlace.target = "_blank";
+        enlace.rel = "noopener noreferrer";
+        enlace.textContent = "Ver presentación del artista";
+        videoContenedor.appendChild(enlace);
+      }
+    } else {
+      videoContenedor.textContent =
+        "El enlace del video no es válido.";
+    }
+  } else {
+    videoContenedor.textContent =
+      "Este músico todavía no ha agregado un video.";
+  }
+
+  const redes = musico.socialUrl || musico.social_url || "";
+  if (redes) {
+    try {
+      const socialUrl = new URL(redes);
+
+      if (["https:", "http:"].includes(socialUrl.protocol)) {
+        const enlaceRedes = document.createElement("a");
+        enlaceRedes.href = socialUrl.href;
+        enlaceRedes.target = "_blank";
+        enlaceRedes.rel = "noopener noreferrer";
+        enlaceRedes.textContent = "Ver redes sociales del artista";
+        videoContenedor.appendChild(enlaceRedes);
+      }
+    } catch {
+      // No mostrar enlaces de redes con formato inválido.
+    }
+  }
+
+  const favoritosSet = typeof favoritos !== "undefined"
+    ? favoritos
+    : new Set();
+
+  const botonFavorito = document.getElementById("perfilPublicoFavorito");
+  const idMusico = String(musico.id);
+
+  botonFavorito.textContent = favoritosSet.has(idMusico)
+    ? "♥ Quitar de favoritos"
+    : "♡ Guardar en favoritos";
+
+  botonFavorito.onclick = () => {
+    if (typeof alternarFavorito === "function") {
+      alternarFavorito(idMusico);
+      botonFavorito.textContent = favoritos.has(idMusico)
+        ? "♥ Quitar de favoritos"
+        : "♡ Guardar en favoritos";
+    }
+  };
+
+  document.getElementById("perfilPublicoCompartir").onclick = async () => {
+    const enlace = `${location.origin}${location.pathname}#musico-${encodeURIComponent(idMusico)}`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: musico.name || "Artista MiMuR",
+          text: "Conoce este artista en MiMuR",
+          url: enlace
+        });
+      } catch (error) {
+        if (error.name !== "AbortError") {
+          alert("No se pudo compartir el perfil.");
+        }
+      }
+    } else if (navigator.clipboard?.writeText) {
+      try {
+        await navigator.clipboard.writeText(enlace);
+        alert("Enlace copiado. Compártelo con tus clientes.");
+      } catch {
+        alert("No se pudo copiar el enlace.");
+      }
+    } else {
+      prompt("Copia el enlace del perfil:", enlace);
+    }
+  };
+
+  document.getElementById("perfilPublicoSolicitar").onclick = () => {
+    perfil.hidden = true;
+
+    if (typeof openRequest === "function") {
+      openRequest(musico);
+    } else {
+      alert("No se encontró el formulario de contratación.");
+    }
+  };
+
+  const resenas = document.getElementById("perfilPublicoResenas");
+  resenas.textContent =
+    "Aún no hay reseñas verificadas para este músico.";
+
+  if (catalogoSection) {
+    catalogoSection.scrollIntoView({
+      behavior: "auto",
+      block: "start"
+    });
+  }
+
+  perfil.hidden = false;
+  perfil.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+
+  history.replaceState(null, "", `#musico-${encodeURIComponent(idMusico)}`);
+}
+
+document.getElementById("volverCatalogoMusicos")?.addEventListener("click", () => {
+  const perfil = document.getElementById("perfilPublicoMusico");
+  if (perfil) perfil.hidden = true;
+
+  history.replaceState(null, "", location.pathname + location.search);
+
+  document.getElementById("musicians")?.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+});
+
 
 function render() {
   const campoBusqueda = $("q");
