@@ -770,7 +770,8 @@ function render() {
               Desde ${money(m.price)}
               <small class="muted"> / ${safe(m.unit)}</small>
             </b>
-            <button type="button" data-id="${safe(id)}">Solicitar</button>
+            <button type="button" data-profile-id="${safe(id)}">Ver perfil</button>
+<button type="button" data-id="${safe(id)}">Solicitar</button>
           </div>
         </div>
       </article>
