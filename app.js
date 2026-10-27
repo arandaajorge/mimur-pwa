@@ -685,6 +685,7 @@ document.getElementById("volverCatalogoMusicos")?.addEventListener("click", () =
 });
 
 
+
 function render() {
   const campoBusqueda = $("q");
   const filtroGenero = $("genre");
@@ -705,10 +706,6 @@ function render() {
       .toLocaleLowerCase("es-MX");
 
   const filas = catalogo.filter((m) => {
-    const nombre = normalizar(m.name);
-    const genero = normalizar(m.genre);
-    const zona = normalizar(m.zone);
-
     const coincideBusqueda =
       !q ||
       normalizar(`${m.name} ${m.genre} ${m.zone}`).includes(
@@ -716,10 +713,10 @@ function render() {
       );
 
     const coincideGenero =
-      !g || genero === normalizar(g);
+      !g || normalizar(m.genre) === normalizar(g);
 
     const coincideZona =
-      !z || zona === normalizar(z);
+      !z || normalizar(m.zone) === normalizar(z);
 
     return coincideBusqueda && coincideGenero && coincideZona;
   });
@@ -770,16 +767,14 @@ function render() {
               Desde ${money(m.price)}
               <small class="muted"> / ${safe(m.unit)}</small>
             </b>
-            <button type="button" data-profile-id="${safe(id)}">Ver perfil</button>
-<button type="button" data-id="${safe(id)}"document.querySelectorAll("#musicians [data-profile-id]").forEach((b) => {
-  b.onclick = () => {
-    const musico = catalogo.find(
-      (m) => String(m.id) === b.dataset.profileId
-    );
 
-    if (musico) abrirPerfilPublicoMusico(musico);
-  };
-});>Solicitar</button>
+            <button type="button" data-profile-id="${safe(id)}">
+              Ver perfil
+            </button>
+
+            <button type="button" data-id="${safe(id)}">
+              Solicitar
+            </button>
           </div>
         </div>
       </article>
@@ -788,13 +783,27 @@ function render() {
 
   $("empty").hidden = filas.length > 0;
 
+  document.querySelectorAll("#musicians [data-profile-id]").forEach((b) => {
+    b.onclick = () => {
+      const musico = catalogo.find(
+        (m) => String(m.id) === b.dataset.profileId
+      );
+
+      if (musico) {
+        abrirPerfilPublicoMusico(musico);
+      }
+    };
+  });
+
   document.querySelectorAll("#musicians [data-id]").forEach((b) => {
     b.onclick = () => {
       const musico = catalogo.find(
         (m) => String(m.id) === b.dataset.id
       );
 
-      if (musico) openRequest(musico);
+      if (musico) {
+        openRequest(musico);
+      }
     };
   });
 
