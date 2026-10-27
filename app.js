@@ -771,7 +771,15 @@ function render() {
               <small class="muted"> / ${safe(m.unit)}</small>
             </b>
             <button type="button" data-profile-id="${safe(id)}">Ver perfil</button>
-<button type="button" data-id="${safe(id)}">Solicitar</button>
+<button type="button" data-id="${safe(id)}"document.querySelectorAll("#musicians [data-profile-id]").forEach((b) => {
+  b.onclick = () => {
+    const musico = catalogo.find(
+      (m) => String(m.id) === b.dataset.profileId
+    );
+
+    if (musico) abrirPerfilPublicoMusico(musico);
+  };
+});>Solicitar</button>
           </div>
         </div>
       </article>
