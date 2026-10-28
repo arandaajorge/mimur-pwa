@@ -176,6 +176,7 @@ async function cargarSolicitudesMusico() {
   }
 
   
+
 const { data: ofertas, error } = await supabaseClient
   .from("offers")
   .select(`
@@ -199,7 +200,6 @@ const { data: ofertas, error } = await supabaseClient
   `)
   .eq("musician_id", musico.id)
   .order("created_at", { ascending: false });
-
 
   if (error) {
     console.error("Error al cargar ofertas:", error);
