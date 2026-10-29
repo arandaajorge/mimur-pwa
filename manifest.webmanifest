@@ -3,7 +3,7 @@
   "id": "./",
   "name": "MiMuR — Música que se vive",
   "short_name": "MiMuR",
-  "description": "Marketplace de músicos para eventos, prototipo piloto",
+  "description": "Marketplace de músicos para eventos",
   "lang": "es-MX",
   "start_url": "./",
   "scope": "./",
