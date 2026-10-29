@@ -133,17 +133,284 @@
   </div>
 </section>
 
-<section id="registro" class="join"><div><p class="eyebrow">PARA MÚSICOS</p><h2>Haz que tu música llegue más lejos.</h2><p>Registra tu interés en el piloto. En esta versión los datos se guardan solo en este dispositivo; aún no se envían a un servidor.</p></div><form id="lead"><h3>Quiero participar</h3><label>Nombre artístico *<input name="name" required maxlength="100"></label><label>WhatsApp *<input name="phone" required type="tel"></label><label>Ciudad / zona *<input name="zone" required maxlength="100"></label><label>Género *<select name="genre" required><option value="">Selecciona</option><option>Mariachi</option><option>Banda</option><option>Norteño</option><option>Grupo versátil</option><option>DJ</option><option>Solista</option><option>Rock / Pop</option><option>Salsa / Cumbia</option><option>Otro</option></select></label>
-<label>Precio mínimo por evento (MXN)
+<section id="registro" class="join"><div><p class="eyebrow">PARA MÚSICOS</p><h2>Haz que tu música llegue más lejos.</h2><p>Registra tu interés en el piloto. En esta versión los datos se guardan solo en este dispositivo; aún no se envían a un servidor.</p></div><form id="lead">
+  <h3>Mi perfil profesional</h3>
+
+  <label>Nombre artístico *
+    <input name="name" required maxlength="100">
+  </label>
+
+  <label>WhatsApp *
+    <input name="phone" required type="tel">
+  </label>
+
+  <label>
+  Alcaldía o municipio *
   <input
-    name="price"
-    type="number"
-    min="0"
-    step="50"
-    placeholder="Ej. 500"
+    name="zone"
+    list="zonasMexico"
+    required
+    maxlength="100"
+    placeholder="Escribe tu alcaldía o municipio"
   >
+  <datalist id="zonasMexico">
+    <optgroup label="Ciudad de México">
+      <option value="Álvaro Obregón, CDMX">
+      <option value="Azcapotzalco, CDMX">
+      <option value="Benito Juárez, CDMX">
+      <option value="Coyoacán, CDMX">
+      <option value="Cuajimalpa de Morelos, CDMX">
+      <option value="Cuauhtémoc, CDMX">
+      <option value="Gustavo A. Madero, CDMX">
+      <option value="Iztacalco, CDMX">
+      <option value="Iztapalapa, CDMX">
+      <option value="La Magdalena Contreras, CDMX">
+      <option value="Miguel Hidalgo, CDMX">
+      <option value="Milpa Alta, CDMX">
+      <option value="Tláhuac, CDMX">
+      <option value="Tlalpan, CDMX">
+      <option value="Venustiano Carranza, CDMX">
+      <option value="Xochimilco, CDMX">
+    </optgroup>
+    <optgroup label="Estado de México">
+      <option value="Acolman, Edomex">
+      <option value="Aculco, Edomex">
+      <option value="Almoloya de Alquisiras, Edomex">
+      <option value="Almoloya de Juárez, Edomex">
+      <option value="Almoloya del Río, Edomex">
+      <option value="Amanalco, Edomex">
+      <option value="Amatepec, Edomex">
+      <option value="Amecameca, Edomex">
+      <option value="Apaxco, Edomex">
+      <option value="Atenco, Edomex">
+      <option value="Atizapán, Edomex">
+      <option value="Atizapán de Zaragoza, Edomex">
+      <option value="Atlacomulco, Edomex">
+      <option value="Atlautla, Edomex">
+      <option value="Axapusco, Edomex">
+      <option value="Ayapango, Edomex">
+      <option value="Calimaya, Edomex">
+      <option value="Capulhuac, Edomex">
+      <option value="Chalco, Edomex">
+      <option value="Chapa de Mota, Edomex">
+      <option value="Chapultepec, Edomex">
+      <option value="Chiautla, Edomex">
+      <option value="Chicoloapan, Edomex">
+      <option value="Chiconcuac, Edomex">
+      <option value="Chimalhuacán, Edomex">
+      <option value="Coacalco de Berriozábal, Edomex">
+      <option value="Coatepec Harinas, Edomex">
+      <option value="Cocotitlán, Edomex">
+      <option value="Coyotepec, Edomex">
+      <option value="Cuautitlán, Edomex">
+      <option value="Cuautitlán Izcalli, Edomex">
+      <option value="Donato Guerra, Edomex">
+      <option value="Ecatepec de Morelos, Edomex">
+      <option value="Ecatzingo, Edomex">
+      <option value="El Oro, Edomex">
+      <option value="Huehuetoca, Edomex">
+      <option value="Hueypoxtla, Edomex">
+      <option value="Huixquilucan, Edomex">
+      <option value="Isidro Fabela, Edomex">
+      <option value="Ixtapaluca, Edomex">
+      <option value="Ixtapan de la Sal, Edomex">
+      <option value="Ixtapan del Oro, Edomex">
+      <option value="Ixtlahuaca, Edomex">
+      <option value="Jaltenco, Edomex">
+      <option value="Jilotepec, Edomex">
+      <option value="Jilotzingo, Edomex">
+      <option value="Jiquipilco, Edomex">
+      <option value="Jocotitlán, Edomex">
+      <option value="Joquicingo, Edomex">
+      <option value="Juchitepec, Edomex">
+      <option value="La Paz, Edomex">
+      <option value="Lerma, Edomex">
+      <option value="Luvianos, Edomex">
+      <option value="Malinalco, Edomex">
+      <option value="Melchor Ocampo, Edomex">
+      <option value="Metepec, Edomex">
+      <option value="Mexicaltzingo, Edomex">
+      <option value="Morelos, Edomex">
+      <option value="Naucalpan de Juárez, Edomex">
+      <option value="Nextlalpan, Edomex">
+      <option value="Nezahualcóyotl, Edomex">
+      <option value="Nicolás Romero, Edomex">
+      <option value="Nopaltepec, Edomex">
+      <option value="Ocoyoacac, Edomex">
+      <option value="Ocuilan, Edomex">
+      <option value="Otumba, Edomex">
+      <option value="Otzoloapan, Edomex">
+      <option value="Otzolotepec, Edomex">
+      <option value="Ozumba, Edomex">
+      <option value="Papalotla, Edomex">
+      <option value="Polotitlán, Edomex">
+      <option value="Rayón, Edomex">
+      <option value="San Antonio la Isla, Edomex">
+      <option value="San Felipe del Progreso, Edomex">
+      <option value="San José del Rincón, Edomex">
+      <option value="San Martín de las Pirámides, Edomex">
+      <option value="San Mateo Atenco, Edomex">
+      <option value="San Simón de Guerrero, Edomex">
+      <option value="Santo Tomás, Edomex">
+      <option value="Soyaniquilpan de Juárez, Edomex">
+      <option value="Sultepec, Edomex">
+      <option value="Tecámac, Edomex">
+      <option value="Tejupilco, Edomex">
+      <option value="Temamatla, Edomex">
+      <option value="Temascalapa, Edomex">
+      <option value="Temascalcingo, Edomex">
+      <option value="Temascaltepec, Edomex">
+      <option value="Temoaya, Edomex">
+      <option value="Tenancingo, Edomex">
+      <option value="Tenango del Aire, Edomex">
+      <option value="Tenango del Valle, Edomex">
+      <option value="Teoloyucan, Edomex">
+      <option value="Teotihuacán, Edomex">
+      <option value="Tepetlaoxtoc, Edomex">
+      <option value="Tepetlixpa, Edomex">
+      <option value="Tepotzotlán, Edomex">
+      <option value="Tequixquiac, Edomex">
+      <option value="Texcaltitlán, Edomex">
+      <option value="Texcalyacac, Edomex">
+      <option value="Texcoco, Edomex">
+      <option value="Tezoyuca, Edomex">
+      <option value="Tianguistenco, Edomex">
+      <option value="Timilpan, Edomex">
+      <option value="Tlalmanalco, Edomex">
+      <option value="Tlalnepantla de Baz, Edomex">
+      <option value="Tlatlaya, Edomex">
+      <option value="Toluca, Edomex">
+      <option value="Tonanitla, Edomex">
+      <option value="Tonatico, Edomex">
+      <option value="Tultepec, Edomex">
+      <option value="Tultitlán, Edomex">
+      <option value="Valle de Bravo, Edomex">
+      <option value="Valle de Chalco Solidaridad, Edomex">
+      <option value="Villa de Allende, Edomex">
+      <option value="Villa del Carbón, Edomex">
+      <option value="Villa Guerrero, Edomex">
+      <option value="Villa Victoria, Edomex">
+      <option value="Xalatlaco, Edomex">
+      <option value="Xonacatlán, Edomex">
+      <option value="Zacazonapan, Edomex">
+      <option value="Zacualpan, Edomex">
+      <option value="Zinacantepec, Edomex">
+      <option value="Zumpahuacán, Edomex">
+      <option value="Zumpango, Edomex">
+    </optgroup>
+  </datalist>
 </label>
-<label>Enlace a video *<input name="video" type="url" required placeholder="https://..."></label><label class="check"><input type="checkbox" name="emergency"> Acepto oportunidades de emergencia.</label><label class="check"><input type="checkbox" name="consent" required> Acepto que MiMuR me contacte para el piloto.</label><button class="btn" type="submit">Guardar registro de prueba →</button><p id="leadMsg" role="status"></p><p class="small">Esta demostración no transmite datos por internet. No incluyas datos sensibles.</p></form></section></main>
+
+  <label>
+  Géneros musicales que interpretas *
+  <select name="genre" required>
+    <option value="">Selecciona tu género principal</option>
+    <option>Mariachi</option>
+    <option>Norteño</option>
+    <option>Banda sinaloense</option>
+    <option>Banda de viento</option>
+    <option>Duranguense</option>
+    <option>Tierra caliente</option>
+    <option>Grupero</option>
+    <option>Grupo versátil</option>
+    <option>Cumbia</option>
+    <option>Salsa</option>
+    <option>Merengue</option>
+    <option>Sonidero</option>
+    <option>Regional mexicano</option>
+    <option>Ranchero</option>
+    <option>Huapango</option>
+    <option>Corridos</option>
+    <option>Corridos tumbados</option>
+    <option>Reguetón</option>
+    <option>Urbano latino</option>
+    <option>Trap</option>
+    <option>Hip-hop / Rap</option>
+    <option>Pop</option>
+    <option>Rock</option>
+    <option>Rock en español</option>
+    <option>Rock alternativo</option>
+    <option>Metal</option>
+    <option>Indie</option>
+    <option>Electrónica</option>
+    <option>DJ</option>
+    <option>House</option>
+    <option>Techno</option>
+    <option>EDM</option>
+    <option>Jazz</option>
+    <option>Blues</option>
+    <option>Reggae</option>
+    <option>Funk</option>
+    <option>Disco</option>
+    <option>Acústico</option>
+    <option>Balada</option>
+    <option>Trova</option>
+    <option>Bolero</option>
+    <option>Romántica</option>
+    <option>Clásica</option>
+    <option>Ópera</option>
+    <option>Coral</option>
+    <option>Infantil</option>
+    <option>Son jarocho</option>
+    <option>Son cubano</option>
+    <option>Flamenco</option>
+    <option>World music</option>
+    <option>Otro</option>
+  </select>
+</label>
+
+  <label>Precio mínimo por evento (MXN)
+    <input name="price" type="number" min="0" step="50" placeholder="Ej. 500">
+  </label>
+
+  <label>Enlace a video *
+    <input name="video" type="url" required placeholder="https://...">
+  </label>
+
+  <label>Descripción artística
+    <textarea name="bio" maxlength="1500" placeholder="Cuéntales a tus clientes quién eres y qué tipo de música ofreces."></textarea>
+  </label>
+
+  <label>Experiencia y trayectoria
+    <textarea name="experience" maxlength="1500" placeholder="Años de experiencia, eventos importantes, trayectoria..."></textarea>
+  </label>
+
+  <label>Repertorio musical
+    <textarea name="repertoire" placeholder="Escribe una canción por línea."></textarea>
+  </label>
+
+  <label>Integrantes
+    <textarea name="members" placeholder="Describe los integrantes y sus instrumentos, uno por línea."></textarea>
+  </label>
+
+  <label>Equipo de sonido e iluminación
+    <textarea name="equipment" maxlength="1500" placeholder="Describe tu equipo disponible."></textarea>
+  </label>
+
+  <label>Servicios que ofreces
+    <textarea name="services" placeholder="Escribe un servicio por línea."></textarea>
+  </label>
+
+  <label>Fotografías (enlaces)
+    <textarea name="photo_urls" placeholder="Pega un enlace por línea."></textarea>
+  </label>
+
+  <label class="check">
+    <input type="checkbox" name="emergency">
+    Acepto oportunidades de emergencia.
+  </label>
+
+  <label class="check">
+    <input type="checkbox" name="consent" required>
+    Acepto que MiMuR me contacte para el piloto.
+  </label>
+
+  <button class="btn" type="submit">
+    Guardar mi perfil →
+  </button>
+
+  <p id="leadMsg" role="status"></p>
+</form></section></main>
 <footer><a class="logo" href="#">MiMu<span>R</span></a><span>© 2026 MiMuR · Prototipo PWA · CDMX</span></footer>
 <dialog id="request"><form id="requestForm"><button type="button" id="close" class="close">×</button><p class="eyebrow">SOLICITUD DE EVENTO</p><h2 id="requestTitle">Solicitar músico</h2><p class="small">La solicitud se guardará localmente. No se enviará al músico.</p><input type="hidden" name="musicianId"><label>Tu nombre *<input name="customer" required></label><label>WhatsApp *<input name="phone" required type="tel"></label><label>Fecha del evento *<input name="date" required type="date"></label><label>Zona *<input name="eventZone" required></label><label>Presupuesto total (MXN) *<input name="budget" type="number" min="1" required></label><label>Detalles<textarea name="details" maxlength="800"></textarea></label><button class="btn" type="submit">Guardar solicitud de prueba</button><p id="requestMsg" role="status"></p></form></dialog>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
