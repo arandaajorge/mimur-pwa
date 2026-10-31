@@ -959,20 +959,7 @@ setTimeout(() => $("request").close(), 3000);
 
     
 
-if (error) {
-  console.error("Error al guardar solicitud:", error);
-  mensaje.textContent =
-    "No se pudo guardar la solicitud: " + error.message;
-  return;
-}
 
-
-
-    mensaje.textContent =
-      "¡Solicitud guardada en MiMuR correctamente!";
-    f.reset();
-
-    setTimeout(() => $("request").close(), 1800);
 
   } catch (error) {
     mensaje.textContent = "Error: " + error.message;
