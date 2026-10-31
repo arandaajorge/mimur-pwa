@@ -998,8 +998,33 @@ const perfil = {
   artist_name: d.name.trim(),
   phone: d.phone.trim(),
   genres: [d.genre],
-  zone: d.zone.trim(),
+    zone: d.zone.trim(),
   video_url: d.video.trim(),
+
+  bio: d.bio ? d.bio.trim() : "",
+
+  experience: d.experience
+    ? d.experience.trim()
+    : "",
+
+  repertoire: (d.repertoire || "")
+    .split(/\r?\n/)
+    .map(x => x.trim())
+    .filter(Boolean),
+
+  members: (d.members || "")
+    .split(/\r?\n/)
+    .map(x => x.trim())
+    .filter(Boolean),
+
+  equipment: d.equipment
+    ? d.equipment.trim()
+    : "",
+
+  services: (d.services || "")
+    .split(/\r?\n/)
+    .map(x => x.trim())
+    .filter(Boolean),
 
   // Tarifas nuevas
   event_price_mxn:
