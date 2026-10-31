@@ -952,18 +952,38 @@ $("lead").onsubmit = async (e) => {
     const d = Object.fromEntries(new FormData(f));
 
 
+
 const perfil = {
   artist_name: d.name.trim(),
   phone: d.phone.trim(),
   genres: [d.genre],
   zone: d.zone.trim(),
   video_url: d.video.trim(),
-  minimum_price_mxn:
-    d.price !== undefined && d.price.trim() !== ""
-      ? Number(d.price)
+
+  // Tarifas nuevas
+  event_price_mxn:
+    d.eventPrice !== undefined && d.eventPrice.trim() !== ""
+      ? Number(d.eventPrice)
       : null,
+
+  hourly_price_mxn:
+    d.hourlyPrice !== undefined && d.hourlyPrice.trim() !== ""
+      ? Number(d.hourlyPrice)
+      : null,
+
+  pricing_notes: d.pricingNotes
+    ? d.pricingNotes.trim()
+    : "",
+
+  // Compatibilidad con el precio anterior
+  minimum_price_mxn:
+    d.eventPrice !== undefined && d.eventPrice.trim() !== ""
+      ? Number(d.eventPrice)
+      : null,
+
   emergency_opt_in: f.elements.emergency.checked
 };
+
 
 
     if (boton) boton.disabled = true;
