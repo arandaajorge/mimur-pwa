@@ -45,8 +45,14 @@ unit:
     : "evento",
   icon: "🎤",
   bio: m.bio || "Este músico aún no ha agregado su biografía.",
-  videoUrl: m.video_url || "",
-  socialUrl: m.social_url || "",
+experience: m.experience || "",
+repertoire: m.repertoire || [],
+members: m.members || [],
+equipment: m.equipment || "",
+services: m.services || [],
+photoUrls: m.photo_urls || [],
+videoUrl: m.video_url || "",
+socialUrl: m.social_url || "",
   emergencyOptIn: m.emergency_opt_in === true,
   status: m.availability === "available"
     ? "Disponible"
