@@ -114,9 +114,38 @@ if (formulario.elements.pricingNotes) {
 
   formulario.elements.zone.value = perfil.zone || "";
   formulario.elements.genre.value = perfil.genres?.[0] || "";
-  formulario.elements.video.value = perfil.video_url || "";
-  formulario.elements.emergency.checked =
-    perfil.emergency_opt_in === true;
+  if (formulario.elements.bio) {
+  formulario.elements.bio.value = perfil.bio || "";
+}
+
+if (formulario.elements.experience) {
+  formulario.elements.experience.value = perfil.experience || "";
+}
+
+if (formulario.elements.repertoire) {
+  formulario.elements.repertoire.value =
+    Array.isArray(perfil.repertoire)
+      ? perfil.repertoire.join("\n")
+      : "";
+}
+
+if (formulario.elements.members) {
+  formulario.elements.members.value =
+    Array.isArray(perfil.members)
+      ? perfil.members.join("\n")
+      : "";
+}
+
+if (formulario.elements.equipment) {
+  formulario.elements.equipment.value = perfil.equipment || "";
+}
+
+if (formulario.elements.services) {
+  formulario.elements.services.value =
+    Array.isArray(perfil.services)
+      ? perfil.services.join("\n")
+      : "";
+}
 
   mensaje.textContent = perfil.approved
     ? "Tu perfil está aprobado. Puedes editar tus datos."
