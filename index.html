@@ -359,9 +359,18 @@
   </select>
 </label>
 
-  <label>Precio mínimo por evento (MXN)
-    <input name="price" type="number" min="0" step="50" placeholder="Ej. 500">
-  </label>
+  <label>Precio por evento (MXN)
+  <input name="eventPrice" type="number" min="0" step="50" placeholder="Ej. 2500">
+</label>
+
+<label>Precio por hora (MXN)
+  <input name="hourlyPrice" type="number" min="0" step="50" placeholder="Ej. 800">
+</label>
+
+<label>Condiciones de contratación y tarifas
+  <textarea name="pricingNotes" maxlength="500"
+    placeholder="Ej. Paquete de 3 horas con descuento. Traslado incluido dentro de CDMX."></textarea>
+</label>
 
   <label>Enlace a video *
     <input name="video" type="url" required placeholder="https://...">
