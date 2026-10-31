@@ -91,10 +91,22 @@ async function cargarMiPerfilMusico() {
 
   formulario.elements.name.value = perfil.artist_name || "";
 
-  if (formulario.elements.price) {
-    formulario.elements.price.value =
-      perfil.minimum_price_mxn ?? "";
-  }
+  
+if (formulario.elements.eventPrice) {
+  formulario.elements.eventPrice.value =
+    perfil.event_price_mxn ?? perfil.minimum_price_mxn ?? "";
+}
+
+if (formulario.elements.hourlyPrice) {
+  formulario.elements.hourlyPrice.value =
+    perfil.hourly_price_mxn ?? "";
+}
+
+if (formulario.elements.pricingNotes) {
+  formulario.elements.pricingNotes.value =
+    perfil.pricing_notes || "";
+}
+
 
   if (formulario.elements.phone) {
     formulario.elements.phone.value = perfil.phone || "";
