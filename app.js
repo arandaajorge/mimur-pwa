@@ -574,7 +574,47 @@ function abrirPerfilPublicoMusico(musico) {
   }
 
   contenedorDetalles.replaceChildren();
+  const fotos = Array.isArray(musico.photoUrls)
+    ? musico.photoUrls
+    : [];
 
+  let galeria = document.getElementById("perfilPublicoGaleria");
+
+  if (!galeria) {
+    galeria = document.createElement("div");
+    galeria.id = "perfilPublicoGaleria";
+    contenedorDetalles.insertAdjacentElement("afterend", galeria);
+  }
+
+  galeria.replaceChildren();
+
+  if (fotos.length) {
+    const tituloFotos = document.createElement("h3");
+    tituloFotos.textContent = "Galería del artista";
+    galeria.appendChild(tituloFotos);
+
+    fotos.forEach((foto) => {
+      try {
+        const urlFoto = new URL(foto);
+
+        if (!["https:", "http:"].includes(urlFoto.protocol)) return;
+
+        const imagen = document.createElement("img");
+        imagen.src = urlFoto.href;
+        imagen.alt = `Fotografía de ${musico.name || "artista MiMuR"}`;
+        imagen.loading = "lazy";
+        imagen.style.width = "100%";
+        imagen.style.maxWidth = "220px";
+        imagen.style.height = "180px";
+        imagen.style.objectFit = "cover";
+        imagen.style.borderRadius = "12px";
+
+        galeria.appendChild(imagen);
+      } catch {
+        // Ignorar fotografías con enlaces inválidos.
+      }
+    });
+  }
   detalles.forEach(([titulo, valor]) => {
     const elementos = Array.isArray(valor)
       ? valor
