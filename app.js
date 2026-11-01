@@ -164,7 +164,12 @@ if (formulario.elements.services) {
       ? perfil.services.join("\n")
       : "";
 }
-
+if (formulario.elements.photo_urls) {
+  formulario.elements.photo_urls.value =
+    Array.isArray(perfil.photo_urls)
+      ? perfil.photo_urls.join("\n")
+      : "";
+}
   mensaje.textContent = perfil.approved
     ? "Tu perfil está aprobado. Puedes editar tus datos."
     : "Tu perfil está pendiente de aprobación. Puedes editar tus datos.";
