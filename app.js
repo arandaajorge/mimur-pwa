@@ -554,7 +554,44 @@ function abrirPerfilPublicoMusico(musico) {
 
   document.getElementById("perfilPublicoZona").textContent =
     musico.zone || "Zona por confirmar";
+  const detalles = [
+    ["Experiencia", musico.experience],
+    ["Integrantes", musico.members],
+    ["Equipo", musico.equipment],
+    ["Servicios", musico.services],
+    ["Repertorio", musico.repertoire]
+  ];
 
+  let contenedorDetalles =
+    document.getElementById("perfilPublicoDetalles");
+
+  if (!contenedorDetalles) {
+    contenedorDetalles = document.createElement("div");
+    contenedorDetalles.id = "perfilPublicoDetalles";
+
+    document.getElementById("perfilPublicoBio")
+      .insertAdjacentElement("afterend", contenedorDetalles);
+  }
+
+  contenedorDetalles.replaceChildren();
+
+  detalles.forEach(([titulo, valor]) => {
+    const elementos = Array.isArray(valor)
+      ? valor
+      : valor ? [valor] : [];
+
+    if (!elementos.length) return;
+
+    const seccion = document.createElement("div");
+    const encabezado = document.createElement("h4");
+    const contenido = document.createElement("p");
+
+    encabezado.textContent = titulo;
+    contenido.textContent = elementos.join(" · ");
+
+    seccion.append(encabezado, contenido);
+    contenedorDetalles.appendChild(seccion);
+  });
   const precio = document.getElementById("perfilPublicoPrecio");
   precio.textContent =
     musico.price != null
