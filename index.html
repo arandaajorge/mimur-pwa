@@ -400,9 +400,15 @@
     <textarea name="services" placeholder="Escribe un servicio por línea."></textarea>
   </label>
 
-  <label>Fotografías (enlaces)
-    <textarea name="photo_urls" placeholder="Pega un enlace por línea."></textarea>
-  </label>
+  <label>Fotografías del artista
+  <input
+    type="file"
+    name="photo_files"
+    accept="image/*"
+    multiple
+  >
+  <small>Selecciona varias fotografías desde tu dispositivo.</small>
+</label>
 
   <label class="check">
     <input type="checkbox" name="emergency">
