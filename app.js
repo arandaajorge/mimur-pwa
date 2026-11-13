@@ -1110,9 +1110,9 @@ for (let i = 0; i < archivos.length; i++) {
     throw new Error("Solo puedes subir archivos de imagen.");
   }
 
-  if (archivo.size > 5 * 1024 * 1024) {
-    throw new Error("Cada fotografía debe pesar máximo 5 MB.");
-  }
+  if (archivo.size > 10 * 1024 * 1024) {
+  throw new Error("Cada fotografía debe pesar máximo 10 MB.");
+}
 
   const nombreArchivo =
     `${Date.now()}-${i}-${archivo.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
