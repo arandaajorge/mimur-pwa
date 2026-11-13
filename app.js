@@ -1080,7 +1080,62 @@ $("lead").onsubmit = async (e) => {
     const d = Object.fromEntries(new FormData(f));
 
 
+// Conservar las fotografías que ya tiene el músico.
+const { data: fotosActuales, error: fotosError } =
+  await supabaseClient
+    .from("musicians")
+    .select("photo_urls")
+    .eq("user_id", user.id)
+    .maybeSingle();
 
+if (fotosError) throw fotosError;
+
+const photoUrls = Array.isArray(fotosActuales?.photo_urls)
+  ? [...fotosActuales.photo_urls]
+  : [];
+
+// Obtener las fotografías seleccionadas desde el celular.
+const archivos = Array.from(
+  f.elements.photo_files?.files || []
+);
+
+if (archivos.length > 10) {
+  throw new Error("Puedes subir un máximo de 10 fotografías por vez.");
+}
+
+for (let i = 0; i < archivos.length; i++) {
+  const archivo = archivos[i];
+
+  if (!archivo.type.startsWith("image/")) {
+    throw new Error("Solo puedes subir archivos de imagen.");
+  }
+
+  if (archivo.size > 5 * 1024 * 1024) {
+    throw new Error("Cada fotografía debe pesar máximo 5 MB.");
+  }
+
+  const nombreArchivo =
+    `${Date.now()}-${i}-${archivo.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
+
+  const ruta = `${user.id}/${nombreArchivo}`;
+
+  const { error: subidaError } =
+    await supabaseClient.storage
+      .from("musician-photos")
+      .upload(ruta, archivo, {
+        contentType: archivo.type,
+        upsert: false
+      });
+
+  if (subidaError) throw subidaError;
+
+  const { data: urlPublica } =
+    supabaseClient.storage
+      .from("musician-photos")
+      .getPublicUrl(ruta);
+
+  photoUrls.push(urlPublica.publicUrl);
+}
 const perfil = {
   artist_name: d.name.trim(),
   phone: d.phone.trim(),
