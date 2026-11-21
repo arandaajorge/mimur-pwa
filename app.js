@@ -170,6 +170,51 @@ if (formulario.elements.photo_urls) {
       ? perfil.photo_urls.join("\n")
       : "";
 }
+  // Mostrar fotografías existentes del músico.
+const listaFotos = document.getElementById("listaMisFotos");
+
+if (listaFotos) {
+  listaFotos.replaceChildren();
+
+  const fotos = Array.isArray(perfil.photo_urls)
+    ? perfil.photo_urls
+    : [];
+
+  fotos.forEach((url, indice) => {
+    const contenedor = document.createElement("div");
+
+    contenedor.style.cssText = `
+      display: inline-flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 8px;
+      vertical-align: top;
+    `;
+
+    const imagen = document.createElement("img");
+    imagen.src = url;
+    imagen.alt = `Fotografía ${indice + 1}`;
+    imagen.loading = "lazy";
+
+    imagen.style.cssText = `
+      width: 130px;
+      height: 130px;
+      object-fit: cover;
+      border-radius: 12px;
+    `;
+
+    const botonEliminar = document.createElement("button");
+    botonEliminar.type = "button";
+    botonEliminar.textContent = "Eliminar foto";
+    botonEliminar.dataset.url = url;
+
+    // La eliminación se conectará en el siguiente paso.
+    botonEliminar.disabled = true;
+
+    contenedor.append(imagen, botonEliminar);
+    listaFotos.appendChild(contenedor);
+  });
+}
   mensaje.textContent = perfil.approved
     ? "Tu perfil está aprobado. Puedes editar tus datos."
     : "Tu perfil está pendiente de aprobación. Puedes editar tus datos.";
