@@ -1077,7 +1077,19 @@ const videoId = url.pathname.startsWith("/shorts/")
             "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
           iframe.allowFullscreen = true;
           iframe.style.width = "100%";
-          iframe.style.aspectRatio = "16 / 9";
+          
+const esShort = url.pathname.startsWith("/shorts/");
+
+iframe.style.aspectRatio = esShort ? "9 / 16" : "16 / 9";
+
+iframe.style.maxWidth = esShort ? "320px" : "100%";
+
+iframe.style.margin = esShort ? "0 auto" : "0";
+
+iframe.style.display = "block";
+
+iframe.style.borderRadius = "14px";
+
           iframe.style.border = "0";
           videoContenedor.appendChild(iframe);
         }
