@@ -558,9 +558,44 @@ console.log(
 
           precioTotal.appendChild(destacado);
 
-          const aviso = document.createElement("p");
-          aviso.textContent =
-            "Cotización disponible. Pendiente de confirmación del cliente.";
+          
+const aviso = document.createElement("p");
+
+const reservas = Array.isArray(solicitud.bookings)
+  ? solicitud.bookings
+  : solicitud.bookings
+    ? [solicitud.bookings]
+    : [];
+
+const reserva = reservas.find(
+  b => b.accepted_offer_id === oferta.id
+);
+
+if (reserva) {
+  aviso.textContent =
+    "Contratación registrada correctamente.";
+
+  const folio = document.createElement("p");
+  folio.textContent = "Folio de reserva: " + reserva.id;
+
+  const estadoReserva = document.createElement("p");
+
+  estadoReserva.textContent =
+    reserva.status === "pending_confirmation"
+      ? "Estado: Reserva registrada. Anticipo pendiente de pago."
+      : "Estado de reserva: " + reserva.status;
+
+  contenedor.append(folio, estadoReserva);
+
+} else if (solicitud.status === "booked") {
+  aviso.textContent =
+    "Esta solicitud ya tiene una contratación registrada.";
+
+} else {
+  aviso.textContent =
+    "Cotización disponible. Pendiente de confirmación del cliente.";
+}
+
 
           contenedor.append(
             precioMusico,
