@@ -599,7 +599,13 @@ if (reserva) {
       ? "Estado: Reserva registrada. Anticipo pendiente de pago."
       : "Estado de reserva: " + reserva.status;
 
-  contenedor.append(folio, estadoReserva);
+  
+
+aviso.append(
+  document.createElement("br"),
+  folio,
+  estadoReserva
+);
 
 } else if (solicitud.status === "booked") {
   aviso.textContent =
