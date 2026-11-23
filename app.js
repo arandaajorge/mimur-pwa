@@ -932,6 +932,67 @@ async function cargarSolicitudesMusico() {
       <div class="acciones-oferta"></div>
     `;
 
+    // Mostrar la reserva vinculada a esta oferta.
+    const reservas = Array.isArray(oferta.bookings)
+      ? oferta.bookings
+      : oferta.bookings
+        ? [oferta.bookings]
+        : [];
+
+    const reserva = reservas.find(
+      (b) => b.accepted_offer_id === oferta.id
+    );
+
+    if (reserva) {
+      const informacionReserva = document.createElement("div");
+      informacionReserva.className = "reserva-musico";
+
+      const tituloReserva = document.createElement("h4");
+      tituloReserva.textContent = "Contratación registrada";
+
+      const folioReserva = document.createElement("p");
+      folioReserva.textContent =
+        "Folio de reserva: " + reserva.id;
+
+      const estadoReserva = document.createElement("p");
+
+      const estadosReserva = {
+        pending_confirmation:
+          "Reserva registrada. Anticipo pendiente de pago.",
+        confirmed:
+          "Reserva confirmada",
+        cancelled:
+          "Reserva cancelada",
+        completed:
+          "Evento finalizado"
+      };
+
+      estadoReserva.textContent =
+        "Estado: " +
+        (estadosReserva[reserva.status] || reserva.status);
+
+      const totalReserva = document.createElement("p");
+      totalReserva.textContent =
+        "Total contratado: " +
+        pesos(reserva.agreed_total_mxn);
+
+      const pagoMusico = document.createElement("p");
+      pagoMusico.textContent =
+        "Tus honorarios acordados: " +
+        pesos(reserva.musician_payout_mxn);
+
+      informacionReserva.append(
+        tituloReserva,
+        folioReserva,
+        estadoReserva,
+        totalReserva,
+        pagoMusico
+      );
+
+      tarjeta.appendChild(informacionReserva);
+    }
+
+
     const acciones = tarjeta.querySelector(".acciones-oferta");
 
     if (oferta.status === "pending") {
