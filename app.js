@@ -450,6 +450,8 @@ async function cargarContratacionesCliente() {
     estadoSolicitud.textContent =
       "Estado de la solicitud: " + solicitud.status;
 
+    
+  });
     tarjeta.append(
       titulo,
       fecha,
@@ -459,8 +461,100 @@ async function cargarContratacionesCliente() {
       estadoSolicitud
     );
 
+    // Mostrar las cotizaciones de esta solicitud.
+    const tituloCotizaciones = document.createElement("h4");
+    tituloCotizaciones.textContent = "Cotizaciones de músicos";
+
+    tarjeta.appendChild(tituloCotizaciones);
+
+    const ofertas = Array.isArray(solicitud.offers)
+      ? solicitud.offers
+      : [];
+
+    if (ofertas.length === 0) {
+      const sinOfertas = document.createElement("p");
+      sinOfertas.textContent =
+        "Todavía no hay músicos que hayan recibido esta solicitud.";
+
+      tarjeta.appendChild(sinOfertas);
+    } else {
+      ofertas.forEach((oferta) => {
+        const contenedor = document.createElement("div");
+        contenedor.className = "cotizacion-cliente";
+
+        const musico = Array.isArray(oferta.musicians)
+          ? oferta.musicians[0]
+          : oferta.musicians;
+
+        const nombre = document.createElement("p");
+        nombre.textContent =
+          "Músico: " +
+          (musico?.artist_name || "Artista MiMuR");
+
+        const estadoOferta = document.createElement("p");
+
+        const estados = {
+          pending: "Esperando respuesta del músico",
+          accepted: "Cotización recibida",
+          declined: "El músico rechazó la solicitud",
+          withdrawn: "Oferta retirada"
+        };
+
+        estadoOferta.textContent =
+          "Estado: " +
+          (estados[oferta.status] || oferta.status);
+
+        contenedor.append(nombre, estadoOferta);
+
+        if (
+          oferta.status === "accepted" &&
+          oferta.musician_price_mxn != null &&
+          oferta.customer_total_mxn != null
+        ) {
+          const honorarios = Number(
+            oferta.musician_price_mxn
+          );
+
+          const total = Number(
+            oferta.customer_total_mxn
+          );
+
+          const comision = total - honorarios;
+
+          const precioMusico = document.createElement("p");
+          precioMusico.textContent =
+            "Honorarios del músico: " + money(honorarios);
+
+          const precioComision = document.createElement("p");
+          precioComision.textContent =
+            "Comisión MiMuR: " + money(comision);
+
+          const precioTotal = document.createElement("p");
+          const destacado = document.createElement("strong");
+
+          destacado.textContent =
+            "Total de la cotización: " + money(total);
+
+          precioTotal.appendChild(destacado);
+
+          const aviso = document.createElement("p");
+          aviso.textContent =
+            "Cotización disponible. Pendiente de confirmación del cliente.";
+
+          contenedor.append(
+            precioMusico,
+            precioComision,
+            precioTotal,
+            aviso
+          );
+        }
+
+        tarjeta.appendChild(contenedor);
+      });
+    }
+
     lista.appendChild(tarjeta);
-  });
+
 }
 
 const botonActualizarContrataciones = document.getElementById(
