@@ -1058,7 +1058,15 @@ function mostrarFoto() {
         url.hostname === "youtube.com" ||
         url.hostname === "m.youtube.com"
       ) {
-        const videoId = url.searchParams.get("v");
+        
+
+const videoId = url.pathname.startsWith("/shorts/")
+  ? url.pathname.split("/")[2]
+  : url.pathname.startsWith("/live/")
+    ? url.pathname.split("/")[2]
+    : url.pathname.startsWith("/embed/")
+      ? url.pathname.split("/")[2]
+      : url.searchParams.get("v");
 
         if (videoId && /^[\w-]{11}$/.test(videoId)) {
           const iframe = document.createElement("iframe");
