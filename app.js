@@ -389,6 +389,7 @@ async function cargarContratacionesCliente() {
       artist_name
     )
   ),
+  
   bookings (
     id,
     accepted_offer_id,
@@ -396,8 +397,16 @@ async function cargarContratacionesCliente() {
     commission_mxn,
     musician_payout_mxn,
     status,
-    created_at
+    created_at,
+    booking_payments (
+      id,
+      payment_type,
+      amount_mxn,
+      status,
+      paid_at
+    )
   )
+
 
 `)
 
