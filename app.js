@@ -1313,10 +1313,7 @@ const perfil = {
     .map(x => x.trim())
     .filter(Boolean),
   
-photo_urls: (d.photo_urls || "")
-  .split(/\r?\n/)
-  .map(x => x.trim())
-  .filter(Boolean),
+
   // Tarifas nuevas
   event_price_mxn:
     d.eventPrice !== undefined && d.eventPrice.trim() !== ""
