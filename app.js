@@ -451,6 +451,17 @@ async function cargarContratacionesCliente() {
   });
 }
 
+const botonActualizarContrataciones = document.getElementById(
+  "actualizarContratacionesCliente"
+);
+
+if (botonActualizarContrataciones) {
+  botonActualizarContrataciones.addEventListener(
+    "click",
+    cargarContratacionesCliente
+  );
+}
+
 function actualizarPanelCliente(usuario) {
   const panel = document.getElementById("panelCliente");
   const estado = document.getElementById(
