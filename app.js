@@ -399,6 +399,16 @@ async function cargarContratacionesCliente() {
 
   if (usuarioActual?.id !== usuarioId) return;
 
+console.log(
+  "MiMuR - Solicitudes y cotizaciones:",
+  JSON.stringify(solicitudes, null, 2)
+);
+
+console.log(
+  "MiMuR - Error de consulta:",
+  error
+);
+
   if (error) {
     console.error("Error al cargar solicitudes:", error);
     estado.textContent =
