@@ -799,6 +799,32 @@ async function cargarSolicitudesMusico() {
   
 
 
+  const { data: ofertas, error } = await supabaseClient
+    .from("offers")
+    .select(`
+      id,
+      event_request_id,
+      musician_price_mxn,
+      commission_bps,
+      customer_total_mxn,
+      status,
+      musician_note,
+      created_at,
+      event_requests!offers_event_request_id_fkey (
+        event_type,
+        event_date,
+        zone,
+        genre,
+        duration_minutes,
+        budget_mxn,
+        details,
+        customer_name,
+        status
+      )
+    `)
+    .eq("musician_id", musico.id)
+    .order("created_at", { ascending: false });
+
     
   if (error) {
     console.error("Error al cargar ofertas:", error);
