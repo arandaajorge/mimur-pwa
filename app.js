@@ -618,6 +618,93 @@ aviso.append(
   estadoReserva
 );
 
+  // MiMuR: mostrar anticipo y saldo de la reserva.
+  const pagos = Array.isArray(reserva.booking_payments)
+    ? reserva.booking_payments
+    : [];
+
+  const anticipo = pagos.find(
+    pago => pago.payment_type === "deposit"
+  );
+
+  const saldo = pagos.find(
+    pago => pago.payment_type === "balance"
+  );
+
+  const estadosPago = {
+    pending: "Pendiente de pago",
+    processing: "Procesando pago",
+    paid: "Pago recibido",
+    failed: "Pago rechazado",
+    refunded: "Reembolsado",
+    cancelled: "Cancelado"
+  };
+
+  const panelPagos = document.createElement("div");
+  panelPagos.className = "resumen-pagos-mimur";
+
+  panelPagos.style.cssText = `
+    margin-top: 16px;
+    padding: 16px;
+    border: 1px solid #374151;
+    border-radius: 14px;
+    background: #111827;
+    color: #ffffff;
+  `;
+
+  const tituloPagos = document.createElement("h4");
+  tituloPagos.textContent = "Resumen de pagos MiMuR";
+
+  const totalEvento = document.createElement("p");
+  totalEvento.textContent =
+    "Total contratado: " + money(reserva.agreed_total_mxn);
+
+  const montoAnticipo = document.createElement("p");
+  montoAnticipo.textContent = anticipo
+    ? "Anticipo (50 %): " + money(anticipo.amount_mxn)
+    : "Anticipo: todavía no preparado";
+
+  const estadoAnticipo = document.createElement("p");
+  estadoAnticipo.textContent = anticipo
+    ? "Estado del anticipo: " +
+      (estadosPago[anticipo.status] || anticipo.status)
+    : "Estado del anticipo: no disponible";
+
+  const montoSaldo = document.createElement("p");
+  montoSaldo.textContent = saldo
+    ? "Saldo restante: " + money(saldo.amount_mxn)
+    : "Saldo: todavía no preparado";
+
+  const estadoSaldo = document.createElement("p");
+  estadoSaldo.textContent = saldo
+    ? "Estado del saldo: " +
+      (estadosPago[saldo.status] || saldo.status)
+    : "Estado del saldo: no disponible";
+
+  const avisoPago = document.createElement("small");
+  avisoPago.textContent =
+    "El pago en línea estará disponible próximamente. " +
+    "No realices transferencias fuera de MiMuR.";
+
+  avisoPago.style.cssText = `
+    display: block;
+    margin-top: 12px;
+    color: #9ca3af;
+    line-height: 1.5;
+  `;
+
+  panelPagos.append(
+    tituloPagos,
+    totalEvento,
+    montoAnticipo,
+    estadoAnticipo,
+    montoSaldo,
+    estadoSaldo,
+    avisoPago
+  );
+
+  aviso.appendChild(panelPagos);
+
 } else if (solicitud.status === "booked") {
   aviso.textContent =
     "Esta solicitud ya tiene una contratación registrada.";
