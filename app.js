@@ -899,6 +899,116 @@ function mostrarFoto() {
 
     galeria.appendChild(carrusel);
     mostrarFoto();
+    
+    // Abrir fotografía en pantalla completa.
+    imagen.style.cursor = "zoom-in";
+    imagen.title = "Toca para ampliar la fotografía";
+
+    imagen.onclick = () => {
+      const visor = document.createElement("div");
+      visor.className = "mimur-visor-fotos";
+
+      const fotoGrande = document.createElement("img");
+      fotoGrande.className = "mimur-visor-imagen";
+      fotoGrande.alt = "Fotografía ampliada del artista";
+
+      const cerrar = document.createElement("button");
+      cerrar.type = "button";
+      cerrar.className = "mimur-visor-cerrar";
+      cerrar.textContent = "×";
+      cerrar.setAttribute("aria-label", "Cerrar fotografía");
+
+      const atras = document.createElement("button");
+      atras.type = "button";
+      atras.className = "mimur-visor-atras";
+      atras.textContent = "❮";
+      atras.setAttribute("aria-label", "Fotografía anterior");
+
+      const adelante = document.createElement("button");
+      adelante.type = "button";
+      adelante.className = "mimur-visor-adelante";
+      adelante.textContent = "❯";
+      adelante.setAttribute("aria-label", "Fotografía siguiente");
+
+      const numero = document.createElement("span");
+      numero.className = "mimur-visor-numero";
+
+      let posicion = indice;
+
+      function actualizarVisor() {
+        fotoGrande.src = fotosValidas[posicion];
+        numero.textContent =
+          `${posicion + 1} / ${fotosValidas.length}`;
+
+        atras.hidden = fotosValidas.length <= 1;
+        adelante.hidden = fotosValidas.length <= 1;
+      }
+
+      function cerrarVisor() {
+        visor.remove();
+        document.body.style.overflow = "";
+        document.removeEventListener("keydown", teclado);
+      }
+
+      function teclado(e) {
+        if (e.key === "Escape") cerrarVisor();
+        if (e.key === "ArrowRight") adelante.click();
+        if (e.key === "ArrowLeft") atras.click();
+      }
+
+      cerrar.onclick = cerrarVisor;
+
+      atras.onclick = () => {
+        posicion =
+          (posicion - 1 + fotosValidas.length) %
+          fotosValidas.length;
+        actualizarVisor();
+      };
+
+      adelante.onclick = () => {
+        posicion = (posicion + 1) % fotosValidas.length;
+        actualizarVisor();
+      };
+
+      let inicioX = null;
+
+      fotoGrande.addEventListener("touchstart", (e) => {
+        inicioX = e.changedTouches[0].screenX;
+      }, { passive: true });
+
+      fotoGrande.addEventListener("touchend", (e) => {
+        if (inicioX === null) return;
+
+        const diferencia =
+          e.changedTouches[0].screenX - inicioX;
+
+        inicioX = null;
+
+        if (Math.abs(diferencia) < 50) return;
+
+        if (diferencia < 0) adelante.click();
+        else atras.click();
+      }, { passive: true });
+
+      visor.onclick = (e) => {
+        if (e.target === visor) cerrarVisor();
+      };
+
+      visor.append(
+        fotoGrande,
+        cerrar,
+        atras,
+        adelante,
+        numero
+      );
+
+      document.body.appendChild(visor);
+      document.body.style.overflow = "hidden";
+      document.addEventListener("keydown", teclado);
+
+      actualizarVisor();
+    };
+
   }
 }
 
