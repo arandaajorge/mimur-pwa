@@ -204,13 +204,89 @@ if (listaFotos) {
     `;
 
     const botonEliminar = document.createElement("button");
-    botonEliminar.type = "button";
+botonEliminar.type = "button";
+botonEliminar.textContent = "Eliminar foto";
+
+botonEliminar.onclick = async () => {
+  const confirmar = confirm(
+    "¿Seguro que deseas eliminar esta fotografía?"
+  );
+
+  if (!confirmar) return;
+
+  botonEliminar.disabled = true;
+  botonEliminar.textContent = "Eliminando...";
+
+  try {
+    const { data: { user }, error: authError } =
+      await supabaseClient.auth.getUser();
+
+    if (authError || !user) {
+      throw new Error("Debes iniciar sesión.");
+    }
+
+    const bucket = "musician-photos";
+
+    const prefijo =
+      `/storage/v1/object/public/${bucket}/`;
+
+    const urlFoto = new URL(url);
+
+    if (
+      urlFoto.origin !== new URL(SUPABASE_URL).origin ||
+      !urlFoto.pathname.startsWith(prefijo)
+    ) {
+      throw new Error("La fotografía no pertenece a MiMuR.");
+    }
+
+    const ruta = decodeURIComponent(
+      urlFoto.pathname.slice(prefijo.length)
+    );
+
+    if (!ruta.startsWith(`${user.id}/`)) {
+      throw new Error("No puedes eliminar esta fotografía.");
+    }
+
+    // Quitar la URL del perfil.
+    const fotosActualizadas = fotos.filter(
+      foto => foto !== url
+    );
+
+    const { error: errorPerfil } =
+      await supabaseClient
+        .from("musicians")
+        .update({ photo_urls: fotosActualizadas })
+        .eq("user_id", user.id);
+
+    if (errorPerfil) throw errorPerfil;
+
+    // Eliminar el archivo de Supabase Storage.
+    const { error: errorStorage } =
+      await supabaseClient.storage
+        .from(bucket)
+        .remove([ruta]);
+
+    if (errorStorage) throw errorStorage;
+
+    await cargarMiPerfilMusico();
+    await cargarMusicosAprobados();
+
+    alert("Fotografía eliminada correctamente.");
+
+  } catch (error) {
+    console.error("Error al eliminar fotografía:", error);
+
+    alert(
+      "No se pudo completar la eliminación: " +
+      error.message
+    );
+
+    await cargarMiPerfilMusico();
+  } finally {
+    botonEliminar.disabled = false;
     botonEliminar.textContent = "Eliminar foto";
-    botonEliminar.dataset.url = url;
-
-    // La eliminación se conectará en el siguiente paso.
-    botonEliminar.disabled = true;
-
+  }
+};
     contenedor.append(imagen, botonEliminar);
     listaFotos.appendChild(contenedor);
   });
