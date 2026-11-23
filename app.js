@@ -394,9 +394,12 @@ const { data: ofertas, error } = await supabaseClient
   .select(`
     id,
     event_request_id,
-    musician_price_mxn,
-    customer_total_mxn,
-    status,
+    
+musician_price_mxn,
+commission_bps,
+customer_total_mxn,
+status,
+
     musician_note,
     created_at,
     event_requests!offers_event_request_id_fkey (
