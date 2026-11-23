@@ -808,9 +808,20 @@ async function cargarSolicitudesMusico() {
       commission_bps,
       customer_total_mxn,
       status,
+      
       musician_note,
       created_at,
+      bookings (
+        id,
+        accepted_offer_id,
+        status,
+        agreed_total_mxn,
+        commission_mxn,
+        musician_payout_mxn,
+        created_at
+      ),
       event_requests!offers_event_request_id_fkey (
+
         event_type,
         event_date,
         zone,
