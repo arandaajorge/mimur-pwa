@@ -338,6 +338,41 @@ function actualizarPanelMusico(perfil, usuario) {
       : `Bienvenido, ${perfil.artist_name}. Tu perfil está pendiente de aprobación.`;
   }
 }
+
+function actualizarPanelCliente(usuario) {
+  const panel = document.getElementById("panelCliente");
+  const estado = document.getElementById(
+    "estadoContratacionesCliente"
+  );
+  const lista = document.getElementById(
+    "listaContratacionesCliente"
+  );
+
+  if (!panel) return;
+
+  // El panel solo aparece cuando existe una sesión.
+  panel.hidden = !usuario;
+
+  if (!usuario) {
+    // Limpiar información de la sesión anterior.
+    if (lista) {
+      lista.replaceChildren();
+    }
+
+    if (estado) {
+      estado.textContent =
+        "Inicia sesión para consultar tus contrataciones.";
+    }
+
+    return;
+  }
+
+  if (estado) {
+    estado.textContent =
+      "Tu cuenta está activa. Ya puedes consultar tus solicitudes.";
+  }
+}
+
 const botonEditarPerfilMusico = $("editarPerfilMusico");
 
 if (botonEditarPerfilMusico) {
