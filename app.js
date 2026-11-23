@@ -776,16 +776,84 @@ if (fotos.length) {
     contador.className = "mimur-carrusel-contador";
     contador.setAttribute("aria-live", "polite");
 
-    let indice = 0;
+    
+let indice = 0;
+let solicitudActual = 0;
 
-    function mostrarFoto() {
-      imagen.src = fotosValidas[indice];
-      contador.textContent =
-        `${indice + 1} / ${fotosValidas.length}`;
+// Guardar en memoria las fotografías ya descargadas.
+const imagenesPrecargadas = new Map();
 
-      anterior.hidden = fotosValidas.length <= 1;
-      siguiente.hidden = fotosValidas.length <= 1;
-    }
+function precargarFoto(posicion) {
+  const url = fotosValidas[posicion];
+
+  if (!url || imagenesPrecargadas.has(url)) return;
+
+  const precarga = new Image();
+
+  imagenesPrecargadas.set(url, precarga);
+
+  precarga.onload = () => {
+    console.log("MiMuR: fotografía cargada", posicion + 1);
+  };
+
+  precarga.onerror = () => {
+    imagenesPrecargadas.delete(url);
+    console.warn("MiMuR: no se pudo cargar la fotografía", posicion + 1);
+  };
+
+  precarga.src = url;
+}
+
+function mostrarFoto() {
+  const solicitud = ++solicitudActual;
+  const url = fotosValidas[indice];
+
+  contador.textContent =
+    `${indice + 1} / ${fotosValidas.length}`;
+
+  anterior.hidden = fotosValidas.length <= 1;
+  siguiente.hidden = fotosValidas.length <= 1;
+
+  // Mostrar la fotografía únicamente cuando esté descargada.
+  imagen.style.opacity = "0.35";
+
+  const precarga = imagenesPrecargadas.get(url) || new Image();
+
+  imagenesPrecargadas.set(url, precarga);
+
+  const mostrarImagen = () => {
+    if (solicitud !== solicitudActual) return;
+
+    imagen.src = url;
+    imagen.style.opacity = "1";
+  };
+
+  const mostrarError = () => {
+    if (solicitud !== solicitudActual) return;
+
+    imagen.removeAttribute("src");
+    imagen.alt = "No se pudo cargar esta fotografía";
+    imagen.style.opacity = "1";
+    imagenesPrecargadas.delete(url);
+  };
+
+  if (precarga.complete && precarga.naturalWidth > 0) {
+    mostrarImagen();
+  } else {
+    imagen.removeAttribute("src");
+    precarga.onload = mostrarImagen;
+    precarga.onerror = mostrarError;
+    precarga.src = url;
+  }
+
+  // Preparar las fotografías vecinas.
+  if (fotosValidas.length > 1) {
+    precargarFoto((indice + 1) % fotosValidas.length);
+    precargarFoto(
+      (indice - 1 + fotosValidas.length) % fotosValidas.length
+    );
+  }
+}
 
     anterior.onclick = () => {
       indice = (indice - 1 + fotosValidas.length)
