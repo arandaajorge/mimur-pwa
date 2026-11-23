@@ -2463,6 +2463,57 @@ alert("¡Bienvenido a MiMuR, " + (data.user.email || "usuario") + "!");
 })();
 console.log("MiMuR cargado correctamente");
 
+/* MiMuR: comprobar actualizaciones de la PWA */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", async () => {
+    try {
+      const registro =
+        await navigator.serviceWorker.ready;
+
+      // Comprobar si existe una nueva versión.
+      await registro.update();
+
+      // Volver a comprobar cuando el usuario
+      // regrese a la aplicación.
+      document.addEventListener(
+        "visibilitychange",
+        async () => {
+          if (document.visibilityState === "visible") {
+            try {
+              await registro.update();
+            } catch (error) {
+              console.warn(
+                "MiMuR: no se pudo comprobar la actualización.",
+                error
+              );
+            }
+          }
+        }
+      );
+
+      // Recargar cuando tome el control
+      // un nuevo Service Worker.
+      let actualizando = false;
+
+      navigator.serviceWorker.addEventListener(
+        "controllerchange",
+        () => {
+          if (actualizando) return;
+
+          actualizando = true;
+          window.location.reload();
+        }
+      );
+
+    } catch (error) {
+      console.warn(
+        "MiMuR: actualización no disponible.",
+        error
+      );
+    }
+  });
+}
+
 cargarFavoritos();
 
 
