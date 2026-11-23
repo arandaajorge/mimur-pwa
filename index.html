@@ -75,32 +75,57 @@
   </div>
 </section>
 
+
 <section id="perfilPublicoMusico" class="join" hidden>
+
+  <!-- Encabezado artístico -->
   <div class="perfil-publico-header">
     <button type="button" id="volverCatalogoMusicos">
       ← Volver al catálogo
     </button>
 
     <p class="eyebrow">PERFIL ARTÍSTICO · MIMUR</p>
-    <h2 id="perfilPublicoNombre">Perfil del músico</h2>
+
+    <h2 id="perfilPublicoNombre">
+      Perfil del músico
+    </h2>
+
     <p id="perfilPublicoGenero" class="muted"></p>
   </div>
 
+  <!-- Contenido principal -->
   <div class="perfil-publico-content">
+
+    <!-- Galería fotográfica -->
+    <div class="perfil-publico-galeria-seccion">
+      <div id="perfilPublicoGaleria"></div>
+    </div>
+
+    <!-- Videos -->
     <div class="perfil-publico-videos">
       <h3>🎬 Videos y presentaciones</h3>
+
       <div id="perfilPublicoVideo">
         <p>Este músico todavía no ha agregado un video.</p>
       </div>
 
-      <p>
+      <p class="muted">
         Conoce su estilo y escucha cómo suena antes de contratarlo.
       </p>
     </div>
 
+    <!-- Información artística -->
     <div class="perfil-publico-info">
       <h3>Sobre el artista</h3>
+
       <p id="perfilPublicoBio"></p>
+
+      <!-- Detalles artísticos generados desde app.js -->
+      <div id="perfilPublicoDetalles"></div>
+    </div>
+
+    <!-- Contratación -->
+    <div class="perfil-publico-contratacion">
 
       <h3>Zona de servicio</h3>
       <p id="perfilPublicoZona"></p>
@@ -129,9 +154,11 @@
           Solicitar contratación
         </button>
       </div>
+
     </div>
   </div>
 </section>
+
 
 <section id="registro" class="join"><div><p class="eyebrow">PARA MÚSICOS</p><h2>Haz que tu música llegue más lejos.</h2><p>Registra tu interés en el piloto. En esta versión los datos se guardan solo en este dispositivo; aún no se envían a un servidor.</p></div><form id="lead">
   <h3>Mi perfil profesional</h3>
