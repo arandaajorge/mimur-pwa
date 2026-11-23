@@ -471,9 +471,22 @@ console.log(
       "Presupuesto: " + money(solicitud.budget_mxn);
 
     
+    
     const estadoSolicitud = document.createElement("p");
+
+    const estadosSolicitud = {
+      open: "Solicitud enviada",
+      matching: "Buscando músicos",
+      offers_received: "Cotizaciones disponibles",
+      booked: "Contratación registrada",
+      cancelled: "Solicitud cancelada",
+      completed: "Evento finalizado"
+    };
+
     estadoSolicitud.textContent =
-      "Estado de la solicitud: " + solicitud.status;
+      "Estado de la solicitud: " +
+      (estadosSolicitud[solicitud.status] || solicitud.status);
+
 
     tarjeta.append(
 
