@@ -615,9 +615,14 @@ botonConfirmar.onclick = async () => {
   }
 };
 
-if (solicitud.status !== "booked") {
+
+if (
+  ["open", "matching", "offers_received"].includes(solicitud.status) &&
+  oferta.status === "accepted"
+) {
   contenedor.appendChild(botonConfirmar);
 }
+
 
         }
 
