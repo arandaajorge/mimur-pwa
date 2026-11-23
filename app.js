@@ -378,6 +378,7 @@ async function cargarContratacionesCliente() {
   budget_mxn,
   status,
   created_at,
+  
   offers (
     id,
     status,
@@ -387,7 +388,17 @@ async function cargarContratacionesCliente() {
     musicians (
       artist_name
     )
+  ),
+  bookings (
+    id,
+    accepted_offer_id,
+    agreed_total_mxn,
+    commission_mxn,
+    musician_payout_mxn,
+    status,
+    created_at
   )
+
 `)
 
       .eq("customer_id", usuarioId)
