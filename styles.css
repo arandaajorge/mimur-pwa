@@ -1983,3 +1983,62 @@ dialog::backdrop {
     font-size: 18px;
   }
 }
+
+/* =====================================
+   MIMUR - CORRECCIÓN GALERÍA MÓVIL
+===================================== */
+
+/* Evitar que la galería desborde el perfil */
+#perfilPublicoMusico,
+#perfilPublicoGaleria,
+.mimur-carrusel {
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Galería centrada */
+#perfilPublicoGaleria {
+  width: 100%;
+  margin: 20px auto;
+}
+
+/* Carrusel compacto */
+.mimur-carrusel {
+  position: relative;
+  width: 100%;
+  height: 280px;
+  aspect-ratio: auto;
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+/* Imagen ajustada al contenedor */
+.mimur-carrusel-imagen {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  background: #080c14;
+}
+
+/* Ajustes para celulares */
+@media (max-width: 600px) {
+  #perfilPublicoMusico {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  #perfilPublicoGaleria {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .mimur-carrusel {
+    height: 240px;
+    max-height: 240px;
+    aspect-ratio: auto;
+  }
+}
