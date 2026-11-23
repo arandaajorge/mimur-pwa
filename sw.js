@@ -1,5 +1,5 @@
 
-const CACHE = "mimur-pwa-v2";
+const CACHE = "mimur-pwa-v3";
 
 const FILES = [
   "./",
@@ -10,7 +10,7 @@ const FILES = [
   "./assets/icon.svg"
 ];
 
-// Instalar y almacenar archivos principales.
+// Instalar la nueva versión.
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE)
@@ -19,14 +19,17 @@ self.addEventListener("install", (event) => {
   );
 });
 
-// Eliminar cachés anteriores.
+// Eliminar versiones anteriores.
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys()
       .then((keys) =>
         Promise.all(
           keys
-            .filter((key) => key !== CACHE)
+            .filter((key) =>
+              key.startsWith("mimur-pwa-") &&
+              key !== CACHE
+            )
             .map((key) => caches.delete(key))
         )
       )
@@ -34,26 +37,38 @@ self.addEventListener("activate", (event) => {
   );
 });
 
-// Consultar internet primero y usar caché si falla.
+// Internet primero; caché como respaldo.
 self.addEventListener("fetch", (event) => {
   const request = event.request;
+  const url = new URL(request.url);
 
   if (
     request.method !== "GET" ||
-    new URL(request.url).origin !== self.location.origin
+    url.origin !== self.location.origin
   ) {
     return;
   }
 
+  // No interceptar solicitudes ajenas al sitio.
+  if (!["http:", "https:"].includes(url.protocol)) {
+    return;
+  }
+
+  // Usar una URL estable para la caché.
+  const cacheUrl = new URL(url.href);
+  cacheUrl.searchParams.delete("v");
+
+  const cacheKey = cacheUrl.href;
+
   event.respondWith(
-    fetch(request)
+    fetch(request, { cache: "no-store" })
       .then((response) => {
-        if (response.ok) {
+        if (response.ok && response.type === "basic") {
           const copia = response.clone();
 
           event.waitUntil(
             caches.open(CACHE).then((cache) =>
-              cache.put(request, copia)
+              cache.put(cacheKey, copia)
             )
           );
         }
@@ -61,12 +76,15 @@ self.addEventListener("fetch", (event) => {
         return response;
       })
       .catch(async () => {
-        const cache = await caches.match(request);
+        const cache = await caches.match(cacheKey);
 
         if (cache) return cache;
 
         if (request.mode === "navigate") {
-          const inicio = await caches.match("./index.html");
+          const inicio = await caches.match(
+            new URL("./index.html", self.registration.scope).href
+          );
+
           if (inicio) return inicio;
         }
 
