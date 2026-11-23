@@ -1921,12 +1921,37 @@ console.log("MiMuR cargado correctamente");
 cargarFavoritos();
 
 
+
+
 supabaseClient.auth.onAuthStateChange((event, session) => {
   setTimeout(async () => {
-    if (session?.user) {
+    const usuario = session?.user || null;
+
+    // Actualizar el panel del cliente.
+    actualizarPanelCliente(usuario);
+
+    if (usuario) {
+      // Cargar información del músico, si tiene perfil.
       await cargarMiPerfilMusico();
+
+      // Recuperar favoritos del usuario.
       await cargarFavoritos();
+
     } else {
+      // Ocultar el panel del músico.
+      actualizarPanelMusico(null, null);
+
+      // Ocultar solicitudes de la sesión anterior.
+      const solicitudes = document.getElementById(
+        "contenidoSolicitudesMusico"
+      );
+
+      if (solicitudes) {
+        solicitudes.hidden = true;
+        solicitudes.replaceChildren();
+      }
+
+      // Limpiar formulario del músico.
       const formulario = document.getElementById("lead");
 
       if (formulario) {
