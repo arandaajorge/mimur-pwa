@@ -439,18 +439,7 @@ console.log(
 
   solicitudes.forEach((solicitud) => {
     
-if (solicitud.status === "booked") {
-  const diagnostico = document.createElement("p");
 
-  diagnostico.style.color = "#00D6A3";
-  diagnostico.style.fontWeight = "bold";
-
-  diagnostico.textContent =
-    "DIAGNÓSTICO RESERVA: " +
-    JSON.stringify(solicitud.bookings ?? null);
-
-  lista.appendChild(diagnostico);
-}
 
     const tarjeta = document.createElement("article");
     tarjeta.className = "oferta-musico-card";
