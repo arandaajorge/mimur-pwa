@@ -563,9 +563,11 @@ console.log(
       });
     }
 
+    
     lista.appendChild(tarjeta);
-
+  });
 }
+
 
 const botonActualizarContrataciones = document.getElementById(
   "actualizarContratacionesCliente"
