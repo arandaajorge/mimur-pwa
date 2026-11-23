@@ -557,6 +557,68 @@ console.log(
             precioTotal,
             aviso
           );
+          
+const botonConfirmar = document.createElement("button");
+
+botonConfirmar.type = "button";
+botonConfirmar.className = "btn";
+botonConfirmar.textContent = "Confirmar contratación";
+
+botonConfirmar.onclick = async () => {
+  const confirmar = confirm(
+    "CONFIRMAR CONTRATACIÓN\n\n" +
+    "Músico: " +
+    (musico?.artist_name || "Artista MiMuR") + "\n" +
+    "Honorarios: " + money(honorarios) + "\n" +
+    "Comisión MiMuR: " + money(comision) + "\n" +
+    "Total: " + money(total) + "\n\n" +
+    "¿Deseas confirmar esta contratación?"
+  );
+
+  if (!confirmar) return;
+
+  botonConfirmar.disabled = true;
+  botonConfirmar.textContent = "Confirmando...";
+
+  try {
+    const { data: reservaId, error } =
+      await supabaseClient.rpc(
+        "confirmar_contratacion_cliente",
+        {
+          p_offer_id: oferta.id
+        }
+      );
+
+    if (error) throw error;
+
+    alert(
+      "¡Contratación registrada correctamente!\n\n" +
+      "Folio: " + reservaId + "\n\n" +
+      "El pago del anticipo está pendiente."
+    );
+
+    await cargarContratacionesCliente();
+
+  } catch (error) {
+    console.error(
+      "Error al confirmar contratación:",
+      error
+    );
+
+    alert(
+      "No se pudo confirmar la contratación: " +
+      error.message
+    );
+
+    botonConfirmar.disabled = false;
+    botonConfirmar.textContent = "Confirmar contratación";
+  }
+};
+
+if (solicitud.status !== "booked") {
+  contenedor.appendChild(botonConfirmar);
+}
+
         }
 
         tarjeta.appendChild(contenedor);
