@@ -46,6 +46,44 @@
   </form>
 </dialog>
 
+<!-- PANEL DE CONTRATACIONES DEL CLIENTE -->
+<section id="panelCliente" class="join" hidden>
+
+  <div>
+    <p class="eyebrow">MI MIMUR</p>
+    <h2>Mis contrataciones</h2>
+    <p>
+      Consulta tus solicitudes, revisa las
+      cotizaciones de los músicos y administra
+      tus próximas contrataciones.
+    </p>
+  </div>
+
+  <div class="panel-cliente-content">
+
+    <div class="panel-cliente-actions">
+      <button
+        type="button"
+        id="actualizarContratacionesCliente"
+        class="btn secondary">
+        Actualizar mis solicitudes
+      </button>
+    </div>
+
+    <p
+      id="estadoContratacionesCliente"
+      role="status"
+      aria-live="polite">
+      Aquí aparecerán tus solicitudes de contratación.
+    </p>
+
+    <div id="listaContratacionesCliente"></div>
+
+  </div>
+
+</section>
+<!-- FIN PANEL DEL CLIENTE -->
+
 <section id="panelMusico" class="join" hidden>
   <div>
     <p class="eyebrow">MI MIMUR</p>
