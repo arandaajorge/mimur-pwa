@@ -456,13 +456,13 @@ console.log(
     presupuesto.textContent =
       "Presupuesto: " + money(solicitud.budget_mxn);
 
+    
     const estadoSolicitud = document.createElement("p");
     estadoSolicitud.textContent =
       "Estado de la solicitud: " + solicitud.status;
 
-    
-  });
     tarjeta.append(
+
       titulo,
       fecha,
       zona,
