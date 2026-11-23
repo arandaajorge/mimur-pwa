@@ -519,44 +519,98 @@ const { data: ofertas, error } = await supabaseClient
   });
 }
 
+
 async function responderOfertaMusico(
   ofertaId,
   decision,
   botonAceptar,
   botonRechazar
 ) {
-  const confirmacion = decision === "accepted"
-    ? "¿Confirmas que deseas aceptar esta oferta?"
-    : "¿Confirmas que deseas rechazar esta oferta?";
+  let precio = null;
 
-  if (!confirm(confirmacion)) return;
+  if (decision === "accepted") {
+    const entrada = prompt(
+      "¿Cuánto deseas cobrar por este evento? Ingresa tus honorarios en MXN:"
+    );
+
+    if (entrada === null) return;
+
+    const valor = entrada.trim();
+
+    if (!/^[1-9]\d*$/.test(valor)) {
+      alert("Ingresa un precio válido, sin decimales ni símbolos.");
+      return;
+    }
+
+    precio = Number(valor);
+
+    if (!Number.isSafeInteger(precio) || precio > 1952257861) {
+      alert("El precio ingresado es demasiado alto.");
+      return;
+    }
+
+    const comision = Math.ceil(precio * 0.10);
+    const total = precio + comision;
+
+    const formato = n =>
+      n.toLocaleString("es-MX", {
+        style: "currency",
+        currency: "MXN",
+        maximumFractionDigits: 0
+      });
+
+    const confirmado = confirm(
+      "RESUMEN DE TU COTIZACIÓN\n\n" +
+      "Tus honorarios: " + formato(precio) + "\n" +
+      "Comisión MiMuR (10%): " + formato(comision) + "\n" +
+      "Total para el cliente: " + formato(total) + "\n\n" +
+      "¿Deseas enviar esta cotización?"
+    );
+
+    if (!confirmado) return;
+
+  } else if (decision === "declined") {
+    if (!confirm("¿Confirmas que deseas rechazar esta oferta?")) {
+      return;
+    }
+  } else {
+    alert("Decisión no válida.");
+    return;
+  }
 
   botonAceptar.disabled = true;
   botonRechazar.disabled = true;
 
-  const { error } = await supabaseClient.rpc(
-    "responder_oferta_musico",
-    {
-      p_offer_id: ofertaId,
-      p_decision: decision
-    }
-  );
+  try {
+    const { error } = await supabaseClient.rpc(
+      "responder_oferta_musico",
+      {
+        p_offer_id: ofertaId,
+        p_decision: decision,
+        p_precio_mxn: precio
+      }
+    );
 
-  if (error) {
+    if (error) throw error;
+
+    alert(
+      decision === "accepted"
+        ? "¡Cotización enviada correctamente! El cliente deberá confirmar la contratación."
+        : "Oferta rechazada correctamente."
+    );
+
+    await cargarSolicitudesMusico();
+
+  } catch (error) {
     console.error("Error al responder oferta:", error);
-    alert("No se pudo responder la oferta: " + error.message);
+
+    alert(
+      "No se pudo responder la oferta: " + error.message
+    );
+
     botonAceptar.disabled = false;
     botonRechazar.disabled = false;
-    return;
   }
-
-  alert(
-    decision === "accepted"
-      ? "Oferta aceptada correctamente."
-      : "Oferta rechazada correctamente."
-  );
-
-  await cargarSolicitudesMusico();
 }
 
 const botonVerSolicitudesMusico = $("verSolicitudesMusico");
