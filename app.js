@@ -798,9 +798,19 @@ async function cargarSolicitudesMusico() {
 
   
 
-const { data: ofertas, error } = await supabaseClient
-  .from("offers")
-  .select(`
+
+    musician_note,
+    created_at,
+    bookings (
+      id,
+      status,
+      agreed_total_mxn,
+      commission_mxn,
+      musician_payout_mxn,
+      created_at
+    ),
+    event_requests!offers_event_request_id_fkey (
+
     id,
     event_request_id,
     
