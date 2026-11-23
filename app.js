@@ -738,33 +738,102 @@ function abrirPerfilPublicoMusico(musico) {
 
   galeria.replaceChildren();
 
-  if (fotos.length) {
-    const tituloFotos = document.createElement("h3");
-    tituloFotos.textContent = "Galería del artista";
-    galeria.appendChild(tituloFotos);
+  
+if (fotos.length) {
+  const fotosValidas = fotos.filter((foto) => {
+    try {
+      return new URL(foto).protocol === "https:";
+    } catch {
+      return false;
+    }
+  });
 
-    fotos.forEach((foto) => {
-      try {
-        const urlFoto = new URL(foto);
+  if (fotosValidas.length) {
+    const titulo = document.createElement("h3");
+    titulo.textContent = "Galería del artista";
+    galeria.appendChild(titulo);
 
-        if (!["https:", "http:"].includes(urlFoto.protocol)) return;
+    const carrusel = document.createElement("div");
+    carrusel.className = "mimur-carrusel";
 
-        const imagen = document.createElement("img");
-        imagen.src = urlFoto.href;
-        imagen.alt = `Fotografía de ${musico.name || "artista MiMuR"}`;
-        imagen.loading = "lazy";
-        imagen.style.width = "100%";
-        imagen.style.maxWidth = "220px";
-        imagen.style.height = "180px";
-        imagen.style.objectFit = "cover";
-        imagen.style.borderRadius = "12px";
+    const imagen = document.createElement("img");
+    imagen.className = "mimur-carrusel-imagen";
+    imagen.alt = `Fotografía de ${musico.name}`;
 
-        galeria.appendChild(imagen);
-      } catch {
-        // Ignorar fotografías con enlaces inválidos.
+    const anterior = document.createElement("button");
+    anterior.type = "button";
+    anterior.className = "mimur-carrusel-anterior";
+    anterior.textContent = "❮";
+    anterior.setAttribute("aria-label", "Fotografía anterior");
+
+    const siguiente = document.createElement("button");
+    siguiente.type = "button";
+    siguiente.className = "mimur-carrusel-siguiente";
+    siguiente.textContent = "❯";
+    siguiente.setAttribute("aria-label", "Fotografía siguiente");
+
+    const contador = document.createElement("span");
+    contador.className = "mimur-carrusel-contador";
+    contador.setAttribute("aria-live", "polite");
+
+    let indice = 0;
+
+    function mostrarFoto() {
+      imagen.src = fotosValidas[indice];
+      contador.textContent =
+        `${indice + 1} / ${fotosValidas.length}`;
+
+      anterior.hidden = fotosValidas.length <= 1;
+      siguiente.hidden = fotosValidas.length <= 1;
+    }
+
+    anterior.onclick = () => {
+      indice = (indice - 1 + fotosValidas.length)
+        % fotosValidas.length;
+      mostrarFoto();
+    };
+
+    siguiente.onclick = () => {
+      indice = (indice + 1) % fotosValidas.length;
+      mostrarFoto();
+    };
+
+    // Deslizar fotografías desde el celular.
+    let inicioX = null;
+
+    carrusel.addEventListener("touchstart", (e) => {
+      inicioX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    carrusel.addEventListener("touchend", (e) => {
+      if (inicioX === null) return;
+
+      const diferencia =
+        e.changedTouches[0].screenX - inicioX;
+
+      inicioX = null;
+
+      if (Math.abs(diferencia) < 50) return;
+
+      if (diferencia < 0) {
+        siguiente.click();
+      } else {
+        anterior.click();
       }
-    });
+    }, { passive: true });
+
+    carrusel.append(
+      imagen,
+      anterior,
+      siguiente,
+      contador
+    );
+
+    galeria.appendChild(carrusel);
+    mostrarFoto();
   }
+}
+
   detalles.forEach(([titulo, valor]) => {
     const elementos = Array.isArray(valor)
       ? valor
