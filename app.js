@@ -339,6 +339,118 @@ function actualizarPanelMusico(perfil, usuario) {
   }
 }
 
+async function cargarContratacionesCliente() {
+  const lista = document.getElementById(
+    "listaContratacionesCliente"
+  );
+
+  const estado = document.getElementById(
+    "estadoContratacionesCliente"
+  );
+
+  if (!lista || !estado) return;
+
+  const { data: { user }, error: authError } =
+    await supabaseClient.auth.getUser();
+
+  if (authError || !user) {
+    lista.replaceChildren();
+    estado.textContent =
+      "Inicia sesión para consultar tus contrataciones.";
+    return;
+  }
+
+  const usuarioId = user.id;
+
+  estado.textContent = "Cargando tus solicitudes...";
+  lista.replaceChildren();
+
+  const { data: solicitudes, error } =
+    await supabaseClient
+      .from("event_requests")
+      .select(`
+        id,
+        event_type,
+        event_date,
+        zone,
+        genre,
+        budget_mxn,
+        status,
+        created_at
+      `)
+      .eq("customer_id", usuarioId)
+      .order("created_at", { ascending: false });
+
+  // Evitar mostrar datos si cambió la sesión.
+  const { data: { user: usuarioActual } } =
+    await supabaseClient.auth.getUser();
+
+  if (usuarioActual?.id !== usuarioId) return;
+
+  if (error) {
+    console.error("Error al cargar solicitudes:", error);
+    estado.textContent =
+      "No se pudieron cargar tus solicitudes: " +
+      error.message;
+    return;
+  }
+
+  if (!solicitudes || solicitudes.length === 0) {
+    estado.textContent =
+      "Todavía no has realizado solicitudes de contratación.";
+    return;
+  }
+
+  estado.textContent =
+    `Tienes ${solicitudes.length} solicitud(es) registrada(s).`;
+
+  solicitudes.forEach((solicitud) => {
+    const tarjeta = document.createElement("article");
+    tarjeta.className = "oferta-musico-card";
+
+    const titulo = document.createElement("h3");
+    titulo.textContent =
+      solicitud.event_type || "Evento musical";
+
+    const fecha = document.createElement("p");
+    fecha.textContent =
+      "Fecha: " +
+      new Date(solicitud.event_date).toLocaleString(
+        "es-MX",
+        {
+          dateStyle: "medium",
+          timeStyle: "short"
+        }
+      );
+
+    const zona = document.createElement("p");
+    zona.textContent = "Zona: " + solicitud.zone;
+
+    const genero = document.createElement("p");
+    genero.textContent =
+      "Género musical: " + solicitud.genre;
+
+    const presupuesto = document.createElement("p");
+    presupuesto.textContent =
+      "Presupuesto: " + money(solicitud.budget_mxn);
+
+    const estadoSolicitud = document.createElement("p");
+    estadoSolicitud.textContent =
+      "Estado de la solicitud: " + solicitud.status;
+
+    tarjeta.append(
+      titulo,
+      fecha,
+      zona,
+      genero,
+      presupuesto,
+      estadoSolicitud
+    );
+
+    lista.appendChild(tarjeta);
+  });
+}
+
 function actualizarPanelCliente(usuario) {
   const panel = document.getElementById("panelCliente");
   const estado = document.getElementById(
