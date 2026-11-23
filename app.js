@@ -1312,7 +1312,7 @@ const perfil = {
     .split(/\r?\n/)
     .map(x => x.trim())
     .filter(Boolean),
-  photo_urls: photoUrls,
+  
 photo_urls: (d.photo_urls || "")
   .split(/\r?\n/)
   .map(x => x.trim())
