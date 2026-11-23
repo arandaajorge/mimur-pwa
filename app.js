@@ -489,8 +489,19 @@ status,
       <p><strong>Género:</strong> ${escapar(evento?.genre || "No especificado")}</p>
       <p><strong>Duración:</strong> ${escapar(evento?.duration_minutes ?? "No especificada")} minutos</p>
       <p><strong>Presupuesto del cliente:</strong> ${escapar(pesos(evento?.budget_mxn))}</p>
-      <p><strong>Tu precio:</strong> ${escapar(pesos(oferta.musician_price_mxn))}</p>
-      <p><strong>Precio al cliente:</strong> ${escapar(pesos(oferta.customer_total_mxn))}</p>
+      
+<p><strong>Tus honorarios:</strong> ${escapar(pesos(oferta.musician_price_mxn))}</p>
+<p><strong>Comisión MiMuR:</strong> ${escapar(
+  oferta.musician_price_mxn == null ||
+  oferta.customer_total_mxn == null
+    ? "Pendiente de cotización"
+    : pesos(
+        oferta.customer_total_mxn -
+        oferta.musician_price_mxn
+      )
+)}</p>
+<p><strong>Total para el cliente:</strong> ${escapar(pesos(oferta.customer_total_mxn))}</p>
+
       <p><strong>Estado:</strong> ${escapar(estado)}</p>
       ${evento?.customer_name ? `<p><strong>Cliente:</strong> ${escapar(evento.customer_name)}</p>` : ""}
       ${evento?.details ? `<p><strong>Detalles:</strong> ${escapar(evento.details)}</p>` : ""}
