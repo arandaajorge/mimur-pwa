@@ -269,10 +269,34 @@ botonEliminar.onclick = async () => {
     if (errorStorage) throw errorStorage;
 
     await cargarMiPerfilMusico();
-    await cargarMusicosAprobados();
+await cargarMusicosAprobados();
 
-    alert("Fotografía eliminada correctamente.");
+// Actualizar la galería pública si está visible.
+const perfilPublico = document.getElementById(
+  "perfilPublicoMusico"
+);
 
+if (perfilPublico && !perfilPublico.hidden) {
+  const galeriaPublica = document.getElementById(
+    "perfilPublicoGaleria"
+  );
+
+  if (galeriaPublica) {
+    const imagenes = galeriaPublica.querySelectorAll("img");
+
+    imagenes.forEach(imagen => {
+      if (imagen.src === url) {
+        imagen.remove();
+      }
+    });
+
+    if (!galeriaPublica.querySelector("img")) {
+      galeriaPublica.replaceChildren();
+    }
+  }
+}
+
+alert("Fotografía eliminada correctamente.");
   } catch (error) {
     console.error("Error al eliminar fotografía:", error);
 
