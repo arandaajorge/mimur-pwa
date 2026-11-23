@@ -368,16 +368,28 @@ async function cargarContratacionesCliente() {
   const { data: solicitudes, error } =
     await supabaseClient
       .from("event_requests")
-      .select(`
-        id,
-        event_type,
-        event_date,
-        zone,
-        genre,
-        budget_mxn,
-        status,
-        created_at
-      `)
+      
+.select(`
+  id,
+  event_type,
+  event_date,
+  zone,
+  genre,
+  budget_mxn,
+  status,
+  created_at,
+  offers (
+    id,
+    status,
+    musician_price_mxn,
+    commission_bps,
+    customer_total_mxn,
+    musicians (
+      artist_name
+    )
+  )
+`)
+
       .eq("customer_id", usuarioId)
       .order("created_at", { ascending: false });
 
