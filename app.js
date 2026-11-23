@@ -1398,7 +1398,35 @@ if (resultado.error) {
         "No se pudo guardar el perfil: " + errorGuardado.message;
       return;
     }
+// Guardar las fotografías sin perder las existentes.
+if (archivos.length > 0) {
+  const { data: perfilActual, error: lecturaError } =
+    await supabaseClient
+      .from("musicians")
+      .select("photo_urls")
+      .eq("user_id", user.id)
+      .single();
 
+  if (lecturaError) throw lecturaError;
+
+  const fotosExistentes = Array.isArray(perfilActual.photo_urls)
+    ? perfilActual.photo_urls
+    : [];
+
+  const fotosNuevas = photoUrls.filter(
+    url => !fotosExistentes.includes(url)
+  );
+
+  const { error: errorFotos } =
+    await supabaseClient
+      .from("musicians")
+      .update({
+        photo_urls: [...fotosExistentes, ...fotosNuevas]
+      })
+      .eq("user_id", user.id);
+
+  if (errorFotos) throw errorFotos;
+}
 
     await cargarMiPerfilMusico();
     await cargarMusicosAprobados();
