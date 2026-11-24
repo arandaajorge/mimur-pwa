@@ -496,8 +496,54 @@
 </form></section></main>
 <footer><a class="logo" href="#">MiMu<span>R</span></a><span>© 2026 MiMuR · Prototipo PWA · CDMX</span></footer>
 <dialog id="request"><form id="requestForm"><button type="button" id="close" class="close">×</button><p class="eyebrow">SOLICITUD DE EVENTO</p><h2 id="requestTitle">Solicitar músico</h2><p class="small">La solicitud se guardará localmente. No se enviará al músico.</p><input type="hidden" name="musicianId"><label>Tu nombre *<input name="customer" required></label><label>WhatsApp *<input name="phone" required type="tel"></label><label>Fecha del evento *
+  
+<label>Fecha del evento *
   <input name="date" required type="date">
 </label>
+
+<label>Hora de inicio del evento *
+  <input name="eventTime" type="time" required>
+  <small>Horario de Ciudad de México.</small>
+</label>
+
+<label>Duración de la presentación *
+  <select name="duration" id="eventDuration" required>
+    <option value="">Selecciona la duración</option>
+    <option value="30">30 minutos</option>
+    <option value="45">45 minutos</option>
+    <option value="50">50 minutos</option>
+    <option value="60">1 hora</option>
+    <option value="90">1 hora y 30 minutos</option>
+    <option value="120">2 horas</option>
+    <option value="180">3 horas</option>
+    <option value="240">4 horas</option>
+    <option value="300">5 horas</option>
+    <option value="360">6 horas</option>
+    <option value="480">8 horas</option>
+    <option value="custom">Personalizar duración</option>
+  </select>
+</label>
+
+<div id="customDurationContainer" hidden>
+  <label>Duración personalizada en minutos *
+    <input
+      name="customDuration"
+      id="customDuration"
+      type="number"
+      min="1"
+      max="1440"
+      step="1"
+      placeholder="Ej. 75"
+      disabled
+    >
+  </label>
+</div>
+
+<p id="eventTimeSummary"
+   class="small"
+   aria-live="polite">
+</p>
+
 <label>
   Alcaldía o municipio del evento *
   <input
