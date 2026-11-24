@@ -2024,14 +2024,106 @@ $("q").addEventListener("input", render);
 $("genre").addEventListener("change", render);
 $("zone").addEventListener("change", render);
 function openRequest(m){$("requestTitle").textContent="Solicitar a "+m.name;$("requestForm").elements.musicianId.value=m.id;$("requestMsg").textContent="";$("request").showModal()}$("close").onclick=()=>$("request").close();
+
+// MiMuR: configuración de horarios y duración del evento.
+
+const formularioEvento = $("requestForm");
+const selectorDuracion = $("eventDuration");
+const contenedorDuracion = $("customDurationContainer");
+const campoDuracion = $("customDuration");
+const resumenHorario = $("eventTimeSummary");
+
+function obtenerDuracionEvento() {
+  return Number(
+    selectorDuracion.value === "custom"
+      ? campoDuracion.value
+      : selectorDuracion.value
+  );
+}
+
+function actualizarHorarioEvento() {
+  const personalizada =
+    selectorDuracion.value === "custom";
+
+  contenedorDuracion.hidden = !personalizada;
+  campoDuracion.disabled = !personalizada;
+  campoDuracion.required = personalizada;
+
+  const hora = formularioEvento.elements.eventTime.value;
+  const duracion = obtenerDuracionEvento();
+
+  if (
+    !hora ||
+    !Number.isInteger(duracion) ||
+    duracion < 1 ||
+    duracion > 1440
+  ) {
+    resumenHorario.textContent = "";
+    return;
+  }
+
+  const [horas, minutos] = hora.split(":").map(Number);
+
+  const minutosFinales =
+    horas * 60 + minutos + duracion;
+
+  const horaFinal = String(
+    Math.floor(minutosFinales / 60) % 24
+  ).padStart(2, "0");
+
+  const minutoFinal = String(
+    minutosFinales % 60
+  ).padStart(2, "0");
+
+  const diaSiguiente =
+    minutosFinales >= 1440
+      ? " (día siguiente)"
+      : "";
+
+  resumenHorario.textContent =
+    `Inicio: ${hora} · ` +
+    `Finalización: ${horaFinal}:${minutoFinal}` +
+    diaSiguiente +
+    ` · Duración: ${duracion} minutos`;
+
+  resumenHorario.style.color = "#00D6A3";
+}
+
+selectorDuracion.addEventListener(
+  "change",
+  actualizarHorarioEvento
+);
+
+campoDuracion.addEventListener(
+  "input",
+  actualizarHorarioEvento
+);
+
+formularioEvento.elements.eventTime.addEventListener(
+  "input",
+  actualizarHorarioEvento
+);
+
+formularioEvento.addEventListener("reset", () => {
+  setTimeout(actualizarHorarioEvento, 0);
+});
+
+actualizarHorarioEvento();
+
+
+// MiMuR: guardar y distribuir solicitudes de eventos.
+
 $("requestForm").onsubmit = async (e) => {
   e.preventDefault();
 
   const f = e.currentTarget;
-  if (!f.reportValidity()) return;
-
   const mensaje = $("requestMsg");
   const boton = f.querySelector('[type="submit"]');
+
+  if (boton?.disabled) return;
+  if (!f.reportValidity()) return;
+
+  if (boton) boton.disabled = true;
 
   try {
     const { data: { user }, error: userError } =
@@ -2044,12 +2136,55 @@ $("requestForm").onsubmit = async (e) => {
     }
 
     const d = Object.fromEntries(new FormData(f));
-    const fecha = new Date(d.date + "T12:00:00");
 
-    const perfil = catalogo.find(m => m.id === d.musicianId);
+    // Horario de Ciudad de México para el piloto.
+    const fecha = new Date(
+      `${d.date}T${d.eventTime}:00-06:00`
+    );
+
+    if (Number.isNaN(fecha.getTime())) {
+      mensaje.textContent =
+        "Selecciona una fecha y hora válidas.";
+      return;
+    }
+
+    if (fecha.getTime() <= Date.now()) {
+      mensaje.textContent =
+        "La fecha y hora del evento deben ser futuras.";
+      return;
+    }
+
+    const duracion = obtenerDuracionEvento();
+
+    if (
+      !Number.isInteger(duracion) ||
+      duracion < 1 ||
+      duracion > 1440
+    ) {
+      mensaje.textContent =
+        "Selecciona una duración válida entre 1 y 1440 minutos.";
+      return;
+    }
+
+    const presupuesto = Number(d.budget);
+
+    if (
+      !Number.isSafeInteger(presupuesto) ||
+      presupuesto < 1 ||
+      presupuesto > 2147483647
+    ) {
+      mensaje.textContent =
+        "Ingresa un presupuesto válido en pesos mexicanos.";
+      return;
+    }
+
+    const perfil = catalogo.find(
+      m => String(m.id) === String(d.musicianId)
+    );
 
     if (!perfil) {
-      mensaje.textContent = "No se encontró el músico seleccionado.";
+      mensaje.textContent =
+        "No se encontró el músico seleccionado.";
       return;
     }
 
@@ -2059,58 +2194,79 @@ $("requestForm").onsubmit = async (e) => {
       customer_phone: d.phone.trim(),
       event_type: "Contratación musical",
       event_date: fecha.toISOString(),
+      duration_minutes: duracion,
       zone: d.eventZone.trim(),
       genre: perfil.genre,
-      budget_mxn: Number(d.budget),
+      budget_mxn: presupuesto,
       details: d.details.trim() || null,
       status: "open"
     };
 
-    if (boton) boton.disabled = true;
-    mensaje.textContent = "Enviando solicitud a MiMuR...";
+    mensaje.textContent =
+      "Enviando solicitud a MiMuR...";
 
-    
-const { data: solicitudGuardada, error } = await supabaseClient
-  .from("event_requests")
-  .insert(solicitud)
-  .select("id")
-  .single();
+    const { data: solicitudGuardada, error } =
+      await supabaseClient
+        .from("event_requests")
+        .insert(solicitud)
+        .select("id")
+        .single();
 
-if (error) {
-  console.error("Error al guardar solicitud:", error);
-  mensaje.textContent =
-    "No se pudo guardar la solicitud: " + error.message;
-  return;
-}
+    if (error) {
+      console.error("Error al guardar solicitud:", error);
 
-mensaje.textContent = "Solicitud guardada. Buscando músicos compatibles...";
+      mensaje.textContent =
+        "No se pudo guardar la solicitud: " +
+        error.message;
 
-const { data: cantidad, error: errorDistribucion } =
-  await supabaseClient.rpc("distribuir_solicitud_musical", {
-    p_event_request_id: solicitudGuardada.id
-  });
+      return;
+    }
 
-if (errorDistribucion) {
-  console.error("Error al distribuir solicitud:", errorDistribucion);
-  mensaje.textContent =
-    "La solicitud se guardó, pero no se pudo avisar a los músicos: " +
-    errorDistribucion.message;
-  return;
-}
+    // La solicitud ya existe. Evitar enviarla dos veces.
+    f.reset();
 
-mensaje.textContent = cantidad > 0
-  ? `¡Solicitud publicada! Se notificó a ${cantidad} músico(s) compatible(s).`
-  : "La solicitud se guardó, pero todavía no hay músicos aprobados disponibles que coincidan con el género y la zona.";
-f.reset();
+    mensaje.textContent =
+      "Solicitud guardada. Buscando músicos compatibles...";
 
-setTimeout(() => $("request").close(), 3000);
+    const { data: cantidad, error: errorDistribucion } =
+      await supabaseClient.rpc(
+        "distribuir_solicitud_musical",
+        {
+          p_event_request_id: solicitudGuardada.id
+        }
+      );
 
-    
+    if (errorDistribucion) {
+      console.error(
+        "Error al distribuir solicitud:",
+        errorDistribucion
+      );
 
+      mensaje.textContent =
+        "La solicitud se guardó, pero no se pudo avisar a los músicos: " +
+        errorDistribucion.message;
 
+      return;
+    }
+
+    mensaje.textContent = cantidad > 0
+      ? `¡Solicitud publicada! Se generaron ofertas para ${cantidad} músico(s) compatible(s).`
+      : "La solicitud se guardó, pero todavía no hay músicos aprobados disponibles que coincidan con el género y la zona.";
+
+    await cargarContratacionesCliente();
+
+    setTimeout(() => {
+      if ($("request").open) {
+        $("request").close();
+      }
+    }, 3000);
 
   } catch (error) {
-    mensaje.textContent = "Error: " + error.message;
+    console.error("Error en la solicitud:", error);
+
+    mensaje.textContent =
+      "Error: " + error.message;
+
   } finally {
     if (boton) boton.disabled = false;
   }
