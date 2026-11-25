@@ -82,7 +82,132 @@ function actualizarPanelCliente(u){if($('panelCliente'))$('panelCliente').hidden
 function actualizarSesion(session){const u=session?.user||null,id=u?.id||null;if(id!==sesionId){sesionId=id;epoch++;favoritos.clear();$('listaContratacionesCliente')?.replaceChildren();$('listaMisFotos')?.replaceChildren();const c=$('contenidoSolicitudesMusico');if(c){c.hidden=true;c.replaceChildren();}$('lead')?.reset();actualizarPanelMusico(null,null);render();}actualizarPanelCliente(u);if($('openAccount'))$('openAccount').textContent=u?'Mi cuenta ✓':'Mi cuenta';if($('signOut'))$('signOut').hidden=!u;if($('signIn'))$('signIn').hidden=!!u;if($('signUp'))$('signUp').hidden=!!u;if(!u&&$('leadMsg'))$('leadMsg').textContent='Inicia sesión para consultar o editar tu perfil de músico.';if(u){const e=epoch;setTimeout(async()=>{if(e!==epoch)return;await cargarMiPerfilMusico();if(e===epoch)await cargarFavoritos();},0);}}
 const authForm=$('authForm'),authMsg=$('authMsg'),account=$('accountDialog');
 $('openAccount')?.addEventListener('click',()=>account.showModal());$('closeAccount')?.addEventListener('click',()=>account.close());account?.addEventListener('click',e=>{if(e.target===account)account.close();});
-async function autenticar(registro){if(!authForm||!authForm.elements.email.reportValidity()||!authForm.elements.password.reportValidity())return;const email=authForm.elements.email.value.trim(),password=authForm.elements.password.value,b=$(registro?'signUp':'signIn');if(registro&&password.length<8){authMsg.textContent='La contraseña debe tener al menos 8 caracteres.';return;}b.disabled=true;authMsg.textContent=registro?'Creando cuenta...':'Iniciando sesión...';try{const r=registro?await supabaseClient.auth.signUp({email,password,options:{data:{display_name:email.split('@')[0]}}}):await supabaseClient.auth.signInWithPassword({email,password});if(r.error)throw r.error;if(r.data.session){actualizarSesion(r.data.session);authMsg.textContent='¡Bienvenido a MiMuR!';account.close();}else authMsg.textContent='Registro recibido. Revisa tu correo para confirmar la cuenta.';authForm.elements.password.value='';}catch(error){authMsg.textContent='Error: '+error.message;}finally{b.disabled=false;}}
+async function autenticar(registro) {
+
+  if (
+    !authForm ||
+    !authForm.elements.email.reportValidity() ||
+    !authForm.elements.password.reportValidity()
+  ) return;
+
+  const email = authForm.elements.email.value.trim();
+  const password = authForm.elements.password.value;
+  const b = $(registro ? 'signUp' : 'signIn');
+
+  if (!b || b.disabled) return;
+
+  // Validar contraseña únicamente durante el registro.
+
+  if (registro) {
+
+    const requisitos = [];
+
+    if (Array.from(password).length < 12) {
+      requisitos.push('al menos 12 caracteres');
+    }
+
+    if (!/[A-Z]/.test(password)) {
+      requisitos.push('una letra mayúscula');
+    }
+
+    if (!/[a-z]/.test(password)) {
+      requisitos.push('una letra minúscula');
+    }
+
+    if (!/[0-9]/.test(password)) {
+      requisitos.push('un número');
+    }
+
+    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]/.test(password)) {
+      requisitos.push('un símbolo especial');
+    }
+
+    if (requisitos.length > 0) {
+
+      authMsg.textContent =
+        'Tu contraseña debe incluir: ' +
+        requisitos.join(', ') + '.';
+
+      return;
+
+    }
+
+  }
+
+  b.disabled = true;
+
+  authMsg.textContent = registro
+    ? 'Creando cuenta...'
+    : 'Iniciando sesión...';
+
+  try {
+
+    const r = registro
+
+      ? await supabaseClient.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              display_name: email.split('@')[0]
+            }
+          }
+        })
+
+      : await supabaseClient.auth.signInWithPassword({
+          email,
+          password
+        });
+
+    if (r.error) throw r.error;
+
+    if (r.data.session) {
+
+      actualizarSesion(r.data.session);
+
+      authMsg.textContent = '¡Bienvenido a MiMuR!';
+
+      account.close();
+
+    } else {
+
+      authMsg.textContent =
+        'Registro recibido. Revisa tu correo para confirmar la cuenta.';
+
+    }
+
+    authForm.elements.password.value = '';
+
+  } catch (error) {
+
+    if (error.code === 'weak_password') {
+
+      authMsg.textContent =
+        'La contraseña no cumple los requisitos de seguridad de MiMuR.';
+
+    } else if (error.code === 'invalid_credentials') {
+
+      authMsg.textContent =
+        'El correo electrónico o la contraseña son incorrectos.';
+
+    } else if (error.code === 'email_not_confirmed') {
+
+      authMsg.textContent =
+        'Debes confirmar tu correo electrónico antes de iniciar sesión.';
+
+    } else {
+
+      authMsg.textContent = 'Error: ' + error.message;
+
+    }
+
+  } finally {
+
+    b.disabled = false;
+
+  }
+
+}
 $('signUp')?.addEventListener('click',()=>autenticar(true));$('signIn')?.addEventListener('click',()=>autenticar(false));$('signOut')?.addEventListener('click',async()=>{const b=$('signOut');b.disabled=true;try{const {error}=await supabaseClient.auth.signOut();if(error)throw error;actualizarSesion(null);account.close();authMsg.textContent='Has cerrado sesión correctamente.';}catch(error){authMsg.textContent=error.message;}finally{b.disabled=false;}});
 supabaseClient.auth.onAuthStateChange((event,session)=>actualizarSesion(session));
 for(const id of ['q','genre','zone'])$(id)?.addEventListener(id==='q'?'input':'change',render);
