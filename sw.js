@@ -1,4 +1,5 @@
-const CACHE = "mimur-pwa-v4";
+
+const CACHE = "mimur-pwa-v5";
 
 const FILES = [
   "./",
@@ -6,7 +7,17 @@ const FILES = [
   "./styles.css",
   "./app.js",
   "./manifest.webmanifest",
-  "./assets/icon.svg"
+  "./assets/icon-192.png",
+  "./assets/icon-512.png",
+  "./assets/favicon.png",
+  "./assets/logo-mimur.webp",
+  "./assets/fondo-mimur.webp",
+  "./assets/solistas.webp",
+  "./assets/mariachis.webp",
+  "./assets/dj.webp",
+  "./assets/rock-pop.webp",
+  "./assets/norteno.webp",
+  "./assets/versatiles.webp"
 ];
 
 // Archivos estáticos autorizados.
