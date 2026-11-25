@@ -72,8 +72,16 @@ function render(){
   }
 
   const coincideTexto =
-    !q ||
-    norm([m.name, ...m.genres, m.zone].join(' ')).includes(q);
+  !q ||
+  norm([m.name, ...m.genres, m.zone].join(' ')).includes(q) ||
+  (
+    ['solista', 'solistas'].includes(q) &&
+    coincideGeneroMusical(m, 'Solista')
+  ) ||
+  (
+    ['rock pop', 'rock / pop', 'rock-pop'].includes(q) &&
+    coincideGeneroMusical(m, 'Rock / Pop')
+  );
 
   const coincideGenero =
     coincideGeneroMusical(m, $('genre')?.value);
