@@ -38,7 +38,7 @@ function coincideGeneroMusical(musico, filtro) {
   if (!seleccionado) return true;
 
   const categorias = {
-    solistas: [
+    solista: [
       'solista',
       'acustico',
       'trova',
@@ -46,7 +46,7 @@ function coincideGeneroMusical(musico, filtro) {
       'bolero',
       'romantica'
     ],
-    'rock-pop': [
+    'rock / pop': [
       'rock',
       'pop',
       'rock en español',
