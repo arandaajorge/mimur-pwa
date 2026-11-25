@@ -27,7 +27,25 @@ async function cargarMusicosAprobados(){
 function render(){
  const norm=v=>String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toLowerCase();
  const q=norm($('q')?.value),g=norm($('genre')?.value),z=norm($('zone')?.value);
- const filas=catalogo.filter(m=>vista==='favoritos'?favoritos.has(m.id):((!q||norm([m.name,...m.genres,m.zone].join(' ')).includes(q))&&(!g||m.genres.some(x=>norm(x)===g||(g==='rock / pop'&&['rock','pop','rock en español','rock alternativo'].includes(norm(x))))||norm(m.genre)===g)&&(!z||norm(m.zone)===z||norm(m.zone).split(',')[0]===z)));
+ const filas = catalogo.filter(m => {
+  if (vista === 'favoritos') {
+    return favoritos.has(m.id);
+  }
+
+  const coincideTexto =
+    !q ||
+    norm([m.name, ...m.genres, m.zone].join(' ')).includes(q);
+
+  const coincideGenero =
+    coincideGeneroMusical(m, $('genre')?.value);
+
+  const coincideZona =
+    !z ||
+    norm(m.zone) === z ||
+    norm(m.zone).split(',')[0] === z;
+
+  return coincideTexto && coincideGenero && coincideZona;
+});
  $('musicians').innerHTML=filas.map(m=>`<article class="musician"><div class="art">${m.photoUrls.find(x=>httpsUrl(x))?`<img src="${safe(m.photoUrls.find(x=>httpsUrl(x)))}" alt="${safe(m.name)}" loading="lazy" style="width:100%;height:180px;object-fit:cover">`:'🎤'}</div><div class="body"><div class="cardheading"><h3>${safe(m.name)}</h3><button type="button" class="favorite-btn" data-favorite-id="${safe(m.id)}" aria-pressed="${favoritos.has(m.id)}" aria-label="${favoritos.has(m.id)?'Quitar de favoritos':'Guardar en favoritos'}">${favoritos.has(m.id)?'♥':'♡'}</button></div><div class="muted">${safe(m.genres.join(' · ')||m.genre)} · ${safe(m.zone)}</div><div class="stars"><small>Sin reseñas verificadas</small></div><p class="muted">${safe(m.bio)}</p><div class="chips"><span class="chip">${safe(m.status)}</span><span class="chip">Perfil MiMuR</span></div><div class="cardbottom"><b>${m.price==null?'Precio por confirmar':`Desde ${money(m.price)} <small class="muted">/ ${safe(m.unit)}</small>`}</b><button type="button" data-profile-id="${safe(m.id)}">Ver perfil</button><button type="button" data-id="${safe(m.id)}">Solicitar</button></div></div></article>`).join('');
  $('empty').hidden=filas.length>0;$('empty').textContent=catalogError?'No se pudo cargar el catálogo. Actualiza la página.':vista==='favoritos'?'Todavía no tienes artistas guardados.':'No se encontraron músicos con estos filtros.';
  document.querySelectorAll('#musicians [data-profile-id]').forEach(b=>b.onclick=()=>abrirPerfilPublicoMusico(catalogo.find(m=>m.id===b.dataset.profileId)));
