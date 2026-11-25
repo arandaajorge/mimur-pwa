@@ -1,1 +1,565 @@
-:root{color-scheme:dark;--bg:#101216;--panel:#202429;--panel-light:#292d32;--line:#41464c;--text:#f5f5f5;--muted:#a4a8ac;--green:#20d978;--accent:var(--green);--radius:20px}*{box-sizing:border-box}[hidden]{display:none!important}html{scroll-behavior:smooth;scroll-padding-top:90px}body{margin:0;color:var(--text);background:var(--bg);font:16px/1.55 system-ui,sans-serif;padding-bottom:85px}body:before{content:'';position:fixed;inset:0;z-index:-1;background:linear-gradient(#10121655,#101216bb),url('./assets/fondo-mimur.webp') center/cover no-repeat}a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}button,a,input,select,textarea{-webkit-tap-highlight-color:transparent}button{cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}:focus-visible{outline:2px solid var(--green);outline-offset:3px}header,footer{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px max(20px,calc((100% - 1120px)/2));background:#101216e8}header{position:sticky;top:0;z-index:20;backdrop-filter:blur(14px);border-bottom:1px solid #ffffff18}header nav{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.logo{font-size:29px;font-weight:850;letter-spacing:-1.5px;white-space:nowrap}.logo span{color:var(--green)}.logo img{width:52px;height:52px;object-fit:contain;vertical-align:middle;margin-right:8px}main{max-width:1160px;margin:auto;padding:24px 20px}section{margin-bottom:34px}h1,h2,h3,h4,p{margin:0 0 12px}h1{font-size:clamp(34px,6vw,64px);line-height:1.08;letter-spacing:-.045em}h2{font-size:clamp(24px,4vw,34px);line-height:1.2;letter-spacing:-.025em}h3{font-size:19px}p{color:var(--muted)}.eyebrow{font-size:11px;letter-spacing:.16em;font-weight:800;color:var(--green)}.hero{display:grid;gap:24px;padding:30px 0}.hero em{font-style:normal;color:var(--green)}.title-left,.title-right{display:inline-block;animation:enter .7s ease both}.title-left{--shift:-45px}.title-right{--shift:45px;animation-delay:.12s}@keyframes enter{from{opacity:0;transform:translateX(var(--shift))}to{opacity:1;transform:none}}.lead{font-size:17px;max-width:620px}.small,.muted,small{font-size:13px;color:var(--muted)}.btn,button{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid transparent;border-radius:12px;padding:11px 16px;background:var(--green);color:#101216;font-weight:750;min-height:44px;text-align:center}.secondary,header button,.favorite-btn,#volverCatalogoMusicos,#perfilPublicoFavorito,#perfilPublicoCompartir{background:#ffffff09;border-color:var(--line);color:var(--text)}.btn:hover,button:hover{filter:brightness(1.08)}.hero aside,.filters,.search-panel,.join,form,.steps article,.musician,.oferta-musico-card,.artist-cta{background:#202429e8;border:1px solid #ffffff20;border-radius:var(--radius);padding:20px;box-shadow:0 8px 28px #0002}.tag,.chip,.chips span{display:inline-block;border-radius:20px;padding:4px 10px;background:#20d97818;color:var(--green);font-size:12px}.stats,.actions,.panel-musico-actions,.panel-cliente-actions,.perfil-publico-acciones{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}.stats b{padding:8px;background:var(--panel-light);border-radius:8px}.filters,.grid,.steps,.category-grid{display:grid;gap:14px}.filters{margin:16px 0}label{display:grid;gap:6px;font-size:14px;font-weight:600;margin:0 0 12px}input,select,textarea{width:100%;min-width:0;background:#101216cc;color:var(--text);border:1px solid var(--line);border-radius:11px;padding:12px;min-height:46px}textarea{min-height:100px;resize:vertical}input::placeholder,textarea::placeholder{color:var(--muted)}input[type=checkbox]{width:19px;min-height:19px;accent-color:var(--green)}.check{display:flex;align-items:center;gap:10px}.grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))}.musician{padding:0;overflow:hidden}.musician .art{min-height:120px;display:grid;place-items:center;font-size:50px;background:linear-gradient(145deg,#292d32,#152d22)}.musician .body{padding:16px}.cardheading{display:flex;justify-content:space-between;align-items:center;gap:8px}.favorite-btn{padding:6px 12px;font-size:23px}.favorite-btn[aria-pressed=true]{color:var(--green)}.cardbottom{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:14px}.cardbottom button{flex:1}.chips{display:flex;flex-wrap:wrap;gap:6px}.steps article b{color:var(--green)}.join{display:grid;gap:20px}.join form{box-shadow:none;background:#10121666}.category-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.category-card{position:relative;aspect-ratio:4/5;overflow:hidden;border-radius:18px;border:1px solid #ffffff22;padding:0;background:var(--panel);color:white;text-align:left;display:block}.category-card img{width:100%;height:100%;object-fit:cover;display:block}.category-card:after{content:'';position:absolute;inset:0;background:linear-gradient(transparent 35%,#000d)}.category-card .category-copy{position:absolute;bottom:0;left:0;right:0;padding:14px;z-index:1}.category-copy strong{display:block;font-size:18px}.category-copy small{color:#ddd}.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:30;display:flex;justify-content:space-around;background:#101216f5;border-top:1px solid var(--line);padding:8px 4px calc(8px + env(safe-area-inset-bottom));backdrop-filter:blur(14px)}.bottom-nav a,.bottom-nav button{display:flex;flex:1;flex-direction:column;align-items:center;gap:4px;font-size:11px;color:var(--muted);background:none;border:0;padding:6px 2px;min-width:0}.bottom-nav svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1.7}.bottom-nav [aria-current=page],.bottom-nav .active{color:var(--green)}dialog{width:min(94vw,560px);max-height:90dvh;overflow:auto;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:20px;padding:24px;box-shadow:0 20px 80px #0009}dialog::backdrop{background:#000b;backdrop-filter:blur(4px)}dialog form{padding:0;border:0;background:none;box-shadow:none}.close{position:sticky;top:0;float:right;background:var(--panel-light);color:var(--text);border:1px solid var(--line);width:44px;padding:0;font-size:25px;z-index:2}.perfil-publico-content{display:grid;gap:16px}.perfil-publico-content>div{min-width:0}.perfil-publico-video iframe,#perfilPublicoVideo iframe,#perfilPublicoVideo video{width:100%;aspect-ratio:16/9;border:0;border-radius:12px}.perfil-publico-contratacion,.perfil-publico-info{padding:16px;background:#10121699;border-radius:14px}.oferta-musico-card{margin:12px 0;overflow-wrap:anywhere}.cotizacion-cliente{padding:14px;margin:10px 0;border:1px solid var(--line);border-radius:12px}#listaMisFotos{display:flex;flex-wrap:wrap;gap:10px}#listaMisFotos img{max-width:120px;border-radius:10px}.mimur-carrusel{position:relative;width:100%;height:340px;overflow:hidden;touch-action:pan-y;background:#101216;border-radius:16px}.mimur-carrusel-imagen{width:100%;height:100%;object-fit:contain}.mimur-carrusel-anterior,.mimur-carrusel-siguiente,.mimur-visor-atras,.mimur-visor-adelante{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;min-height:0;border-radius:50%;padding:0;background:#101216cc;color:white}.mimur-carrusel-anterior,.mimur-visor-atras{left:12px}.mimur-carrusel-siguiente,.mimur-visor-adelante{right:12px}.mimur-carrusel-contador{position:absolute;bottom:12px;right:12px;background:#000b;padding:5px 10px;border-radius:20px}.mimur-visor-fotos{position:fixed;inset:0;z-index:99999;background:#000f;display:flex;align-items:center;justify-content:center;height:100dvh}.mimur-visor-imagen{max-width:100%;max-height:90dvh;object-fit:contain}.mimur-visor-cerrar{position:absolute;top:calc(12px + env(safe-area-inset-top));right:18px}.mimur-visor-numero{position:absolute;bottom:calc(15px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%)}footer{font-size:12px;color:var(--muted);flex-wrap:wrap}.waveform{width:100%;max-width:600px;color:var(--green)}@media(min-width:850px){.hero{grid-template-columns:1.6fr 1fr;align-items:center}.filters,.steps{grid-template-columns:repeat(3,minmax(0,1fr))}.category-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.perfil-publico-content{grid-template-columns:1.4fr 1fr}.perfil-publico-galeria-seccion,.perfil-publico-videos{grid-column:1}.perfil-publico-info{grid-column:2;grid-row:1}.perfil-publico-contratacion{grid-column:2;grid-row:2}.bottom-nav{max-width:700px;margin:auto;border-radius:18px 18px 0 0}}@media(max-width:600px){main{padding:18px 14px}header{padding:12px 14px}header nav{gap:6px}header nav a{font-size:12px}header button{font-size:12px;padding:8px}.hero{padding:20px 0}.join,.filters,form{padding:15px}.mimur-carrusel{height:260px}.cardbottom button{flex-basis:42%}.category-copy strong{font-size:16px}.category-copy small{font-size:11px}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#101216"><meta name="description" content="Encuentra músicos para tu evento con MiMuR"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" href="assets/favicon.png"><link rel="stylesheet" href="styles.css"><title>MiMuR — Música que se vive</title></head>
+<body><header><a class="logo" href="#inicio"><img src="assets/logo-mimur.webp" alt="">MiMu<span>R</span></a><nav><button id="openAccount" type="button">Mi cuenta</button><button id="install" type="button" hidden>Instalar app</button></nav></header>
+<main><section id="inicio" class="hero"><div><p class="eyebrow">● MÚSICA PARA TUS MOMENTOS</p><h1><span class="title-left">Encuentra la música.</span><br><em class="title-right">Vive el momento.</em></h1><p class="lead">Cada momento tiene un sonido. Encuentra el tuyo.</p><svg class="waveform" viewBox="0 0 320 40" aria-hidden="true"><path d="M0 20H85L98 15 110 26 123 8 137 32 150 2 165 38 180 12 194 28 208 16 222 20H320" fill="none" stroke="currentColor" stroke-width="2"/></svg></div></section>
+<section id="buscar"><div class="search-panel"><p class="eyebrow">DESCUBRIR</p><h2>¿Qué quieres escuchar?</h2><div class="filters"><label>Buscar<input id="q" placeholder="Nombre, estilo o zona"></label><label>Género<select id="genre"><option value="">Todos</option><option>Mariachi</option>
+<option>Norteño</option>
+<option>Banda sinaloense</option>
+<option>Banda de viento</option>
+<option>Duranguense</option>
+<option>Tierra caliente</option>
+<option>Grupero</option>
+<option>Grupo versátil</option>
+<option>Cumbia</option>
+<option>Salsa</option>
+<option>Merengue</option>
+<option>Sonidero</option>
+<option>Regional mexicano</option>
+<option>Ranchero</option>
+<option>Huapango</option>
+<option>Corridos</option>
+<option>Corridos tumbados</option>
+<option>Reguetón</option>
+<option>Urbano latino</option>
+<option>Trap</option>
+<option>Hip-hop / Rap</option>
+<option>Pop</option>
+<option>Rock</option>
+<option>Rock en español</option>
+<option>Rock alternativo</option>
+<option>Metal</option>
+<option>Indie</option>
+<option>Electrónica</option>
+<option>DJ</option>
+<option>House</option>
+<option>Techno</option>
+<option>EDM</option>
+<option>Jazz</option>
+<option>Blues</option>
+<option>Reggae</option>
+<option>Funk</option>
+<option>Disco</option>
+<option>Acústico</option>
+<option>Balada</option>
+<option>Trova</option>
+<option>Bolero</option>
+<option>Romántica</option>
+<option>Clásica</option>
+<option>Ópera</option>
+<option>Coral</option>
+<option>Infantil</option>
+<option>Son jarocho</option>
+<option>Son cubano</option>
+<option>Flamenco</option>
+<option>World music</option>
+<option>Otro</option>
+<option>Rock / Pop</option>
+<option>Solista</option></select></label><label>Zona<select id="zone"><option value="">Todas</option><option>Coyoacán</option>
+<option>Benito Juárez</option>
+<option>Centro</option>
+<option>Azcapotzalco</option>
+<option>Álvaro Obregón, CDMX</option>
+<option>Azcapotzalco, CDMX</option>
+<option>Benito Juárez, CDMX</option>
+<option>Coyoacán, CDMX</option>
+<option>Cuajimalpa de Morelos, CDMX</option>
+<option>Cuauhtémoc, CDMX</option>
+<option>Gustavo A. Madero, CDMX</option>
+<option>Iztacalco, CDMX</option>
+<option>Iztapalapa, CDMX</option>
+<option>La Magdalena Contreras, CDMX</option>
+<option>Miguel Hidalgo, CDMX</option>
+<option>Milpa Alta, CDMX</option>
+<option>Tláhuac, CDMX</option>
+<option>Tlalpan, CDMX</option>
+<option>Venustiano Carranza, CDMX</option>
+<option>Xochimilco, CDMX</option>
+<option>Acolman, Edomex</option>
+<option>Aculco, Edomex</option>
+<option>Almoloya de Alquisiras, Edomex</option>
+<option>Almoloya de Juárez, Edomex</option>
+<option>Almoloya del Río, Edomex</option>
+<option>Amanalco, Edomex</option>
+<option>Amatepec, Edomex</option>
+<option>Amecameca, Edomex</option>
+<option>Apaxco, Edomex</option>
+<option>Atenco, Edomex</option>
+<option>Atizapán, Edomex</option>
+<option>Atizapán de Zaragoza, Edomex</option>
+<option>Atlacomulco, Edomex</option>
+<option>Atlautla, Edomex</option>
+<option>Axapusco, Edomex</option>
+<option>Ayapango, Edomex</option>
+<option>Calimaya, Edomex</option>
+<option>Capulhuac, Edomex</option>
+<option>Chalco, Edomex</option>
+<option>Chapa de Mota, Edomex</option>
+<option>Chapultepec, Edomex</option>
+<option>Chiautla, Edomex</option>
+<option>Chicoloapan, Edomex</option>
+<option>Chiconcuac, Edomex</option>
+<option>Chimalhuacán, Edomex</option>
+<option>Coacalco de Berriozábal, Edomex</option>
+<option>Coatepec Harinas, Edomex</option>
+<option>Cocotitlán, Edomex</option>
+<option>Coyotepec, Edomex</option>
+<option>Cuautitlán, Edomex</option>
+<option>Cuautitlán Izcalli, Edomex</option>
+<option>Donato Guerra, Edomex</option>
+<option>Ecatepec de Morelos, Edomex</option>
+<option>Ecatzingo, Edomex</option>
+<option>El Oro, Edomex</option>
+<option>Huehuetoca, Edomex</option>
+<option>Hueypoxtla, Edomex</option>
+<option>Huixquilucan, Edomex</option>
+<option>Isidro Fabela, Edomex</option>
+<option>Ixtapaluca, Edomex</option>
+<option>Ixtapan de la Sal, Edomex</option>
+<option>Ixtapan del Oro, Edomex</option>
+<option>Ixtlahuaca, Edomex</option>
+<option>Jaltenco, Edomex</option>
+<option>Jilotepec, Edomex</option>
+<option>Jilotzingo, Edomex</option>
+<option>Jiquipilco, Edomex</option>
+<option>Jocotitlán, Edomex</option>
+<option>Joquicingo, Edomex</option>
+<option>Juchitepec, Edomex</option>
+<option>La Paz, Edomex</option>
+<option>Lerma, Edomex</option>
+<option>Luvianos, Edomex</option>
+<option>Malinalco, Edomex</option>
+<option>Melchor Ocampo, Edomex</option>
+<option>Metepec, Edomex</option>
+<option>Mexicaltzingo, Edomex</option>
+<option>Morelos, Edomex</option>
+<option>Naucalpan de Juárez, Edomex</option>
+<option>Nextlalpan, Edomex</option>
+<option>Nezahualcóyotl, Edomex</option>
+<option>Nicolás Romero, Edomex</option>
+<option>Nopaltepec, Edomex</option>
+<option>Ocoyoacac, Edomex</option>
+<option>Ocuilan, Edomex</option>
+<option>Otumba, Edomex</option>
+<option>Otzoloapan, Edomex</option>
+<option>Otzolotepec, Edomex</option>
+<option>Ozumba, Edomex</option>
+<option>Papalotla, Edomex</option>
+<option>Polotitlán, Edomex</option>
+<option>Rayón, Edomex</option>
+<option>San Antonio la Isla, Edomex</option>
+<option>San Felipe del Progreso, Edomex</option>
+<option>San José del Rincón, Edomex</option>
+<option>San Martín de las Pirámides, Edomex</option>
+<option>San Mateo Atenco, Edomex</option>
+<option>San Simón de Guerrero, Edomex</option>
+<option>Santo Tomás, Edomex</option>
+<option>Soyaniquilpan de Juárez, Edomex</option>
+<option>Sultepec, Edomex</option>
+<option>Tecámac, Edomex</option>
+<option>Tejupilco, Edomex</option>
+<option>Temamatla, Edomex</option>
+<option>Temascalapa, Edomex</option>
+<option>Temascalcingo, Edomex</option>
+<option>Temascaltepec, Edomex</option>
+<option>Temoaya, Edomex</option>
+<option>Tenancingo, Edomex</option>
+<option>Tenango del Aire, Edomex</option>
+<option>Tenango del Valle, Edomex</option>
+<option>Teoloyucan, Edomex</option>
+<option>Teotihuacán, Edomex</option>
+<option>Tepetlaoxtoc, Edomex</option>
+<option>Tepetlixpa, Edomex</option>
+<option>Tepotzotlán, Edomex</option>
+<option>Tequixquiac, Edomex</option>
+<option>Texcaltitlán, Edomex</option>
+<option>Texcalyacac, Edomex</option>
+<option>Texcoco, Edomex</option>
+<option>Tezoyuca, Edomex</option>
+<option>Tianguistenco, Edomex</option>
+<option>Timilpan, Edomex</option>
+<option>Tlalmanalco, Edomex</option>
+<option>Tlalnepantla de Baz, Edomex</option>
+<option>Tlatlaya, Edomex</option>
+<option>Toluca, Edomex</option>
+<option>Tonanitla, Edomex</option>
+<option>Tonatico, Edomex</option>
+<option>Tultepec, Edomex</option>
+<option>Tultitlán, Edomex</option>
+<option>Valle de Bravo, Edomex</option>
+<option>Valle de Chalco Solidaridad, Edomex</option>
+<option>Villa de Allende, Edomex</option>
+<option>Villa del Carbón, Edomex</option>
+<option>Villa Guerrero, Edomex</option>
+<option>Villa Victoria, Edomex</option>
+<option>Xalatlaco, Edomex</option>
+<option>Xonacatlán, Edomex</option>
+<option>Zacazonapan, Edomex</option>
+<option>Zacualpan, Edomex</option>
+<option>Zinacantepec, Edomex</option>
+<option>Zumpahuacán, Edomex</option>
+<option>Zumpango, Edomex</option></select></label></div><label>Fecha del evento<input id="fechaBusqueda" type="date"></label><label>Presupuesto total (MXN)<input id="presupuestoBusqueda" type="number" min="1" max="2147483647" step="1" placeholder="Ej. 3500"></label><p class="small">Fecha y presupuesto se usarán al preparar tu solicitud; no verifican disponibilidad.</p><button type="button" id="buscarMusicos" class="btn">Encontrar mi músico →</button></div></section>
+<section id="categorias"><h2>Explora por categoría</h2><div class="category-grid"><button type="button" class="category-card" data-category="solistas"><img src="assets/solistas.webp" alt="" loading="lazy"><span class="category-copy"><strong>Solistas</strong><small>Una voz, mil emociones</small></span></button><button type="button" class="category-card" data-category="Mariachi"><img src="assets/mariachis.webp" alt="" loading="lazy"><span class="category-copy"><strong>Mariachis</strong><small>Tradición que emociona</small></span></button><button type="button" class="category-card" data-category="DJ"><img src="assets/dj.webp" alt="" loading="lazy"><span class="category-copy"><strong>DJ</strong><small>Enciende la fiesta</small></span></button><button type="button" class="category-card" data-category="rock-pop"><img src="assets/rock-pop.webp" alt="" loading="lazy"><span class="category-copy"><strong>Rock / Pop</strong><small>Siente la energía</small></span></button><button type="button" class="category-card" data-category="Norteño"><img src="assets/norteno.webp" alt="" loading="lazy"><span class="category-copy"><strong>Norteños</strong><small>Música con identidad</small></span></button><button type="button" class="category-card" data-category="Grupo versátil"><img src="assets/versatiles.webp" alt="" loading="lazy"><span class="category-copy"><strong>Grupos versátiles</strong><small>Para cada celebración</small></span></button></div></section>
+<section id="resultados"><h2 id="tituloResultados">Músicos para tu evento</h2><div id="musicians" class="grid"></div><p id="empty" hidden>No encontramos perfiles con esos filtros.</p></section>
+<section class="artist-cta" id="invitacionMusico"><h2>Tu talento merece un escenario.</h2><p>Forma parte de la comunidad de artistas MiMuR.</p><a class="btn" href="#registro">Soy músico →</a></section>
+<section id="panelCliente" class="join" hidden><div><p class="eyebrow">MI MIMUR</p><h2>Mis contrataciones</h2><p>Consulta tus solicitudes, cotizaciones y próximas contrataciones.</p></div><div class="panel-cliente-content"><div class="panel-cliente-actions"><button type="button" id="actualizarContratacionesCliente" class="btn secondary">Actualizar mis solicitudes</button></div><p id="estadoContratacionesCliente" role="status" aria-live="polite"></p><div id="listaContratacionesCliente"></div></div></section>
+<section id="panelMusico" class="join" hidden><div><p class="eyebrow">MI MIMUR</p><h2>Panel del músico</h2><p>Administra tu perfil artístico.</p></div><div class="panel-musico-content"><h3>Mi perfil artístico</h3><p id="estadoPerfilMusico">Cargando información...</p><div class="panel-musico-actions"><button type="button" id="editarPerfilMusico">Editar mi perfil</button><button type="button" id="verSolicitudesMusico">Mis solicitudes</button></div><div id="contenidoSolicitudesMusico" hidden></div></div></section>
+<section id="perfilPublicoMusico" class="join" hidden><div class="perfil-publico-header"><button type="button" id="volverCatalogoMusicos">← Volver al catálogo</button><p class="eyebrow">PERFIL ARTÍSTICO · MIMUR</p><h2 id="perfilPublicoNombre">Perfil del músico</h2><p id="perfilPublicoGenero" class="muted"></p></div><div class="perfil-publico-content"><div class="perfil-publico-galeria-seccion"><div id="perfilPublicoGaleria"></div></div><div class="perfil-publico-videos"><h3>Videos y presentaciones</h3><div id="perfilPublicoVideo"></div><p class="muted">Conoce su estilo antes de contratarlo.</p></div><div class="perfil-publico-info"><h3>Sobre el artista</h3><p id="perfilPublicoBio"></p><div id="perfilPublicoDetalles"></div></div><div class="perfil-publico-contratacion"><h3>Zona de servicio</h3><p id="perfilPublicoZona"></p><h3>Precio desde</h3><p id="perfilPublicoPrecio"></p><h3>Disponibilidad</h3><p id="perfilPublicoDisponibilidad"></p><h3>Reseñas de clientes</h3><div id="perfilPublicoResenas"><p>Aún no hay reseñas verificadas.</p></div><div class="perfil-publico-acciones"><button type="button" id="perfilPublicoFavorito">♡ Guardar en favoritos</button><button type="button" id="perfilPublicoCompartir">Compartir perfil</button><button type="button" id="perfilPublicoSolicitar">Solicitar contratación</button></div></div></div></section>
+<section id="registro" class="join"><div><p class="eyebrow">PARA MÚSICOS</p><h2>Haz que tu música llegue más lejos.</h2><p>Crea o actualiza tu perfil profesional. Los perfiles requieren aprobación para aparecer en el catálogo.</p></div><form id="lead"><h3>Mi perfil profesional</h3><label>Nombre artístico *<input name="name" required maxlength="100"></label><label>WhatsApp *<input name="phone" required type="tel"></label><label>Alcaldía o municipio *<input name="zone" list="zonasMexico" required maxlength="100" placeholder="Escribe tu alcaldía o municipio"></label><datalist id="zonasMexico"><option>Álvaro Obregón, CDMX</option>
+<option>Azcapotzalco, CDMX</option>
+<option>Benito Juárez, CDMX</option>
+<option>Coyoacán, CDMX</option>
+<option>Cuajimalpa de Morelos, CDMX</option>
+<option>Cuauhtémoc, CDMX</option>
+<option>Gustavo A. Madero, CDMX</option>
+<option>Iztacalco, CDMX</option>
+<option>Iztapalapa, CDMX</option>
+<option>La Magdalena Contreras, CDMX</option>
+<option>Miguel Hidalgo, CDMX</option>
+<option>Milpa Alta, CDMX</option>
+<option>Tláhuac, CDMX</option>
+<option>Tlalpan, CDMX</option>
+<option>Venustiano Carranza, CDMX</option>
+<option>Xochimilco, CDMX</option>
+<option>Acolman, Edomex</option>
+<option>Aculco, Edomex</option>
+<option>Almoloya de Alquisiras, Edomex</option>
+<option>Almoloya de Juárez, Edomex</option>
+<option>Almoloya del Río, Edomex</option>
+<option>Amanalco, Edomex</option>
+<option>Amatepec, Edomex</option>
+<option>Amecameca, Edomex</option>
+<option>Apaxco, Edomex</option>
+<option>Atenco, Edomex</option>
+<option>Atizapán, Edomex</option>
+<option>Atizapán de Zaragoza, Edomex</option>
+<option>Atlacomulco, Edomex</option>
+<option>Atlautla, Edomex</option>
+<option>Axapusco, Edomex</option>
+<option>Ayapango, Edomex</option>
+<option>Calimaya, Edomex</option>
+<option>Capulhuac, Edomex</option>
+<option>Chalco, Edomex</option>
+<option>Chapa de Mota, Edomex</option>
+<option>Chapultepec, Edomex</option>
+<option>Chiautla, Edomex</option>
+<option>Chicoloapan, Edomex</option>
+<option>Chiconcuac, Edomex</option>
+<option>Chimalhuacán, Edomex</option>
+<option>Coacalco de Berriozábal, Edomex</option>
+<option>Coatepec Harinas, Edomex</option>
+<option>Cocotitlán, Edomex</option>
+<option>Coyotepec, Edomex</option>
+<option>Cuautitlán, Edomex</option>
+<option>Cuautitlán Izcalli, Edomex</option>
+<option>Donato Guerra, Edomex</option>
+<option>Ecatepec de Morelos, Edomex</option>
+<option>Ecatzingo, Edomex</option>
+<option>El Oro, Edomex</option>
+<option>Huehuetoca, Edomex</option>
+<option>Hueypoxtla, Edomex</option>
+<option>Huixquilucan, Edomex</option>
+<option>Isidro Fabela, Edomex</option>
+<option>Ixtapaluca, Edomex</option>
+<option>Ixtapan de la Sal, Edomex</option>
+<option>Ixtapan del Oro, Edomex</option>
+<option>Ixtlahuaca, Edomex</option>
+<option>Jaltenco, Edomex</option>
+<option>Jilotepec, Edomex</option>
+<option>Jilotzingo, Edomex</option>
+<option>Jiquipilco, Edomex</option>
+<option>Jocotitlán, Edomex</option>
+<option>Joquicingo, Edomex</option>
+<option>Juchitepec, Edomex</option>
+<option>La Paz, Edomex</option>
+<option>Lerma, Edomex</option>
+<option>Luvianos, Edomex</option>
+<option>Malinalco, Edomex</option>
+<option>Melchor Ocampo, Edomex</option>
+<option>Metepec, Edomex</option>
+<option>Mexicaltzingo, Edomex</option>
+<option>Morelos, Edomex</option>
+<option>Naucalpan de Juárez, Edomex</option>
+<option>Nextlalpan, Edomex</option>
+<option>Nezahualcóyotl, Edomex</option>
+<option>Nicolás Romero, Edomex</option>
+<option>Nopaltepec, Edomex</option>
+<option>Ocoyoacac, Edomex</option>
+<option>Ocuilan, Edomex</option>
+<option>Otumba, Edomex</option>
+<option>Otzoloapan, Edomex</option>
+<option>Otzolotepec, Edomex</option>
+<option>Ozumba, Edomex</option>
+<option>Papalotla, Edomex</option>
+<option>Polotitlán, Edomex</option>
+<option>Rayón, Edomex</option>
+<option>San Antonio la Isla, Edomex</option>
+<option>San Felipe del Progreso, Edomex</option>
+<option>San José del Rincón, Edomex</option>
+<option>San Martín de las Pirámides, Edomex</option>
+<option>San Mateo Atenco, Edomex</option>
+<option>San Simón de Guerrero, Edomex</option>
+<option>Santo Tomás, Edomex</option>
+<option>Soyaniquilpan de Juárez, Edomex</option>
+<option>Sultepec, Edomex</option>
+<option>Tecámac, Edomex</option>
+<option>Tejupilco, Edomex</option>
+<option>Temamatla, Edomex</option>
+<option>Temascalapa, Edomex</option>
+<option>Temascalcingo, Edomex</option>
+<option>Temascaltepec, Edomex</option>
+<option>Temoaya, Edomex</option>
+<option>Tenancingo, Edomex</option>
+<option>Tenango del Aire, Edomex</option>
+<option>Tenango del Valle, Edomex</option>
+<option>Teoloyucan, Edomex</option>
+<option>Teotihuacán, Edomex</option>
+<option>Tepetlaoxtoc, Edomex</option>
+<option>Tepetlixpa, Edomex</option>
+<option>Tepotzotlán, Edomex</option>
+<option>Tequixquiac, Edomex</option>
+<option>Texcaltitlán, Edomex</option>
+<option>Texcalyacac, Edomex</option>
+<option>Texcoco, Edomex</option>
+<option>Tezoyuca, Edomex</option>
+<option>Tianguistenco, Edomex</option>
+<option>Timilpan, Edomex</option>
+<option>Tlalmanalco, Edomex</option>
+<option>Tlalnepantla de Baz, Edomex</option>
+<option>Tlatlaya, Edomex</option>
+<option>Toluca, Edomex</option>
+<option>Tonanitla, Edomex</option>
+<option>Tonatico, Edomex</option>
+<option>Tultepec, Edomex</option>
+<option>Tultitlán, Edomex</option>
+<option>Valle de Bravo, Edomex</option>
+<option>Valle de Chalco Solidaridad, Edomex</option>
+<option>Villa de Allende, Edomex</option>
+<option>Villa del Carbón, Edomex</option>
+<option>Villa Guerrero, Edomex</option>
+<option>Villa Victoria, Edomex</option>
+<option>Xalatlaco, Edomex</option>
+<option>Xonacatlán, Edomex</option>
+<option>Zacazonapan, Edomex</option>
+<option>Zacualpan, Edomex</option>
+<option>Zinacantepec, Edomex</option>
+<option>Zumpahuacán, Edomex</option>
+<option>Zumpango, Edomex</option></datalist><label>Género principal *<select name="genre" required><option value="">Selecciona tu género principal</option><option>Mariachi</option>
+<option>Norteño</option>
+<option>Banda sinaloense</option>
+<option>Banda de viento</option>
+<option>Duranguense</option>
+<option>Tierra caliente</option>
+<option>Grupero</option>
+<option>Grupo versátil</option>
+<option>Cumbia</option>
+<option>Salsa</option>
+<option>Merengue</option>
+<option>Sonidero</option>
+<option>Regional mexicano</option>
+<option>Ranchero</option>
+<option>Huapango</option>
+<option>Corridos</option>
+<option>Corridos tumbados</option>
+<option>Reguetón</option>
+<option>Urbano latino</option>
+<option>Trap</option>
+<option>Hip-hop / Rap</option>
+<option>Pop</option>
+<option>Rock</option>
+<option>Rock en español</option>
+<option>Rock alternativo</option>
+<option>Metal</option>
+<option>Indie</option>
+<option>Electrónica</option>
+<option>DJ</option>
+<option>House</option>
+<option>Techno</option>
+<option>EDM</option>
+<option>Jazz</option>
+<option>Blues</option>
+<option>Reggae</option>
+<option>Funk</option>
+<option>Disco</option>
+<option>Acústico</option>
+<option>Balada</option>
+<option>Trova</option>
+<option>Bolero</option>
+<option>Romántica</option>
+<option>Clásica</option>
+<option>Ópera</option>
+<option>Coral</option>
+<option>Infantil</option>
+<option>Son jarocho</option>
+<option>Son cubano</option>
+<option>Flamenco</option>
+<option>World music</option>
+<option>Otro</option></select></label><label>Precio por evento (MXN)<input name="eventPrice" type="number" min="10" max="1000000" step="1" placeholder="Ej. 2500"></label><label>Precio por hora (MXN)<input name="hourlyPrice" type="number" min="10" max="1000000" step="1" placeholder="Ej. 800"></label><label>Condiciones de contratación y tarifas<textarea name="pricingNotes" maxlength="500"></textarea></label><label>Enlace a video *<input name="video" type="url" required placeholder="https://..."></label><label>Descripción artística<textarea name="bio" maxlength="1500"></textarea></label><label>Experiencia y trayectoria<textarea name="experience" maxlength="1500"></textarea></label><label>Repertorio musical<textarea name="repertoire" placeholder="Una canción por línea"></textarea></label><label>Integrantes<textarea name="members" placeholder="Un integrante por línea"></textarea></label><label>Equipo de sonido e iluminación<textarea name="equipment" maxlength="1500"></textarea></label><label>Servicios que ofreces<textarea name="services" placeholder="Un servicio por línea"></textarea></label><label>Fotografías del artista<input type="file" name="photo_files" accept="image/*" multiple><small>Selecciona varias fotografías.</small></label><div id="misFotosMusico"><h4>Mis fotografías</h4><div id="listaMisFotos"></div></div><label class="check"><input type="checkbox" name="emergency">Acepto oportunidades de emergencia.</label><label class="check"><input type="checkbox" name="consent" required>Acepto que MiMuR me contacte para el piloto.</label><button class="btn" type="submit">Guardar mi perfil →</button><p id="leadMsg" role="status"></p></form></section></main>
+<footer><a class="logo" href="#inicio">MiMu<span>R</span></a><span>© 2026 MiMuR · Piloto · CDMX</span></footer><nav class="bottom-nav" aria-label="Navegación principal"><button type="button" data-view="inicio" aria-current=page><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10l9-7 9 7v11H3z M9 21v-8h6v8" stroke-linecap="round" stroke-linejoin="round"/></svg>Inicio</button><button type="button" data-view="explorar" ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 21l-6-6 M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0" stroke-linecap="round" stroke-linejoin="round"/></svg>Explorar</button><button type="button" data-view="solicitudes" ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v16H3z M3 10h18 M7 2v6 M17 2v6" stroke-linecap="round" stroke-linejoin="round"/></svg>Solicitudes</button><button type="button" data-view="favoritos" ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21L3 12C-2 4 8 0 12 7c4-7 14-3 9 5z" stroke-linecap="round" stroke-linejoin="round"/></svg>Favoritos</button><button type="button" data-view="cuenta" ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8 M4 22v-3a8 8 0 0 1 16 0v3" stroke-linecap="round" stroke-linejoin="round"/></svg>Cuenta</button></nav>
+<dialog id="accountDialog"><button type="button" id="closeAccount" class="close" aria-label="Cerrar">×</button><p class="eyebrow">MI MIMUR</p><h2>Tu música, tu cuenta.</h2><p>Inicia sesión o crea tu cuenta.</p><form id="authForm"><h3>Crear cuenta o iniciar sesión</h3><label>Correo electrónico<input name="email" type="email" required autocomplete="email" placeholder="tu@correo.com"></label><label>Contraseña<input name="password" type="password" required autocomplete="current-password" placeholder="Ingresa tu contraseña" aria-describedby="passwordRequirements"></label><div id="passwordRequirements" class="small"><strong>Requisitos para crear una cuenta:</strong><ul><li>Mínimo 12 caracteres.</li><li>Una letra mayúscula.</li><li>Una letra minúscula.</li><li>Un número.</li><li>Un símbolo especial.</li></ul><small>Si ya tienes una cuenta, utiliza tu contraseña actual.</small></div><div class="actions"><button class="btn" id="signUp" type="button">Crear cuenta</button><button class="btn secondary" id="signIn" type="button">Iniciar sesión</button><button class="btn secondary" id="signOut" type="button" hidden>Cerrar sesión</button></div><p id="authMsg" role="status" aria-live="polite"></p></form></dialog>
+<dialog id="request"><form id="requestForm"><button type="button" id="close" class="close" aria-label="Cerrar">×</button><p class="eyebrow">SOLICITUD DE EVENTO</p><h2 id="requestTitle">Solicitar músico</h2><p class="small">Envía una solicitud para recibir cotizaciones de músicos compatibles.</p><input type="hidden" name="musicianId"><label>Tu nombre *<input name="customer" required></label><label>WhatsApp *<input name="phone" required type="tel"></label><label>Fecha del evento *<input name="date" required type="date"></label><label>Hora de inicio del evento *<input name="eventTime" type="time" required><small>Horario de Ciudad de México.</small></label><label>Duración de la presentación *<select name="duration" id="eventDuration" required><option value="">Selecciona la duración</option><option value="30">30 minutos</option><option value="45">45 minutos</option><option value="50">50 minutos</option><option value="60">1 hora</option><option value="90">1 hora y 30 minutos</option><option value="120">2 horas</option><option value="180">3 horas</option><option value="240">4 horas</option><option value="300">5 horas</option><option value="360">6 horas</option><option value="480">8 horas</option><option value="custom">Personalizar duración</option></select></label><div id="customDurationContainer" hidden><label>Duración personalizada en minutos *<input name="customDuration" id="customDuration" type="number" min="1" max="1440" step="1" disabled></label></div><p id="eventTimeSummary" class="small" aria-live="polite"></p><label>Alcaldía o municipio del evento *<input name="eventZone" list="zonasEvento" required maxlength="100"></label><datalist id="zonasEvento"><option>Álvaro Obregón, CDMX</option>
+<option>Azcapotzalco, CDMX</option>
+<option>Benito Juárez, CDMX</option>
+<option>Coyoacán, CDMX</option>
+<option>Cuajimalpa de Morelos, CDMX</option>
+<option>Cuauhtémoc, CDMX</option>
+<option>Gustavo A. Madero, CDMX</option>
+<option>Iztacalco, CDMX</option>
+<option>Iztapalapa, CDMX</option>
+<option>La Magdalena Contreras, CDMX</option>
+<option>Miguel Hidalgo, CDMX</option>
+<option>Milpa Alta, CDMX</option>
+<option>Tláhuac, CDMX</option>
+<option>Tlalpan, CDMX</option>
+<option>Venustiano Carranza, CDMX</option>
+<option>Xochimilco, CDMX</option>
+<option>Acolman, Edomex</option>
+<option>Aculco, Edomex</option>
+<option>Almoloya de Alquisiras, Edomex</option>
+<option>Almoloya de Juárez, Edomex</option>
+<option>Almoloya del Río, Edomex</option>
+<option>Amanalco, Edomex</option>
+<option>Amatepec, Edomex</option>
+<option>Amecameca, Edomex</option>
+<option>Apaxco, Edomex</option>
+<option>Atenco, Edomex</option>
+<option>Atizapán, Edomex</option>
+<option>Atizapán de Zaragoza, Edomex</option>
+<option>Atlacomulco, Edomex</option>
+<option>Atlautla, Edomex</option>
+<option>Axapusco, Edomex</option>
+<option>Ayapango, Edomex</option>
+<option>Calimaya, Edomex</option>
+<option>Capulhuac, Edomex</option>
+<option>Chalco, Edomex</option>
+<option>Chapa de Mota, Edomex</option>
+<option>Chapultepec, Edomex</option>
+<option>Chiautla, Edomex</option>
+<option>Chicoloapan, Edomex</option>
+<option>Chiconcuac, Edomex</option>
+<option>Chimalhuacán, Edomex</option>
+<option>Coacalco de Berriozábal, Edomex</option>
+<option>Coatepec Harinas, Edomex</option>
+<option>Cocotitlán, Edomex</option>
+<option>Coyotepec, Edomex</option>
+<option>Cuautitlán, Edomex</option>
+<option>Cuautitlán Izcalli, Edomex</option>
+<option>Donato Guerra, Edomex</option>
+<option>Ecatepec de Morelos, Edomex</option>
+<option>Ecatzingo, Edomex</option>
+<option>El Oro, Edomex</option>
+<option>Huehuetoca, Edomex</option>
+<option>Hueypoxtla, Edomex</option>
+<option>Huixquilucan, Edomex</option>
+<option>Isidro Fabela, Edomex</option>
+<option>Ixtapaluca, Edomex</option>
+<option>Ixtapan de la Sal, Edomex</option>
+<option>Ixtapan del Oro, Edomex</option>
+<option>Ixtlahuaca, Edomex</option>
+<option>Jaltenco, Edomex</option>
+<option>Jilotepec, Edomex</option>
+<option>Jilotzingo, Edomex</option>
+<option>Jiquipilco, Edomex</option>
+<option>Jocotitlán, Edomex</option>
+<option>Joquicingo, Edomex</option>
+<option>Juchitepec, Edomex</option>
+<option>La Paz, Edomex</option>
+<option>Lerma, Edomex</option>
+<option>Luvianos, Edomex</option>
+<option>Malinalco, Edomex</option>
+<option>Melchor Ocampo, Edomex</option>
+<option>Metepec, Edomex</option>
+<option>Mexicaltzingo, Edomex</option>
+<option>Morelos, Edomex</option>
+<option>Naucalpan de Juárez, Edomex</option>
+<option>Nextlalpan, Edomex</option>
+<option>Nezahualcóyotl, Edomex</option>
+<option>Nicolás Romero, Edomex</option>
+<option>Nopaltepec, Edomex</option>
+<option>Ocoyoacac, Edomex</option>
+<option>Ocuilan, Edomex</option>
+<option>Otumba, Edomex</option>
+<option>Otzoloapan, Edomex</option>
+<option>Otzolotepec, Edomex</option>
+<option>Ozumba, Edomex</option>
+<option>Papalotla, Edomex</option>
+<option>Polotitlán, Edomex</option>
+<option>Rayón, Edomex</option>
+<option>San Antonio la Isla, Edomex</option>
+<option>San Felipe del Progreso, Edomex</option>
+<option>San José del Rincón, Edomex</option>
+<option>San Martín de las Pirámides, Edomex</option>
+<option>San Mateo Atenco, Edomex</option>
+<option>San Simón de Guerrero, Edomex</option>
+<option>Santo Tomás, Edomex</option>
+<option>Soyaniquilpan de Juárez, Edomex</option>
+<option>Sultepec, Edomex</option>
+<option>Tecámac, Edomex</option>
+<option>Tejupilco, Edomex</option>
+<option>Temamatla, Edomex</option>
+<option>Temascalapa, Edomex</option>
+<option>Temascalcingo, Edomex</option>
+<option>Temascaltepec, Edomex</option>
+<option>Temoaya, Edomex</option>
+<option>Tenancingo, Edomex</option>
+<option>Tenango del Aire, Edomex</option>
+<option>Tenango del Valle, Edomex</option>
+<option>Teoloyucan, Edomex</option>
+<option>Teotihuacán, Edomex</option>
+<option>Tepetlaoxtoc, Edomex</option>
+<option>Tepetlixpa, Edomex</option>
+<option>Tepotzotlán, Edomex</option>
+<option>Tequixquiac, Edomex</option>
+<option>Texcaltitlán, Edomex</option>
+<option>Texcalyacac, Edomex</option>
+<option>Texcoco, Edomex</option>
+<option>Tezoyuca, Edomex</option>
+<option>Tianguistenco, Edomex</option>
+<option>Timilpan, Edomex</option>
+<option>Tlalmanalco, Edomex</option>
+<option>Tlalnepantla de Baz, Edomex</option>
+<option>Tlatlaya, Edomex</option>
+<option>Toluca, Edomex</option>
+<option>Tonanitla, Edomex</option>
+<option>Tonatico, Edomex</option>
+<option>Tultepec, Edomex</option>
+<option>Tultitlán, Edomex</option>
+<option>Valle de Bravo, Edomex</option>
+<option>Valle de Chalco Solidaridad, Edomex</option>
+<option>Villa de Allende, Edomex</option>
+<option>Villa del Carbón, Edomex</option>
+<option>Villa Guerrero, Edomex</option>
+<option>Villa Victoria, Edomex</option>
+<option>Xalatlaco, Edomex</option>
+<option>Xonacatlán, Edomex</option>
+<option>Zacazonapan, Edomex</option>
+<option>Zacualpan, Edomex</option>
+<option>Zinacantepec, Edomex</option>
+<option>Zumpahuacán, Edomex</option>
+<option>Zumpango, Edomex</option></datalist><label>Presupuesto total (MXN) *<input name="budget" type="number" min="1" max="2147483647" step="1" required></label><label>Detalles<textarea name="details" maxlength="800"></textarea></label><button class="btn" type="submit">Enviar solicitud</button><p id="requestMsg" role="status"></p></form></dialog>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="app.js"></script>
+<script>
+// Navegación provisional hasta integrar las vistas en app.js.
+(() => {
+ const el = id => document.getElementById(id);
+ const go = id => el(id).scrollIntoView({behavior:'smooth'});
+ el('buscarMusicos').onclick = () => go('resultados');
+ document.querySelectorAll('[data-category]').forEach(b => b.onclick = () => {
+   const v = b.dataset.category;
+   el('q').value = ''; el('zone').value = '';
+   if(v === 'solistas' || v === 'rock-pop'){el('genre').value = ''; el('genre').dispatchEvent(new Event('change')); go('buscar'); return;}
+   el('genre').value = v;
+   el('genre').dispatchEvent(new Event('change')); go('resultados');
+ });
+ document.querySelectorAll('.bottom-nav button').forEach(b => b.onclick = () => {
+   const v = b.dataset.view;
+   if(v === 'favoritos'){alert('La vista de favoritos se integrará en el siguiente paso. Puedes guardar favoritos desde el catálogo.');return;}
+   if(v === 'cuenta'){el('openAccount').click();return;}
+   if(v === 'solicitudes' && el('panelCliente').hidden){el('openAccount').click();return;}
+   document.querySelectorAll('.bottom-nav button').forEach(x=>x.removeAttribute('aria-current')); b.setAttribute('aria-current','page');
+   go(v === 'inicio' ? 'inicio' : v === 'explorar' ? 'buscar' : 'panelCliente');
+ });
+ el('request').addEventListener('close',()=>{});
+ new MutationObserver(()=>{if(el('request').open){const f=el('requestForm');if(!f.elements.date.value)f.elements.date.value=el('fechaBusqueda').value;if(!f.elements.budget.value)f.elements.budget.value=el('presupuestoBusqueda').value;}}).observe(el('request'),{attributes:true,attributeFilter:['open']});
+})();
+</script>
+</body></html>
