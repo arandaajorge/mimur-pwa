@@ -1,5 +1,4 @@
-
-const CACHE = "mimur-pwa-v3";
+const CACHE = "mimur-pwa-v4";
 
 const FILES = [
   "./",
@@ -10,85 +9,147 @@ const FILES = [
   "./assets/icon.svg"
 ];
 
+// Archivos estáticos autorizados.
+const ALLOWED_FILES = new Set(
+  FILES.map(file =>
+    new URL(file, self.registration.scope).href
+  )
+);
+
 // Instalar la nueva versión.
 self.addEventListener("install", (event) => {
+
   event.waitUntil(
     caches.open(CACHE)
-      .then((cache) => cache.addAll(FILES))
+      .then(cache =>
+        cache.addAll(
+          FILES.map(file =>
+            new Request(
+              new URL(file, self.registration.scope),
+              { cache: "reload" }
+            )
+          )
+        )
+      )
       .then(() => self.skipWaiting())
   );
+
 });
 
-// Eliminar versiones anteriores.
+// Eliminar versiones anteriores de MiMuR.
 self.addEventListener("activate", (event) => {
+
   event.waitUntil(
     caches.keys()
-      .then((keys) =>
+      .then(keys =>
         Promise.all(
           keys
-            .filter((key) =>
+            .filter(key =>
               key.startsWith("mimur-pwa-") &&
               key !== CACHE
             )
-            .map((key) => caches.delete(key))
+            .map(key => caches.delete(key))
         )
       )
       .then(() => self.clients.claim())
   );
+
 });
 
-// Internet primero; caché como respaldo.
+// Internet primero y caché como respaldo.
 self.addEventListener("fetch", (event) => {
+
   const request = event.request;
   const url = new URL(request.url);
 
-  if (
-    request.method !== "GET" ||
-    url.origin !== self.location.origin
-  ) {
-    return;
-  }
+  // Excluir operaciones distintas de GET.
+  if (request.method !== "GET") return;
 
-  // No interceptar solicitudes ajenas al sitio.
+  // Excluir servicios externos, incluido Supabase.
+  if (url.origin !== self.location.origin) return;
+
   if (!["http:", "https:"].includes(url.protocol)) {
     return;
   }
 
-  // Usar una URL estable para la caché.
-  const cacheUrl = new URL(url.href);
-  cacheUrl.searchParams.delete("v");
+  // Autorizar únicamente archivos estáticos conocidos.
+  const baseUrl = new URL(url.href);
+  baseUrl.search = "";
+  baseUrl.hash = "";
 
-  const cacheKey = cacheUrl.href;
+  if (!ALLOWED_FILES.has(baseUrl.href)) return;
+
+  // No almacenar solicitudes con parámetros.
+  const puedeGuardar = url.search === "";
 
   event.respondWith(
-    fetch(request, { cache: "no-store" })
-      .then((response) => {
-        if (response.ok && response.type === "basic") {
-          const copia = response.clone();
+    (async () => {
 
-          event.waitUntil(
-            caches.open(CACHE).then((cache) =>
-              cache.put(cacheKey, copia)
-            )
-          );
+      try {
+
+        const response = await fetch(request, {
+          cache: "no-store"
+        });
+
+        if (
+          puedeGuardar &&
+          response.ok &&
+          response.type === "basic" &&
+          !response.redirected
+        ) {
+
+          try {
+
+            const cache = await caches.open(CACHE);
+
+            await cache.put(
+              request,
+              response.clone()
+            );
+
+          } catch (error) {
+
+            console.warn(
+              "MiMuR: no se pudo actualizar la caché.",
+              error
+            );
+
+          }
+
         }
 
         return response;
-      })
-      .catch(async () => {
-        const cache = await caches.match(cacheKey);
 
-        if (cache) return cache;
+      } catch (error) {
+
+        const cache = await caches.open(CACHE);
+
+        if (puedeGuardar) {
+
+          const guardado = await cache.match(request);
+
+          if (guardado) return guardado;
+
+        }
 
         if (request.mode === "navigate") {
-          const inicio = await caches.match(
-            new URL("./index.html", self.registration.scope).href
+
+          const inicio = await cache.match(
+            new URL(
+              "./index.html",
+              self.registration.scope
+            ).href
           );
 
           if (inicio) return inicio;
+
         }
 
         return Response.error();
-      })
+
+      }
+
+    })()
   );
+
 });
