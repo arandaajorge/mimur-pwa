@@ -127,6 +127,23 @@ document.querySelectorAll('a[href="#inicio"]').forEach(b=>b.onclick=e=>{e.preven
 document.querySelectorAll('a[href="#registro"]').forEach(b=>b.onclick=e=>{e.preventDefault();irVista('cuenta');$('registro').scrollIntoView();});
 $('editarPerfilMusico').addEventListener('click',()=>{irVista('cuenta');$('registro').scrollIntoView();});
 $('buscarMusicos').onclick=()=>irVista('explorar');
-document.querySelectorAll('[data-category]').forEach(b=>b.onclick=()=>{$('q').value='';$('zone').value='';$('genre').value=({solistas:'Solista','rock-pop':'Rock / Pop'})[b.dataset.category]||b.dataset.category;irVista('explorar');});
+document.querySelectorAll('[data-category]').forEach(b => {
+  b.onclick = () => {
+    $('q').value = '';
+    $('zone').value = '';
+
+    const categoria = b.dataset.category;
+
+    if (categoria === 'solistas') {
+      $('genre').value = 'Solista';
+    } else if (categoria === 'rock-pop') {
+      $('genre').value = 'Rock / Pop';
+    } else {
+      $('genre').value = categoria;
+    }
+
+    irVista('explorar');
+  };
+});
 const observarSesion=new MutationObserver(()=>{if(!sesionId&&['solicitudes','favoritos'].includes(vista))irVista('inicio');});observarSesion.observe($('signOut'),{attributes:true,attributeFilter:['hidden']});
 aplicarVista();render();cargarMusicosAprobados();
