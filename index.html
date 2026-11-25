@@ -24,26 +24,75 @@
   </div>
 
   <form id="authForm">
-    <h3>Crear cuenta o iniciar sesión</h3>
 
-    <label>Correo electrónico
-      <input name="email" type="email" required autocomplete="email" placeholder="tu@correo.com">
-    </label>
+  <h3>Crear cuenta o iniciar sesión</h3>
 
-    <label>Contraseña
-      <input name="password" type="password" required minlength="8" autocomplete="current-password" placeholder="Mínimo 8 caracteres">
-    </label>
+  <label>Correo electrónico
+    <input
+      name="email"
+      type="email"
+      required
+      autocomplete="email"
+      placeholder="tu@correo.com">
+  </label>
 
-    
-<div class="actions">
-  <button class="btn" id="signUp" type="button">Crear cuenta</button>
-  <button class="btn secondary" id="signIn" type="button">Iniciar sesión</button>
-  <button class="btn secondary" id="signOut" type="button" hidden>Cerrar sesión</button>
-</div>
+  <label>Contraseña
+    <input
+      name="password"
+      type="password"
+      required
+      autocomplete="current-password"
+      placeholder="Ingresa tu contraseña"
+      aria-describedby="passwordRequirements">
+  </label>
 
+  <div id="passwordRequirements"
+       style="font-size:13px;line-height:1.6;color:var(--muted);margin:10px 0;">
 
-    <p id="authMsg" role="status" aria-live="polite"></p>
-  </form>
+    <strong>Requisitos para crear una cuenta:</strong>
+
+    <ul style="margin:6px 0;padding-left:20px;">
+      <li>Mínimo 12 caracteres.</li>
+      <li>Una letra mayúscula.</li>
+      <li>Una letra minúscula.</li>
+      <li>Un número.</li>
+      <li>Un símbolo especial.</li>
+    </ul>
+
+    <small>
+      Si ya tienes una cuenta, utiliza tu contraseña actual.
+    </small>
+
+  </div>
+
+  <div class="actions">
+
+    <button class="btn"
+            id="signUp"
+            type="button">
+      Crear cuenta
+    </button>
+
+    <button class="btn secondary"
+            id="signIn"
+            type="button">
+      Iniciar sesión
+    </button>
+
+    <button class="btn secondary"
+            id="signOut"
+            type="button"
+            hidden>
+      Cerrar sesión
+    </button>
+
+  </div>
+
+  <p id="authMsg"
+     role="status"
+     aria-live="polite"></p>
+
+</form>
 </dialog>
 
 <!-- PANEL DE CONTRATACIONES DEL CLIENTE -->
