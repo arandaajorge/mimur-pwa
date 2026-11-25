@@ -10,6 +10,7 @@ const node = (tag,text,cls) => {const n=document.createElement(tag); if(text!=nu
 const button = (text,fn) => {const b=node('button',text);b.type='button';b.onclick=fn;return b;};
 const line = (parent,text) => parent.appendChild(node('p',text));
 const getUser = async () => {const {data,error}=await supabaseClient.auth.getUser();return error?null:data.user;};
+let vista="inicio", retornoPerfil="explorar";
 let catalogo=[], favoritos=new Set(), sesionId=null, epoch=0, perfilAbierto=null, catalogError=false;
 const estadosOferta={pending:'Pendiente de respuesta',accepted:'Cotización recibida',declined:'Rechazada',withdrawn:'Retirada'};
 const estadosSolicitud={open:'Solicitud enviada',matching:'Buscando músicos',offers_received:'Cotizaciones disponibles',booked:'Contratación registrada',cancelled:'Solicitud cancelada',completed:'Evento finalizado'};
@@ -26,9 +27,9 @@ async function cargarMusicosAprobados(){
 function render(){
  const norm=v=>String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toLowerCase();
  const q=norm($('q')?.value),g=norm($('genre')?.value),z=norm($('zone')?.value);
- const filas=catalogo.filter(m=>(!q||norm([m.name,...m.genres,m.zone].join(' ')).includes(q))&&(!g||m.genres.some(x=>norm(x)===g)||norm(m.genre)===g)&&(!z||norm(m.zone)===z));
- $('musicians').innerHTML=filas.map(m=>`<article class="musician"><div class="art">🎤</div><div class="body"><div class="cardheading"><h3>${safe(m.name)}</h3><button type="button" class="favorite-btn" data-favorite-id="${safe(m.id)}" aria-pressed="${favoritos.has(m.id)}" aria-label="${favoritos.has(m.id)?'Quitar de favoritos':'Guardar en favoritos'}">${favoritos.has(m.id)?'♥':'♡'}</button></div><div class="muted">${safe(m.genres.join(' · ')||m.genre)} · ${safe(m.zone)}</div><div class="stars"><small>Sin reseñas verificadas</small></div><p class="muted">${safe(m.bio)}</p><div class="chips"><span class="chip">${safe(m.status)}</span><span class="chip">Perfil MiMuR</span></div><div class="cardbottom"><b>${m.price==null?'Precio por confirmar':`Desde ${money(m.price)} <small class="muted">/ ${safe(m.unit)}</small>`}</b><button type="button" data-profile-id="${safe(m.id)}">Ver perfil</button><button type="button" data-id="${safe(m.id)}">Solicitar</button></div></div></article>`).join('');
- $('empty').hidden=filas.length>0;$('empty').textContent=catalogError?'No se pudo cargar el catálogo. Actualiza la página.':'No se encontraron músicos con estos filtros.';
+ const filas=catalogo.filter(m=>vista==='favoritos'?favoritos.has(m.id):((!q||norm([m.name,...m.genres,m.zone].join(' ')).includes(q))&&(!g||m.genres.some(x=>norm(x)===g||(g==='rock / pop'&&['rock','pop','rock en español','rock alternativo'].includes(norm(x))))||norm(m.genre)===g)&&(!z||norm(m.zone)===z||norm(m.zone).split(',')[0]===z)));
+ $('musicians').innerHTML=filas.map(m=>`<article class="musician"><div class="art">${m.photoUrls.find(x=>httpsUrl(x))?`<img src="${safe(m.photoUrls.find(x=>httpsUrl(x)))}" alt="${safe(m.name)}" loading="lazy" style="width:100%;height:180px;object-fit:cover">`:'🎤'}</div><div class="body"><div class="cardheading"><h3>${safe(m.name)}</h3><button type="button" class="favorite-btn" data-favorite-id="${safe(m.id)}" aria-pressed="${favoritos.has(m.id)}" aria-label="${favoritos.has(m.id)?'Quitar de favoritos':'Guardar en favoritos'}">${favoritos.has(m.id)?'♥':'♡'}</button></div><div class="muted">${safe(m.genres.join(' · ')||m.genre)} · ${safe(m.zone)}</div><div class="stars"><small>Sin reseñas verificadas</small></div><p class="muted">${safe(m.bio)}</p><div class="chips"><span class="chip">${safe(m.status)}</span><span class="chip">Perfil MiMuR</span></div><div class="cardbottom"><b>${m.price==null?'Precio por confirmar':`Desde ${money(m.price)} <small class="muted">/ ${safe(m.unit)}</small>`}</b><button type="button" data-profile-id="${safe(m.id)}">Ver perfil</button><button type="button" data-id="${safe(m.id)}">Solicitar</button></div></div></article>`).join('');
+ $('empty').hidden=filas.length>0;$('empty').textContent=catalogError?'No se pudo cargar el catálogo. Actualiza la página.':vista==='favoritos'?'Todavía no tienes artistas guardados.':'No se encontraron músicos con estos filtros.';
  document.querySelectorAll('#musicians [data-profile-id]').forEach(b=>b.onclick=()=>abrirPerfilPublicoMusico(catalogo.find(m=>m.id===b.dataset.profileId)));
  document.querySelectorAll('#musicians [data-id]').forEach(b=>b.onclick=()=>openRequest(catalogo.find(m=>m.id===b.dataset.id)));
  document.querySelectorAll('#musicians [data-favorite-id]').forEach(b=>b.onclick=()=>alternarFavorito(b.dataset.favoriteId));
@@ -38,7 +39,7 @@ function actualizarBotonFavorito(){const b=$('perfilPublicoFavorito');if(b&&perf
 async function cargarFavoritos(){const e=epoch,u=await getUser();if(e!==epoch)return;if(!u){favoritos.clear();render();return;}const {data,error}=await supabaseClient.from('favorites').select('musician_id').eq('customer_id',u.id);if(e!==epoch||u.id!==sesionId)return;if(error){console.error(error);return;}favoritos=new Set(data.map(f=>f.musician_id));render();}
 const favoritosOcupados=new Set();
 async function alternarFavorito(id){if(favoritosOcupados.has(id))return;favoritosOcupados.add(id);const e=epoch;try{const u=await getUser();if(!u)throw new Error('Inicia sesión para guardar tus favoritos.');if(e!==epoch||u.id!==sesionId)return;const quitar=favoritos.has(id);const {error}=quitar?await supabaseClient.from('favorites').delete().eq('customer_id',u.id).eq('musician_id',id):await supabaseClient.from('favorites').insert({customer_id:u.id,musician_id:id});if(error)throw error;if(e===epoch){quitar?favoritos.delete(id):favoritos.add(id);render();}}catch(error){alert(error.message);}finally{favoritosOcupados.delete(id);}}
-function cerrarPerfil(){perfilAbierto=null;if($('perfilPublicoMusico'))$('perfilPublicoMusico').hidden=true;history.replaceState(null,'',location.pathname+location.search);}
+function cerrarPerfil(){perfilAbierto=null;if($('perfilPublicoMusico'))$('perfilPublicoMusico').hidden=true;history.replaceState(null,'',location.pathname+location.search);if(vista==='perfil'){vista=retornoPerfil;aplicarVista();render();}}
 function httpsUrl(v){try{const u=new URL(v);return u.protocol==='https:'?u:null;}catch{return null;}}
 function galeriaFotos(galeria,fotos,nombre){
  galeria.replaceChildren();fotos=fotos.filter(x=>httpsUrl(x));if(!fotos.length)return;
@@ -50,7 +51,7 @@ function galeriaFotos(galeria,fotos,nombre){
  swipe(c,mover);c.append(img,anterior,siguiente,contador);galeria.append(c);mostrar();img.style.cursor='zoom-in';
  img.onclick=()=>{const visor=node('div',null,'mimur-visor-fotos'),foto=node('img',null,'mimur-visor-imagen'),num=node('span',null,'mimur-visor-numero');let p=i;const old=document.body.style.overflow;const close=()=>{visor.remove();document.body.style.overflow=old;document.removeEventListener('keydown',key);};const moverV=d=>{p=(p+d+fotos.length)%fotos.length;foto.src=fotos[p];num.textContent=`${p+1} / ${fotos.length}`;};const key=e=>{if(e.key==='Escape')close();if(e.key==='ArrowRight')moverV(1);if(e.key==='ArrowLeft')moverV(-1);};const b=button('×',close),a=button('❮',()=>moverV(-1)),s=button('❯',()=>moverV(1));b.className='mimur-visor-cerrar';a.className='mimur-visor-atras';s.className='mimur-visor-adelante';a.hidden=s.hidden=fotos.length<=1;foto.alt='Fotografía ampliada';swipe(foto,moverV);visor.onclick=e=>{if(e.target===visor)close();};visor.append(foto,b,a,s,num);document.body.append(visor);document.body.style.overflow='hidden';document.addEventListener('keydown',key);moverV(0);};
 }
-function abrirPerfilPublicoMusico(m,scroll=true){if(!m||!$('perfilPublicoMusico'))return;perfilAbierto=m.id;const p=$('perfilPublicoMusico');$('perfilPublicoNombre').textContent=m.name;$('perfilPublicoGenero').textContent=m.genres.join(' · ')||m.genre;$('perfilPublicoBio').textContent=m.bio;$('perfilPublicoZona').textContent=m.zone;$('perfilPublicoPrecio').textContent=m.price==null?'Precio por confirmar':`Desde ${money(m.price)} / ${m.unit}`;$('perfilPublicoDisponibilidad').textContent=m.status;
+function abrirPerfilPublicoMusico(m,scroll=true){if(!m||!$('perfilPublicoMusico'))return;if(vista!=='perfil')retornoPerfil=vista;vista='perfil';perfilAbierto=m.id;aplicarVista();const p=$('perfilPublicoMusico');$('perfilPublicoNombre').textContent=m.name;$('perfilPublicoGenero').textContent=m.genres.join(' · ')||m.genre;$('perfilPublicoBio').textContent=m.bio;$('perfilPublicoZona').textContent=m.zone;$('perfilPublicoPrecio').textContent=m.price==null?'Precio por confirmar':`Desde ${money(m.price)} / ${m.unit}`;$('perfilPublicoDisponibilidad').textContent=m.status;
  let d=$('perfilPublicoDetalles');if(!d){d=node('div');d.id='perfilPublicoDetalles';$('perfilPublicoBio').after(d);}d.replaceChildren();for(const [t,v] of [['Experiencia',m.experience],['Integrantes',m.members],['Equipo',m.equipment],['Servicios',m.services],['Repertorio',m.repertoire]]){if(v&&v.length){const s=node('div');s.append(node('h4',t),node('p',Array.isArray(v)?v.join(' · '):v));d.append(s);}}
  let g=$('perfilPublicoGaleria');if(!g){g=node('div');g.id='perfilPublicoGaleria';d.after(g);}galeriaFotos(g,m.photoUrls,m.name);
  const vc=$('perfilPublicoVideo');vc.replaceChildren();const u=httpsUrl(m.videoUrl);let id=null;if(u){if(['youtube.com','www.youtube.com','m.youtube.com'].includes(u.hostname))id=/^\/(shorts|live|embed)\//.test(u.pathname)?u.pathname.split('/')[2]:u.searchParams.get('v');else if(u.hostname==='youtu.be')id=u.pathname.split('/')[1];}
@@ -65,7 +66,7 @@ async function cargarMiPerfilMusico(){const e=epoch,u=await getUser(),f=$('lead'
 }
 $('lead').onsubmit=async e=>{e.preventDefault();const f=e.currentTarget,b=f.querySelector('[type="submit"]'),msg=$('leadMsg');if(b?.disabled||!f.reportValidity())return;if(b)b.disabled=true;let subidos=[],guardado=false;try{const u=await getUser();if(!u)throw new Error('Inicia sesión en Mi cuenta.');const d=Object.fromEntries(new FormData(f));const lista=v=>String(v||'').split(/\r?\n/).map(x=>x.trim()).filter(Boolean);const tarifa=v=>{if(v==null||String(v).trim()==='')return null;const n=Number(v);if(!Number.isInteger(n)||n<10||n>1000000)throw new Error('Las tarifas deben estar entre $10 y $1,000,000 MXN, sin decimales.');return n;};const event=tarifa(d.eventPrice),hour=tarifa(d.hourlyPrice);const {data:p,error}=await supabaseClient.from('musicians').select('id,photo_urls').eq('user_id',u.id).maybeSingle();if(error)throw error;const archivos=Array.from(f.elements.photo_files?.files||[]);if(archivos.length>10)throw new Error('Máximo 10 fotografías por vez.');for(const a of archivos)if(!a.type.startsWith('image/')||a.size>10*1024*1024)throw new Error('Solo imágenes de hasta 10 MB.');const fotos=[...(p?.photo_urls||[])];for(const a of archivos){const path=u.id+'/'+crypto.randomUUID()+'-'+a.name.replace(/[^a-zA-Z0-9._-]/g,'_');const {error}=await supabaseClient.storage.from('musician-photos').upload(path,a,{contentType:a.type,upsert:false});if(error)throw error;subidos.push(path);fotos.push(supabaseClient.storage.from('musician-photos').getPublicUrl(path).data.publicUrl);}const perfil={artist_name:d.name.trim(),phone:d.phone.trim(),genres:[d.genre],zone:d.zone.trim(),video_url:d.video.trim(),bio:(d.bio||'').trim(),experience:(d.experience||'').trim(),repertoire:lista(d.repertoire),members:lista(d.members),equipment:(d.equipment||'').trim(),services:lista(d.services),event_price_mxn:event,hourly_price_mxn:hour,minimum_price_mxn:event,pricing_notes:(d.pricingNotes||'').trim(),emergency_opt_in:f.elements.emergency.checked,photo_urls:fotos};msg.textContent='Guardando perfil...';const r=await (p?supabaseClient.from('musicians').update(perfil).eq('user_id',u.id):supabaseClient.from('musicians').insert({...perfil,user_id:u.id})).select('id').single();if(r.error)throw r.error;guardado=true;if(f.elements.photo_files)f.elements.photo_files.value='';await cargarMiPerfilMusico();await cargarMusicosAprobados();msg.textContent=p?'¡Perfil actualizado correctamente!':'¡Perfil registrado! Pendiente de aprobación.';}catch(error){if(!guardado&&subidos.length)await supabaseClient.storage.from('musician-photos').remove(subidos);msg.textContent='Error al guardar: '+error.message;}finally{if(b)b.disabled=false;}};
 $('editarPerfilMusico')?.addEventListener('click',()=>$('registro')?.scrollIntoView({behavior:'smooth'}));
-function openRequest(m){if(!m)return;$('requestTitle').textContent='Solicitar músicos compatibles con '+m.genre;$('requestForm').elements.musicianId.value=m.id;$('requestMsg').textContent='La solicitud se distribuirá por género y zona; no es exclusiva de este artista.';$('request').showModal();}
+function openRequest(m){if(!m)return;$('requestTitle').textContent='Solicitar músicos compatibles con '+m.genre;$('requestForm').elements.musicianId.value=m.id;$('requestMsg').textContent='La solicitud se distribuirá por género y zona; no es exclusiva de este artista.';const f=$('requestForm');if(!f.elements.date.value)f.elements.date.value=$('fechaBusqueda').value;if(!f.elements.budget.value)f.elements.budget.value=$('presupuestoBusqueda').value;if(!f.elements.eventZone.value)f.elements.eventZone.value=$('zone').value||m.zone;$('request').showModal();}
 $('close').onclick=()=>$('request').close();
 const formularioEvento=$('requestForm'),selectorDuracion=$('eventDuration'),contenedorDuracion=$('customDurationContainer'),campoDuracion=$('customDuration'),resumenHorario=$('eventTimeSummary');
 function obtenerDuracionEvento(){return Number(selectorDuracion.value==='custom'?campoDuracion.value:selectorDuracion.value);}
@@ -82,135 +83,32 @@ function actualizarPanelCliente(u){if($('panelCliente'))$('panelCliente').hidden
 function actualizarSesion(session){const u=session?.user||null,id=u?.id||null;if(id!==sesionId){sesionId=id;epoch++;favoritos.clear();$('listaContratacionesCliente')?.replaceChildren();$('listaMisFotos')?.replaceChildren();const c=$('contenidoSolicitudesMusico');if(c){c.hidden=true;c.replaceChildren();}$('lead')?.reset();actualizarPanelMusico(null,null);render();}actualizarPanelCliente(u);if($('openAccount'))$('openAccount').textContent=u?'Mi cuenta ✓':'Mi cuenta';if($('signOut'))$('signOut').hidden=!u;if($('signIn'))$('signIn').hidden=!!u;if($('signUp'))$('signUp').hidden=!!u;if(!u&&$('leadMsg'))$('leadMsg').textContent='Inicia sesión para consultar o editar tu perfil de músico.';if(u){const e=epoch;setTimeout(async()=>{if(e!==epoch)return;await cargarMiPerfilMusico();if(e===epoch)await cargarFavoritos();},0);}}
 const authForm=$('authForm'),authMsg=$('authMsg'),account=$('accountDialog');
 $('openAccount')?.addEventListener('click',()=>account.showModal());$('closeAccount')?.addEventListener('click',()=>account.close());account?.addEventListener('click',e=>{if(e.target===account)account.close();});
-async function autenticar(registro) {
-
-  if (
-    !authForm ||
-    !authForm.elements.email.reportValidity() ||
-    !authForm.elements.password.reportValidity()
-  ) return;
-
-  const email = authForm.elements.email.value.trim();
-  const password = authForm.elements.password.value;
-  const b = $(registro ? 'signUp' : 'signIn');
-
-  if (!b || b.disabled) return;
-
-  // Validar contraseña únicamente durante el registro.
-
-  if (registro) {
-
-    const requisitos = [];
-
-    if (Array.from(password).length < 12) {
-      requisitos.push('al menos 12 caracteres');
-    }
-
-    if (!/[A-Z]/.test(password)) {
-      requisitos.push('una letra mayúscula');
-    }
-
-    if (!/[a-z]/.test(password)) {
-      requisitos.push('una letra minúscula');
-    }
-
-    if (!/[0-9]/.test(password)) {
-      requisitos.push('un número');
-    }
-
-    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]/.test(password)) {
-      requisitos.push('un símbolo especial');
-    }
-
-    if (requisitos.length > 0) {
-
-      authMsg.textContent =
-        'Tu contraseña debe incluir: ' +
-        requisitos.join(', ') + '.';
-
-      return;
-
-    }
-
-  }
-
-  b.disabled = true;
-
-  authMsg.textContent = registro
-    ? 'Creando cuenta...'
-    : 'Iniciando sesión...';
-
-  try {
-
-    const r = registro
-
-      ? await supabaseClient.auth.signUp({
-          email,
-          password,
-          options: {
-            data: {
-              display_name: email.split('@')[0]
-            }
-          }
-        })
-
-      : await supabaseClient.auth.signInWithPassword({
-          email,
-          password
-        });
-
-    if (r.error) throw r.error;
-
-    if (r.data.session) {
-
-      actualizarSesion(r.data.session);
-
-      authMsg.textContent = '¡Bienvenido a MiMuR!';
-
-      account.close();
-
-    } else {
-
-      authMsg.textContent =
-        'Registro recibido. Revisa tu correo para confirmar la cuenta.';
-
-    }
-
-    authForm.elements.password.value = '';
-
-  } catch (error) {
-
-    if (error.code === 'weak_password') {
-
-      authMsg.textContent =
-        'La contraseña no cumple los requisitos de seguridad de MiMuR.';
-
-    } else if (error.code === 'invalid_credentials') {
-
-      authMsg.textContent =
-        'El correo electrónico o la contraseña son incorrectos.';
-
-    } else if (error.code === 'email_not_confirmed') {
-
-      authMsg.textContent =
-        'Debes confirmar tu correo electrónico antes de iniciar sesión.';
-
-    } else {
-
-      authMsg.textContent = 'Error: ' + error.message;
-
-    }
-
-  } finally {
-
-    b.disabled = false;
-
-  }
-
+async function autenticar(registro){
+ if(!authForm.elements.email.reportValidity()||!authForm.elements.password.reportValidity())return;
+ const email=authForm.elements.email.value.trim(),password=authForm.elements.password.value;
+ const botones=[$('signUp'),$('signIn')];if(botones.some(b=>b.disabled))return;
+ if(registro){const requisitos=[];if(Array.from(password).length<12)requisitos.push('al menos 12 caracteres');if(!/[A-Z]/.test(password))requisitos.push('una letra mayúscula');if(!/[a-z]/.test(password))requisitos.push('una letra minúscula');if(!/[0-9]/.test(password))requisitos.push('un número');if(!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]/.test(password))requisitos.push('un símbolo especial');if(requisitos.length){authMsg.textContent='Tu contraseña debe incluir: '+requisitos.join(', ')+'.';return;}}
+ botones.forEach(b=>b.disabled=true);authMsg.textContent=registro?'Creando cuenta...':'Iniciando sesión...';
+ try{const r=registro?await supabaseClient.auth.signUp({email,password,options:{data:{display_name:email.split('@')[0]}}}):await supabaseClient.auth.signInWithPassword({email,password});if(r.error)throw r.error;if(r.data.session){actualizarSesion(r.data.session);authMsg.textContent='¡Bienvenido a MiMuR!';account.close();}else authMsg.textContent='Registro recibido. Revisa tu correo para confirmar la cuenta.';authForm.elements.password.value='';}catch(error){authMsg.textContent=({weak_password:'La contraseña no cumple los requisitos de seguridad de MiMuR.',invalid_credentials:'El correo electrónico o la contraseña son incorrectos.',email_not_confirmed:'Debes confirmar tu correo electrónico antes de iniciar sesión.'})[error.code]||'Error: '+error.message;}finally{botones.forEach(b=>b.disabled=false);}
 }
+authForm.addEventListener('submit',e=>{e.preventDefault();if(!sesionId)autenticar(false);});
 $('signUp')?.addEventListener('click',()=>autenticar(true));$('signIn')?.addEventListener('click',()=>autenticar(false));$('signOut')?.addEventListener('click',async()=>{const b=$('signOut');b.disabled=true;try{const {error}=await supabaseClient.auth.signOut();if(error)throw error;actualizarSesion(null);account.close();authMsg.textContent='Has cerrado sesión correctamente.';}catch(error){authMsg.textContent=error.message;}finally{b.disabled=false;}});
 supabaseClient.auth.onAuthStateChange((event,session)=>actualizarSesion(session));
 for(const id of ['q','genre','zone'])$(id)?.addEventListener(id==='q'?'input':'change',render);
 let installEvent;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvent=e;if($('install'))$('install').hidden=false;});if($('install'))$('install').onclick=async()=>{if(!installEvent){alert('Usa el menú del navegador y selecciona Instalar aplicación o Añadir a pantalla de inicio.');return;}installEvent.prompt();await installEvent.userChoice;installEvent=null;$('install').hidden=true;};
 if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost'))window.addEventListener('load',async()=>{try{const r=await navigator.serviceWorker.register('./sw.js');await r.update();document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')r.update().catch(console.warn);});}catch(error){console.warn(error);}});
-render();cargarMusicosAprobados();
+function aplicarVista(){
+ const visibles={inicio:['inicio','buscar','categorias','invitacionMusico'],explorar:['buscar','resultados'],favoritos:['resultados'],solicitudes:['panelCliente','panelMusico'],cuenta:['panelMusico','registro'],perfil:['perfilPublicoMusico']}[vista]||[];
+ document.querySelectorAll('main > section').forEach(el=>{if(visibles.includes(el.id))el.style.removeProperty('display');else el.style.display='none';});
+ $('tituloResultados').textContent=vista==='favoritos'?'Mis favoritos':'Músicos para tu evento';
+ document.querySelectorAll('.bottom-nav button').forEach(b=>{if(b.dataset.view===(vista==='perfil'?retornoPerfil:vista))b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
+}
+function irVista(v){if(['favoritos','solicitudes'].includes(v)&&!sesionId){$('openAccount').click();return;}if(perfilAbierto)cerrarPerfil();vista=v;aplicarVista();render();window.scrollTo(0,0);if(v==='solicitudes'){cargarContratacionesCliente();if(!$('panelMusico').hidden)cargarSolicitudesMusico();}if(v==='cuenta'&&!sesionId)$('openAccount').click();}
+document.querySelectorAll('.bottom-nav button').forEach(b=>b.onclick=()=>irVista(b.dataset.view));
+document.querySelectorAll('a[href="#inicio"]').forEach(b=>b.onclick=e=>{e.preventDefault();irVista('inicio');});
+document.querySelectorAll('a[href="#registro"]').forEach(b=>b.onclick=e=>{e.preventDefault();irVista('cuenta');$('registro').scrollIntoView();});
+$('editarPerfilMusico').addEventListener('click',()=>{irVista('cuenta');$('registro').scrollIntoView();});
+$('buscarMusicos').onclick=()=>irVista('explorar');
+document.querySelectorAll('[data-category]').forEach(b=>b.onclick=()=>{$('q').value='';$('zone').value='';$('genre').value=({solistas:'Solista','rock-pop':'Rock / Pop'})[b.dataset.category]||b.dataset.category;irVista('explorar');});
+const observarSesion=new MutationObserver(()=>{if(!sesionId&&['solicitudes','favoritos'].includes(vista))irVista('inicio');});observarSesion.observe($('signOut'),{attributes:true,attributeFilter:['hidden']});
+aplicarVista();render();cargarMusicosAprobados();
