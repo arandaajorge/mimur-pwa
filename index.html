@@ -1,749 +1,541 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#171321"><meta name="description" content="Encuentra músicos para tu evento con MiMuR"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" href="./icon.png"><link rel="stylesheet" href="styles.css"><title>MiMuR — Música que se vive</title></head>
-<body><header>
-  <a class="logo" href="#">MiMu<span>R</span></a>
-  <nav>
-    <a href="#buscar">Explorar</a>
-    <a href="#registro">Soy músico</a>
-    <button id="openAccount" type="button">Mi cuenta</button>
-    <button id="install" type="button" hidden>Instalar app</button>
-  </nav>
-</header>
-<main><section class="hero"><div><p class="eyebrow">● MÚSICA PARA TUS MOMENTOS</p><h1><span class="title-left">Encuentra la música.</span><br><em class="title-right">Vive el momento.</em></h1><p class="lead">Conecta con músicos y agrupaciones para tu evento. Explora perfiles, filtra por estilo y envía una solicitud.</p><a class="btn" href="#buscar">Explorar músicos →</a> <a class="btn secondary" href="#registro">Soy músico</a><p class="small">Prototipo piloto. Los perfiles son de demostración.</p></div><aside><span class="tag">EJEMPLO DE SOLICITUD</span><h2>Serenata de cumpleaños</h2><p>Coyoacán, CDMX · Sábado · 8:00 PM</p><div class="stats"><b>Mariachi</b><b>1 hora</b><b>$3,500 MXN</b></div><p>Publica una solicitud y compara propuestas.</p></aside></section>
-<section id="buscar"><p class="eyebrow">DESCUBRIR</p><h2>Músicos para tu evento</h2><div class="filters"><label>Buscar<input id="q" placeholder="Nombre, estilo o zona"></label><label>Género<select id="genre"><option value="">Todos</option><option>Mariachi</option><option>DJ</option><option>Norteño</option><option>Grupo versátil</option><option>Rock / Pop</option></select></label><label>Zona<select id="zone"><option value="">Todas</option><option>Coyoacán</option><option>Benito Juárez</option><option>Centro</option><option>Azcapotzalco</option></select></label></div><div id="musicians" class="grid"></div><p id="empty" hidden>No encontramos perfiles con esos filtros.</p></section>
-<section class="how"><p class="eyebrow">SENCILLO Y DIRECTO</p><h2>De tu idea a la música</h2><div class="steps"><article><b>01</b><h3>Describe tu evento</h3><p>Fecha, zona, estilo y presupuesto.</p></article><article><b>02</b><h3>Compara opciones</h3><p>Revisa perfiles y propuestas.</p></article><article><b>03</b><h3>Elige tu favorito</h3><p>Confirma los detalles antes de contratar.</p></article></div></section>
-
-
-<dialog id="accountDialog">
-  <button type="button" id="closeAccount" class="close" aria-label="Cerrar">×</button>
-
-  <div>
-    <p class="eyebrow">MI MIMUR</p>
-    <h2>Tu música, tu cuenta.</h2>
-    <p>Inicia sesión o crea tu cuenta para participar en MiMuR.</p>
-  </div>
-
-  <form id="authForm">
-
-  <h3>Crear cuenta o iniciar sesión</h3>
-
-  <label>Correo electrónico
-    <input
-      name="email"
-      type="email"
-      required
-      autocomplete="email"
-      placeholder="tu@correo.com">
-  </label>
-
-  <label>Contraseña
-    <input
-      name="password"
-      type="password"
-      required
-      autocomplete="current-password"
-      placeholder="Ingresa tu contraseña"
-      aria-describedby="passwordRequirements">
-  </label>
-
-  <div id="passwordRequirements"
-       style="font-size:13px;line-height:1.6;color:var(--muted);margin:10px 0;">
-
-    <strong>Requisitos para crear una cuenta:</strong>
-
-    <ul style="margin:6px 0;padding-left:20px;">
-      <li>Mínimo 12 caracteres.</li>
-      <li>Una letra mayúscula.</li>
-      <li>Una letra minúscula.</li>
-      <li>Un número.</li>
-      <li>Un símbolo especial.</li>
-    </ul>
-
-    <small>
-      Si ya tienes una cuenta, utiliza tu contraseña actual.
-    </small>
-
-  </div>
-
-  <div class="actions">
-
-    <button class="btn"
-            id="signUp"
-            type="button">
-      Crear cuenta
-    </button>
-
-    <button class="btn secondary"
-            id="signIn"
-            type="button">
-      Iniciar sesión
-    </button>
-
-    <button class="btn secondary"
-            id="signOut"
-            type="button"
-            hidden>
-      Cerrar sesión
-    </button>
-
-  </div>
-
-  <p id="authMsg"
-     role="status"
-     aria-live="polite"></p>
-
-</form>
-</dialog>
-
-<!-- PANEL DE CONTRATACIONES DEL CLIENTE -->
-<section id="panelCliente" class="join" hidden>
-
-  <div>
-    <p class="eyebrow">MI MIMUR</p>
-    <h2>Mis contrataciones</h2>
-    <p>
-      Consulta tus solicitudes, revisa las
-      cotizaciones de los músicos y administra
-      tus próximas contrataciones.
-    </p>
-  </div>
-
-  <div class="panel-cliente-content">
-
-    <div class="panel-cliente-actions">
-      <button
-        type="button"
-        id="actualizarContratacionesCliente"
-        class="btn secondary">
-        Actualizar mis solicitudes
-      </button>
-    </div>
-
-    <p
-      id="estadoContratacionesCliente"
-      role="status"
-      aria-live="polite">
-      Aquí aparecerán tus solicitudes de contratación.
-    </p>
-
-    <div id="listaContratacionesCliente"></div>
-
-  </div>
-
-</section>
-<!-- FIN PANEL DEL CLIENTE -->
-
-<section id="panelMusico" class="join" hidden>
-  <div>
-    <p class="eyebrow">MI MIMUR</p>
-    <h2>Panel del músico</h2>
-    <p>Administra tu perfil artístico y prepara tu música para nuevos eventos.</p>
-  </div>
-
-  <div class="panel-musico-content">
-    <h3>Mi perfil artístico</h3>
-    <p id="estadoPerfilMusico">
-      Cargando información de tu perfil...
-    </p>
-
-    <div class="panel-musico-actions">
-      <button type="button" id="editarPerfilMusico">
-        Editar mi perfil
-      </button>
-      <button type="button" id="verSolicitudesMusico">
-        Mis solicitudes
-      </button>
-    </div>
-
-    <div id="contenidoSolicitudesMusico" hidden>
-      <h3>Mis solicitudes</h3>
-      <p>Próximamente podrás consultar aquí las solicitudes de contratación que recibas.</p>
-    </div>
-  </div>
-</section>
-
-
-<section id="perfilPublicoMusico" class="join" hidden>
-
-  <!-- Encabezado artístico -->
-  <div class="perfil-publico-header">
-    <button type="button" id="volverCatalogoMusicos">
-      ← Volver al catálogo
-    </button>
-
-    <p class="eyebrow">PERFIL ARTÍSTICO · MIMUR</p>
-
-    <h2 id="perfilPublicoNombre">
-      Perfil del músico
-    </h2>
-
-    <p id="perfilPublicoGenero" class="muted"></p>
-  </div>
-
-  <!-- Contenido principal -->
-  <div class="perfil-publico-content">
-
-    <!-- Galería fotográfica -->
-    <div class="perfil-publico-galeria-seccion">
-      <div id="perfilPublicoGaleria"></div>
-    </div>
-
-    <!-- Videos -->
-    <div class="perfil-publico-videos">
-      <h3>🎬 Videos y presentaciones</h3>
-
-      <div id="perfilPublicoVideo">
-        <p>Este músico todavía no ha agregado un video.</p>
-      </div>
-
-      <p class="muted">
-        Conoce su estilo y escucha cómo suena antes de contratarlo.
-      </p>
-    </div>
-
-    <!-- Información artística -->
-    <div class="perfil-publico-info">
-      <h3>Sobre el artista</h3>
-
-      <p id="perfilPublicoBio"></p>
-
-      <!-- Detalles artísticos generados desde app.js -->
-      <div id="perfilPublicoDetalles"></div>
-    </div>
-
-    <!-- Contratación -->
-    <div class="perfil-publico-contratacion">
-
-      <h3>Zona de servicio</h3>
-      <p id="perfilPublicoZona"></p>
-
-      <h3>Precio desde</h3>
-      <p id="perfilPublicoPrecio"></p>
-
-      <h3>Disponibilidad</h3>
-      <p id="perfilPublicoDisponibilidad"></p>
-
-      <h3>Reseñas de clientes</h3>
-      <div id="perfilPublicoResenas">
-        <p>Aún no hay reseñas verificadas para este músico.</p>
-      </div>
-
-      <div class="perfil-publico-acciones">
-        <button type="button" id="perfilPublicoFavorito">
-          ♡ Guardar en favoritos
-        </button>
-
-        <button type="button" id="perfilPublicoCompartir">
-          Compartir perfil
-        </button>
-
-        <button type="button" id="perfilPublicoSolicitar">
-          Solicitar contratación
-        </button>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-
-<section id="registro" class="join"><div><p class="eyebrow">PARA MÚSICOS</p><h2>Haz que tu música llegue más lejos.</h2><p>Registra tu interés en el piloto. En esta versión los datos se guardan solo en este dispositivo; aún no se envían a un servidor.</p></div><form id="lead">
-  <h3>Mi perfil profesional</h3>
-
-  <label>Nombre artístico *
-    <input name="name" required maxlength="100">
-  </label>
-
-  <label>WhatsApp *
-    <input name="phone" required type="tel">
-  </label>
-
-  <label>
-  Alcaldía o municipio *
-  <input
-    name="zone"
-    list="zonasMexico"
-    required
-    maxlength="100"
-    placeholder="Escribe tu alcaldía o municipio"
-  >
-  <datalist id="zonasMexico">
-    <optgroup label="Ciudad de México">
-      <option value="Álvaro Obregón, CDMX">
-      <option value="Azcapotzalco, CDMX">
-      <option value="Benito Juárez, CDMX">
-      <option value="Coyoacán, CDMX">
-      <option value="Cuajimalpa de Morelos, CDMX">
-      <option value="Cuauhtémoc, CDMX">
-      <option value="Gustavo A. Madero, CDMX">
-      <option value="Iztacalco, CDMX">
-      <option value="Iztapalapa, CDMX">
-      <option value="La Magdalena Contreras, CDMX">
-      <option value="Miguel Hidalgo, CDMX">
-      <option value="Milpa Alta, CDMX">
-      <option value="Tláhuac, CDMX">
-      <option value="Tlalpan, CDMX">
-      <option value="Venustiano Carranza, CDMX">
-      <option value="Xochimilco, CDMX">
-    </optgroup>
-    <optgroup label="Estado de México">
-      <option value="Acolman, Edomex">
-      <option value="Aculco, Edomex">
-      <option value="Almoloya de Alquisiras, Edomex">
-      <option value="Almoloya de Juárez, Edomex">
-      <option value="Almoloya del Río, Edomex">
-      <option value="Amanalco, Edomex">
-      <option value="Amatepec, Edomex">
-      <option value="Amecameca, Edomex">
-      <option value="Apaxco, Edomex">
-      <option value="Atenco, Edomex">
-      <option value="Atizapán, Edomex">
-      <option value="Atizapán de Zaragoza, Edomex">
-      <option value="Atlacomulco, Edomex">
-      <option value="Atlautla, Edomex">
-      <option value="Axapusco, Edomex">
-      <option value="Ayapango, Edomex">
-      <option value="Calimaya, Edomex">
-      <option value="Capulhuac, Edomex">
-      <option value="Chalco, Edomex">
-      <option value="Chapa de Mota, Edomex">
-      <option value="Chapultepec, Edomex">
-      <option value="Chiautla, Edomex">
-      <option value="Chicoloapan, Edomex">
-      <option value="Chiconcuac, Edomex">
-      <option value="Chimalhuacán, Edomex">
-      <option value="Coacalco de Berriozábal, Edomex">
-      <option value="Coatepec Harinas, Edomex">
-      <option value="Cocotitlán, Edomex">
-      <option value="Coyotepec, Edomex">
-      <option value="Cuautitlán, Edomex">
-      <option value="Cuautitlán Izcalli, Edomex">
-      <option value="Donato Guerra, Edomex">
-      <option value="Ecatepec de Morelos, Edomex">
-      <option value="Ecatzingo, Edomex">
-      <option value="El Oro, Edomex">
-      <option value="Huehuetoca, Edomex">
-      <option value="Hueypoxtla, Edomex">
-      <option value="Huixquilucan, Edomex">
-      <option value="Isidro Fabela, Edomex">
-      <option value="Ixtapaluca, Edomex">
-      <option value="Ixtapan de la Sal, Edomex">
-      <option value="Ixtapan del Oro, Edomex">
-      <option value="Ixtlahuaca, Edomex">
-      <option value="Jaltenco, Edomex">
-      <option value="Jilotepec, Edomex">
-      <option value="Jilotzingo, Edomex">
-      <option value="Jiquipilco, Edomex">
-      <option value="Jocotitlán, Edomex">
-      <option value="Joquicingo, Edomex">
-      <option value="Juchitepec, Edomex">
-      <option value="La Paz, Edomex">
-      <option value="Lerma, Edomex">
-      <option value="Luvianos, Edomex">
-      <option value="Malinalco, Edomex">
-      <option value="Melchor Ocampo, Edomex">
-      <option value="Metepec, Edomex">
-      <option value="Mexicaltzingo, Edomex">
-      <option value="Morelos, Edomex">
-      <option value="Naucalpan de Juárez, Edomex">
-      <option value="Nextlalpan, Edomex">
-      <option value="Nezahualcóyotl, Edomex">
-      <option value="Nicolás Romero, Edomex">
-      <option value="Nopaltepec, Edomex">
-      <option value="Ocoyoacac, Edomex">
-      <option value="Ocuilan, Edomex">
-      <option value="Otumba, Edomex">
-      <option value="Otzoloapan, Edomex">
-      <option value="Otzolotepec, Edomex">
-      <option value="Ozumba, Edomex">
-      <option value="Papalotla, Edomex">
-      <option value="Polotitlán, Edomex">
-      <option value="Rayón, Edomex">
-      <option value="San Antonio la Isla, Edomex">
-      <option value="San Felipe del Progreso, Edomex">
-      <option value="San José del Rincón, Edomex">
-      <option value="San Martín de las Pirámides, Edomex">
-      <option value="San Mateo Atenco, Edomex">
-      <option value="San Simón de Guerrero, Edomex">
-      <option value="Santo Tomás, Edomex">
-      <option value="Soyaniquilpan de Juárez, Edomex">
-      <option value="Sultepec, Edomex">
-      <option value="Tecámac, Edomex">
-      <option value="Tejupilco, Edomex">
-      <option value="Temamatla, Edomex">
-      <option value="Temascalapa, Edomex">
-      <option value="Temascalcingo, Edomex">
-      <option value="Temascaltepec, Edomex">
-      <option value="Temoaya, Edomex">
-      <option value="Tenancingo, Edomex">
-      <option value="Tenango del Aire, Edomex">
-      <option value="Tenango del Valle, Edomex">
-      <option value="Teoloyucan, Edomex">
-      <option value="Teotihuacán, Edomex">
-      <option value="Tepetlaoxtoc, Edomex">
-      <option value="Tepetlixpa, Edomex">
-      <option value="Tepotzotlán, Edomex">
-      <option value="Tequixquiac, Edomex">
-      <option value="Texcaltitlán, Edomex">
-      <option value="Texcalyacac, Edomex">
-      <option value="Texcoco, Edomex">
-      <option value="Tezoyuca, Edomex">
-      <option value="Tianguistenco, Edomex">
-      <option value="Timilpan, Edomex">
-      <option value="Tlalmanalco, Edomex">
-      <option value="Tlalnepantla de Baz, Edomex">
-      <option value="Tlatlaya, Edomex">
-      <option value="Toluca, Edomex">
-      <option value="Tonanitla, Edomex">
-      <option value="Tonatico, Edomex">
-      <option value="Tultepec, Edomex">
-      <option value="Tultitlán, Edomex">
-      <option value="Valle de Bravo, Edomex">
-      <option value="Valle de Chalco Solidaridad, Edomex">
-      <option value="Villa de Allende, Edomex">
-      <option value="Villa del Carbón, Edomex">
-      <option value="Villa Guerrero, Edomex">
-      <option value="Villa Victoria, Edomex">
-      <option value="Xalatlaco, Edomex">
-      <option value="Xonacatlán, Edomex">
-      <option value="Zacazonapan, Edomex">
-      <option value="Zacualpan, Edomex">
-      <option value="Zinacantepec, Edomex">
-      <option value="Zumpahuacán, Edomex">
-      <option value="Zumpango, Edomex">
-    </optgroup>
-  </datalist>
-</label>
-
-  <label>
-  Géneros musicales que interpretas *
-  <select name="genre" required>
-    <option value="">Selecciona tu género principal</option>
-    <option>Mariachi</option>
-    <option>Norteño</option>
-    <option>Banda sinaloense</option>
-    <option>Banda de viento</option>
-    <option>Duranguense</option>
-    <option>Tierra caliente</option>
-    <option>Grupero</option>
-    <option>Grupo versátil</option>
-    <option>Cumbia</option>
-    <option>Salsa</option>
-    <option>Merengue</option>
-    <option>Sonidero</option>
-    <option>Regional mexicano</option>
-    <option>Ranchero</option>
-    <option>Huapango</option>
-    <option>Corridos</option>
-    <option>Corridos tumbados</option>
-    <option>Reguetón</option>
-    <option>Urbano latino</option>
-    <option>Trap</option>
-    <option>Hip-hop / Rap</option>
-    <option>Pop</option>
-    <option>Rock</option>
-    <option>Rock en español</option>
-    <option>Rock alternativo</option>
-    <option>Metal</option>
-    <option>Indie</option>
-    <option>Electrónica</option>
-    <option>DJ</option>
-    <option>House</option>
-    <option>Techno</option>
-    <option>EDM</option>
-    <option>Jazz</option>
-    <option>Blues</option>
-    <option>Reggae</option>
-    <option>Funk</option>
-    <option>Disco</option>
-    <option>Acústico</option>
-    <option>Balada</option>
-    <option>Trova</option>
-    <option>Bolero</option>
-    <option>Romántica</option>
-    <option>Clásica</option>
-    <option>Ópera</option>
-    <option>Coral</option>
-    <option>Infantil</option>
-    <option>Son jarocho</option>
-    <option>Son cubano</option>
-    <option>Flamenco</option>
-    <option>World music</option>
-    <option>Otro</option>
-  </select>
-</label>
-
-  <label>Precio por evento (MXN)
-  <input name="eventPrice" type="number" min="0" step="50" placeholder="Ej. 2500">
-</label>
-
-<label>Precio por hora (MXN)
-  <input name="hourlyPrice" type="number" min="0" step="50" placeholder="Ej. 800">
-</label>
-
-<label>Condiciones de contratación y tarifas
-  <textarea name="pricingNotes" maxlength="500"
-    placeholder="Ej. Paquete de 3 horas con descuento. Traslado incluido dentro de CDMX."></textarea>
-</label>
-
-  <label>Enlace a video *
-    <input name="video" type="url" required placeholder="https://...">
-  </label>
-
-  <label>Descripción artística
-    <textarea name="bio" maxlength="1500" placeholder="Cuéntales a tus clientes quién eres y qué tipo de música ofreces."></textarea>
-  </label>
-
-  <label>Experiencia y trayectoria
-    <textarea name="experience" maxlength="1500" placeholder="Años de experiencia, eventos importantes, trayectoria..."></textarea>
-  </label>
-
-  <label>Repertorio musical
-    <textarea name="repertoire" placeholder="Escribe una canción por línea."></textarea>
-  </label>
-
-  <label>Integrantes
-    <textarea name="members" placeholder="Describe los integrantes y sus instrumentos, uno por línea."></textarea>
-  </label>
-
-  <label>Equipo de sonido e iluminación
-    <textarea name="equipment" maxlength="1500" placeholder="Describe tu equipo disponible."></textarea>
-  </label>
-
-  <label>Servicios que ofreces
-    <textarea name="services" placeholder="Escribe un servicio por línea."></textarea>
-  </label>
-
-  <label>Fotografías del artista
-  <input
-    type="file"
-    name="photo_files"
-    accept="image/*"
-    multiple
-  >
-  <small>Selecciona varias fotografías desde tu dispositivo.</small>
-</label>
-<div id="misFotosMusico">
-  <h4>Mis fotografías</h4>
-  <div id="listaMisFotos"></div>
-</div>
-  <label class="check">
-    <input type="checkbox" name="emergency">
-    Acepto oportunidades de emergencia.
-  </label>
-
-  <label class="check">
-    <input type="checkbox" name="consent" required>
-    Acepto que MiMuR me contacte para el piloto.
-  </label>
-
-  <button class="btn" type="submit">
-    Guardar mi perfil →
-  </button>
-
-  <p id="leadMsg" role="status"></p>
-</form></section></main>
-<footer><a class="logo" href="#">MiMu<span>R</span></a><span>© 2026 MiMuR · Prototipo PWA · CDMX</span></footer>
-<dialog id="request"><form id="requestForm"><button type="button" id="close" class="close">×</button><p class="eyebrow">SOLICITUD DE EVENTO</p><h2 id="requestTitle">Solicitar músico</h2><p class="small">La solicitud se guardará localmente. No se enviará al músico.</p><input type="hidden" name="musicianId"><label>Tu nombre *<input name="customer" required></label><label>WhatsApp *<input name="phone" required type="tel"></label><label>Fecha del evento *
-  
-<label>Fecha del evento *
-  <input name="date" required type="date">
-</label>
-
-<label>Hora de inicio del evento *
-  <input name="eventTime" type="time" required>
-  <small>Horario de Ciudad de México.</small>
-</label>
-
-<label>Duración de la presentación *
-  <select name="duration" id="eventDuration" required>
-    <option value="">Selecciona la duración</option>
-    <option value="30">30 minutos</option>
-    <option value="45">45 minutos</option>
-    <option value="50">50 minutos</option>
-    <option value="60">1 hora</option>
-    <option value="90">1 hora y 30 minutos</option>
-    <option value="120">2 horas</option>
-    <option value="180">3 horas</option>
-    <option value="240">4 horas</option>
-    <option value="300">5 horas</option>
-    <option value="360">6 horas</option>
-    <option value="480">8 horas</option>
-    <option value="custom">Personalizar duración</option>
-  </select>
-</label>
-
-<div id="customDurationContainer" hidden>
-  <label>Duración personalizada en minutos *
-    <input
-      name="customDuration"
-      id="customDuration"
-      type="number"
-      min="1"
-      max="1440"
-      step="1"
-      placeholder="Ej. 75"
-      disabled
-    >
-  </label>
-</div>
-
-<p id="eventTimeSummary"
-   class="small"
-   aria-live="polite">
-</p>
-
-<label>
-  Alcaldía o municipio del evento *
-  <input
-    name="eventZone"
-    list="zonasEvento"
-    required
-    maxlength="100"
-    placeholder="Escribe tu alcaldía o municipio"
-  >
-  <datalist id="zonasEvento">
-    <option value="Álvaro Obregón, CDMX">
-    <option value="Azcapotzalco, CDMX">
-    <option value="Benito Juárez, CDMX">
-    <option value="Coyoacán, CDMX">
-    <option value="Cuajimalpa de Morelos, CDMX">
-    <option value="Cuauhtémoc, CDMX">
-    <option value="Gustavo A. Madero, CDMX">
-    <option value="Iztacalco, CDMX">
-    <option value="Iztapalapa, CDMX">
-    <option value="La Magdalena Contreras, CDMX">
-    <option value="Miguel Hidalgo, CDMX">
-    <option value="Milpa Alta, CDMX">
-    <option value="Tláhuac, CDMX">
-    <option value="Tlalpan, CDMX">
-    <option value="Venustiano Carranza, CDMX">
-    <option value="Xochimilco, CDMX">
-    <option value="Acolman, Edomex">
-    <option value="Aculco, Edomex">
-    <option value="Almoloya de Alquisiras, Edomex">
-    <option value="Almoloya de Juárez, Edomex">
-    <option value="Almoloya del Río, Edomex">
-    <option value="Amanalco, Edomex">
-    <option value="Amatepec, Edomex">
-    <option value="Amecameca, Edomex">
-    <option value="Apaxco, Edomex">
-    <option value="Atenco, Edomex">
-    <option value="Atizapán, Edomex">
-    <option value="Atizapán de Zaragoza, Edomex">
-    <option value="Atlacomulco, Edomex">
-    <option value="Atlautla, Edomex">
-    <option value="Axapusco, Edomex">
-    <option value="Ayapango, Edomex">
-    <option value="Calimaya, Edomex">
-    <option value="Capulhuac, Edomex">
-    <option value="Chalco, Edomex">
-    <option value="Chapa de Mota, Edomex">
-    <option value="Chapultepec, Edomex">
-    <option value="Chiautla, Edomex">
-    <option value="Chicoloapan, Edomex">
-    <option value="Chiconcuac, Edomex">
-    <option value="Chimalhuacán, Edomex">
-    <option value="Coacalco de Berriozábal, Edomex">
-    <option value="Coatepec Harinas, Edomex">
-    <option value="Cocotitlán, Edomex">
-    <option value="Coyotepec, Edomex">
-    <option value="Cuautitlán, Edomex">
-    <option value="Cuautitlán Izcalli, Edomex">
-    <option value="Donato Guerra, Edomex">
-    <option value="Ecatepec de Morelos, Edomex">
-    <option value="Ecatzingo, Edomex">
-    <option value="El Oro, Edomex">
-    <option value="Huehuetoca, Edomex">
-    <option value="Hueypoxtla, Edomex">
-    <option value="Huixquilucan, Edomex">
-    <option value="Isidro Fabela, Edomex">
-    <option value="Ixtapaluca, Edomex">
-    <option value="Ixtapan de la Sal, Edomex">
-    <option value="Ixtapan del Oro, Edomex">
-    <option value="Ixtlahuaca, Edomex">
-    <option value="Jaltenco, Edomex">
-    <option value="Jilotepec, Edomex">
-    <option value="Jilotzingo, Edomex">
-    <option value="Jiquipilco, Edomex">
-    <option value="Jocotitlán, Edomex">
-    <option value="Joquicingo, Edomex">
-    <option value="Juchitepec, Edomex">
-    <option value="La Paz, Edomex">
-    <option value="Lerma, Edomex">
-    <option value="Luvianos, Edomex">
-    <option value="Malinalco, Edomex">
-    <option value="Melchor Ocampo, Edomex">
-    <option value="Metepec, Edomex">
-    <option value="Mexicaltzingo, Edomex">
-    <option value="Morelos, Edomex">
-    <option value="Naucalpan de Juárez, Edomex">
-    <option value="Nextlalpan, Edomex">
-    <option value="Nezahualcóyotl, Edomex">
-    <option value="Nicolás Romero, Edomex">
-    <option value="Nopaltepec, Edomex">
-    <option value="Ocoyoacac, Edomex">
-    <option value="Ocuilan, Edomex">
-    <option value="Otumba, Edomex">
-    <option value="Otzoloapan, Edomex">
-    <option value="Otzolotepec, Edomex">
-    <option value="Ozumba, Edomex">
-    <option value="Papalotla, Edomex">
-    <option value="Polotitlán, Edomex">
-    <option value="Rayón, Edomex">
-    <option value="San Antonio la Isla, Edomex">
-    <option value="San Felipe del Progreso, Edomex">
-    <option value="San José del Rincón, Edomex">
-    <option value="San Martín de las Pirámides, Edomex">
-    <option value="San Mateo Atenco, Edomex">
-    <option value="San Simón de Guerrero, Edomex">
-    <option value="Santo Tomás, Edomex">
-    <option value="Soyaniquilpan de Juárez, Edomex">
-    <option value="Sultepec, Edomex">
-    <option value="Tecámac, Edomex">
-    <option value="Tejupilco, Edomex">
-    <option value="Temamatla, Edomex">
-    <option value="Temascalapa, Edomex">
-    <option value="Temascalcingo, Edomex">
-    <option value="Temascaltepec, Edomex">
-    <option value="Temoaya, Edomex">
-    <option value="Tenancingo, Edomex">
-    <option value="Tenango del Aire, Edomex">
-    <option value="Tenango del Valle, Edomex">
-    <option value="Teoloyucan, Edomex">
-    <option value="Teotihuacán, Edomex">
-    <option value="Tepetlaoxtoc, Edomex">
-    <option value="Tepetlixpa, Edomex">
-    <option value="Tepotzotlán, Edomex">
-    <option value="Tequixquiac, Edomex">
-    <option value="Texcaltitlán, Edomex">
-    <option value="Texcalyacac, Edomex">
-    <option value="Texcoco, Edomex">
-    <option value="Tezoyuca, Edomex">
-    <option value="Tianguistenco, Edomex">
-    <option value="Timilpan, Edomex">
-    <option value="Tlalmanalco, Edomex">
-    <option value="Tlalnepantla de Baz, Edomex">
-    <option value="Tlatlaya, Edomex">
-    <option value="Toluca, Edomex">
-    <option value="Tonanitla, Edomex">
-    <option value="Tonatico, Edomex">
-    <option value="Tultepec, Edomex">
-    <option value="Tultitlán, Edomex">
-    <option value="Valle de Bravo, Edomex">
-    <option value="Valle de Chalco Solidaridad, Edomex">
-    <option value="Villa de Allende, Edomex">
-    <option value="Villa del Carbón, Edomex">
-    <option value="Villa Guerrero, Edomex">
-    <option value="Villa Victoria, Edomex">
-    <option value="Xalatlaco, Edomex">
-    <option value="Xonacatlán, Edomex">
-    <option value="Zacazonapan, Edomex">
-    <option value="Zacualpan, Edomex">
-    <option value="Zinacantepec, Edomex">
-    <option value="Zumpahuacán, Edomex">
-    <option value="Zumpango, Edomex">
-  </datalist>
-</label><label>Presupuesto total (MXN) *<input name="budget" type="number" min="1" required></label><label>Detalles<textarea name="details" maxlength="800"></textarea></label><button class="btn" type="submit">Guardar solicitud de prueba</button><p id="requestMsg" role="status"></p></form></dialog>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="app.js"></script></body></html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#101216"><meta name="description" content="Encuentra músicos para tu evento con MiMuR"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" href="assets/favicon.png"><link rel="stylesheet" href="styles.css"><title>MiMuR — Música que se vive</title></head>
+<body><header><a class="logo" href="#inicio"><img src="assets/logo-mimur.webp" alt="">MiMu<span>R</span></a><nav><button id="openAccount" type="button">Mi cuenta</button><button id="install" type="button" hidden>Instalar app</button></nav></header>
+<main><section id="inicio" class="hero"><div><p class="eyebrow">● MÚSICA PARA TUS MOMENTOS</p><h1><span class="title-left">Encuentra la música.</span><br><em class="title-right">Vive el momento.</em></h1><p class="lead">Cada momento tiene un sonido. Encuentra el tuyo.</p><svg class="waveform" viewBox="0 0 320 40" aria-hidden="true"><path d="M0 20H85L98 15 110 26 123 8 137 32 150 2 165 38 180 12 194 28 208 16 222 20H320" fill="none" stroke="currentColor" stroke-width="2"/></svg></div></section>
+<section id="buscar"><div class="search-panel"><p class="eyebrow">DESCUBRIR</p><h2>¿Qué quieres escuchar?</h2><div class="filters"><label>Buscar<input id="q" placeholder="Nombre, estilo o zona"></label><label>Género<select id="genre"><option value="">Todos</option><option>Mariachi</option>
+<option>Norteño</option>
+<option>Banda sinaloense</option>
+<option>Banda de viento</option>
+<option>Duranguense</option>
+<option>Tierra caliente</option>
+<option>Grupero</option>
+<option>Grupo versátil</option>
+<option>Cumbia</option>
+<option>Salsa</option>
+<option>Merengue</option>
+<option>Sonidero</option>
+<option>Regional mexicano</option>
+<option>Ranchero</option>
+<option>Huapango</option>
+<option>Corridos</option>
+<option>Corridos tumbados</option>
+<option>Reguetón</option>
+<option>Urbano latino</option>
+<option>Trap</option>
+<option>Hip-hop / Rap</option>
+<option>Pop</option>
+<option>Rock</option>
+<option>Rock en español</option>
+<option>Rock alternativo</option>
+<option>Metal</option>
+<option>Indie</option>
+<option>Electrónica</option>
+<option>DJ</option>
+<option>House</option>
+<option>Techno</option>
+<option>EDM</option>
+<option>Jazz</option>
+<option>Blues</option>
+<option>Reggae</option>
+<option>Funk</option>
+<option>Disco</option>
+<option>Acústico</option>
+<option>Balada</option>
+<option>Trova</option>
+<option>Bolero</option>
+<option>Romántica</option>
+<option>Clásica</option>
+<option>Ópera</option>
+<option>Coral</option>
+<option>Infantil</option>
+<option>Son jarocho</option>
+<option>Son cubano</option>
+<option>Flamenco</option>
+<option>World music</option>
+<option>Otro</option>
+<option>Rock / Pop</option>
+<option>Solista</option></select></label><label>Zona<select id="zone"><option value="">Todas</option><option>Coyoacán</option>
+<option>Benito Juárez</option>
+<option>Centro</option>
+<option>Azcapotzalco</option>
+<option>Álvaro Obregón, CDMX</option>
+<option>Azcapotzalco, CDMX</option>
+<option>Benito Juárez, CDMX</option>
+<option>Coyoacán, CDMX</option>
+<option>Cuajimalpa de Morelos, CDMX</option>
+<option>Cuauhtémoc, CDMX</option>
+<option>Gustavo A. Madero, CDMX</option>
+<option>Iztacalco, CDMX</option>
+<option>Iztapalapa, CDMX</option>
+<option>La Magdalena Contreras, CDMX</option>
+<option>Miguel Hidalgo, CDMX</option>
+<option>Milpa Alta, CDMX</option>
+<option>Tláhuac, CDMX</option>
+<option>Tlalpan, CDMX</option>
+<option>Venustiano Carranza, CDMX</option>
+<option>Xochimilco, CDMX</option>
+<option>Acolman, Edomex</option>
+<option>Aculco, Edomex</option>
+<option>Almoloya de Alquisiras, Edomex</option>
+<option>Almoloya de Juárez, Edomex</option>
+<option>Almoloya del Río, Edomex</option>
+<option>Amanalco, Edomex</option>
+<option>Amatepec, Edomex</option>
+<option>Amecameca, Edomex</option>
+<option>Apaxco, Edomex</option>
+<option>Atenco, Edomex</option>
+<option>Atizapán, Edomex</option>
+<option>Atizapán de Zaragoza, Edomex</option>
+<option>Atlacomulco, Edomex</option>
+<option>Atlautla, Edomex</option>
+<option>Axapusco, Edomex</option>
+<option>Ayapango, Edomex</option>
+<option>Calimaya, Edomex</option>
+<option>Capulhuac, Edomex</option>
+<option>Chalco, Edomex</option>
+<option>Chapa de Mota, Edomex</option>
+<option>Chapultepec, Edomex</option>
+<option>Chiautla, Edomex</option>
+<option>Chicoloapan, Edomex</option>
+<option>Chiconcuac, Edomex</option>
+<option>Chimalhuacán, Edomex</option>
+<option>Coacalco de Berriozábal, Edomex</option>
+<option>Coatepec Harinas, Edomex</option>
+<option>Cocotitlán, Edomex</option>
+<option>Coyotepec, Edomex</option>
+<option>Cuautitlán, Edomex</option>
+<option>Cuautitlán Izcalli, Edomex</option>
+<option>Donato Guerra, Edomex</option>
+<option>Ecatepec de Morelos, Edomex</option>
+<option>Ecatzingo, Edomex</option>
+<option>El Oro, Edomex</option>
+<option>Huehuetoca, Edomex</option>
+<option>Hueypoxtla, Edomex</option>
+<option>Huixquilucan, Edomex</option>
+<option>Isidro Fabela, Edomex</option>
+<option>Ixtapaluca, Edomex</option>
+<option>Ixtapan de la Sal, Edomex</option>
+<option>Ixtapan del Oro, Edomex</option>
+<option>Ixtlahuaca, Edomex</option>
+<option>Jaltenco, Edomex</option>
+<option>Jilotepec, Edomex</option>
+<option>Jilotzingo, Edomex</option>
+<option>Jiquipilco, Edomex</option>
+<option>Jocotitlán, Edomex</option>
+<option>Joquicingo, Edomex</option>
+<option>Juchitepec, Edomex</option>
+<option>La Paz, Edomex</option>
+<option>Lerma, Edomex</option>
+<option>Luvianos, Edomex</option>
+<option>Malinalco, Edomex</option>
+<option>Melchor Ocampo, Edomex</option>
+<option>Metepec, Edomex</option>
+<option>Mexicaltzingo, Edomex</option>
+<option>Morelos, Edomex</option>
+<option>Naucalpan de Juárez, Edomex</option>
+<option>Nextlalpan, Edomex</option>
+<option>Nezahualcóyotl, Edomex</option>
+<option>Nicolás Romero, Edomex</option>
+<option>Nopaltepec, Edomex</option>
+<option>Ocoyoacac, Edomex</option>
+<option>Ocuilan, Edomex</option>
+<option>Otumba, Edomex</option>
+<option>Otzoloapan, Edomex</option>
+<option>Otzolotepec, Edomex</option>
+<option>Ozumba, Edomex</option>
+<option>Papalotla, Edomex</option>
+<option>Polotitlán, Edomex</option>
+<option>Rayón, Edomex</option>
+<option>San Antonio la Isla, Edomex</option>
+<option>San Felipe del Progreso, Edomex</option>
+<option>San José del Rincón, Edomex</option>
+<option>San Martín de las Pirámides, Edomex</option>
+<option>San Mateo Atenco, Edomex</option>
+<option>San Simón de Guerrero, Edomex</option>
+<option>Santo Tomás, Edomex</option>
+<option>Soyaniquilpan de Juárez, Edomex</option>
+<option>Sultepec, Edomex</option>
+<option>Tecámac, Edomex</option>
+<option>Tejupilco, Edomex</option>
+<option>Temamatla, Edomex</option>
+<option>Temascalapa, Edomex</option>
+<option>Temascalcingo, Edomex</option>
+<option>Temascaltepec, Edomex</option>
+<option>Temoaya, Edomex</option>
+<option>Tenancingo, Edomex</option>
+<option>Tenango del Aire, Edomex</option>
+<option>Tenango del Valle, Edomex</option>
+<option>Teoloyucan, Edomex</option>
+<option>Teotihuacán, Edomex</option>
+<option>Tepetlaoxtoc, Edomex</option>
+<option>Tepetlixpa, Edomex</option>
+<option>Tepotzotlán, Edomex</option>
+<option>Tequixquiac, Edomex</option>
+<option>Texcaltitlán, Edomex</option>
+<option>Texcalyacac, Edomex</option>
+<option>Texcoco, Edomex</option>
+<option>Tezoyuca, Edomex</option>
+<option>Tianguistenco, Edomex</option>
+<option>Timilpan, Edomex</option>
+<option>Tlalmanalco, Edomex</option>
+<option>Tlalnepantla de Baz, Edomex</option>
+<option>Tlatlaya, Edomex</option>
+<option>Toluca, Edomex</option>
+<option>Tonanitla, Edomex</option>
+<option>Tonatico, Edomex</option>
+<option>Tultepec, Edomex</option>
+<option>Tultitlán, Edomex</option>
+<option>Valle de Bravo, Edomex</option>
+<option>Valle de Chalco Solidaridad, Edomex</option>
+<option>Villa de Allende, Edomex</option>
+<option>Villa del Carbón, Edomex</option>
+<option>Villa Guerrero, Edomex</option>
+<option>Villa Victoria, Edomex</option>
+<option>Xalatlaco, Edomex</option>
+<option>Xonacatlán, Edomex</option>
+<option>Zacazonapan, Edomex</option>
+<option>Zacualpan, Edomex</option>
+<option>Zinacantepec, Edomex</option>
+<option>Zumpahuacán, Edomex</option>
+<option>Zumpango, Edomex</option></select></label></div><label>Fecha del evento<input id="fechaBusqueda" type="date"></label><label>Presupuesto total (MXN)<input id="presupuestoBusqueda" type="number" min="1" max="2147483647" step="1" placeholder="Ej. 3500"></label><p class="small">Fecha y presupuesto se usarán al preparar tu solicitud; no verifican disponibilidad.</p><button type="button" id="buscarMusicos" class="btn">Encontrar mi músico →</button></div></section>
+<section id="categorias"><h2>Explora por categoría</h2><div class="category-grid"><button type="button" class="category-card" data-category="solistas"><img src="assets/solistas.webp" alt="" loading="lazy"><span class="category-copy"><strong>Solistas</strong><small>Una voz, mil emociones</small></span></button><button type="button" class="category-card" data-category="Mariachi"><img src="assets/mariachis.webp" alt="" loading="lazy"><span class="category-copy"><strong>Mariachis</strong><small>Tradición que emociona</small></span></button><button type="button" class="category-card" data-category="DJ"><img src="assets/dj.webp" alt="" loading="lazy"><span class="category-copy"><strong>DJ</strong><small>Enciende la fiesta</small></span></button><button type="button" class="category-card" data-category="rock-pop"><img src="assets/rock-pop.webp" alt="" loading="lazy"><span class="category-copy"><strong>Rock / Pop</strong><small>Siente la energía</small></span></button><button type="button" class="category-card" data-category="Norteño"><img src="assets/norteno.webp" alt="" loading="lazy"><span class="category-copy"><strong>Norteños</strong><small>Música con identidad</small></span></button><button type="button" class="category-card" data-category="Grupo versátil"><img src="assets/versatiles.webp" alt="" loading="lazy"><span class="category-copy"><strong>Grupos versátiles</strong><small>Para cada celebración</small></span></button></div></section>
+<section id="resultados"><h2 id="tituloResultados">Músicos para tu evento</h2><div id="musicians" class="grid"></div><p id="empty" hidden>No encontramos perfiles con esos filtros.</p></section>
+<section class="artist-cta" id="invitacionMusico"><h2>Tu talento merece un escenario.</h2><p>Forma parte de la comunidad de artistas MiMuR.</p><a class="btn" href="#registro">Soy músico →</a></section>
+<section id="panelCliente" class="join" hidden><div><p class="eyebrow">MI MIMUR</p><h2>Mis contrataciones</h2><p>Consulta tus solicitudes, cotizaciones y próximas contrataciones.</p></div><div class="panel-cliente-content"><div class="panel-cliente-actions"><button type="button" id="actualizarContratacionesCliente" class="btn secondary">Actualizar mis solicitudes</button></div><p id="estadoContratacionesCliente" role="status" aria-live="polite"></p><div id="listaContratacionesCliente"></div></div></section>
+<section id="panelMusico" class="join" hidden><div><p class="eyebrow">MI MIMUR</p><h2>Panel del músico</h2><p>Administra tu perfil artístico.</p></div><div class="panel-musico-content"><h3>Mi perfil artístico</h3><p id="estadoPerfilMusico">Cargando información...</p><div class="panel-musico-actions"><button type="button" id="editarPerfilMusico">Editar mi perfil</button><button type="button" id="verSolicitudesMusico">Mis solicitudes</button></div><div id="contenidoSolicitudesMusico" hidden></div></div></section>
+<section id="perfilPublicoMusico" class="join" hidden><div class="perfil-publico-header"><button type="button" id="volverCatalogoMusicos">← Volver al catálogo</button><p class="eyebrow">PERFIL ARTÍSTICO · MIMUR</p><h2 id="perfilPublicoNombre">Perfil del músico</h2><p id="perfilPublicoGenero" class="muted"></p></div><div class="perfil-publico-content"><div class="perfil-publico-galeria-seccion"><div id="perfilPublicoGaleria"></div></div><div class="perfil-publico-videos"><h3>Videos y presentaciones</h3><div id="perfilPublicoVideo"></div><p class="muted">Conoce su estilo antes de contratarlo.</p></div><div class="perfil-publico-info"><h3>Sobre el artista</h3><p id="perfilPublicoBio"></p><div id="perfilPublicoDetalles"></div></div><div class="perfil-publico-contratacion"><h3>Zona de servicio</h3><p id="perfilPublicoZona"></p><h3>Precio desde</h3><p id="perfilPublicoPrecio"></p><h3>Disponibilidad</h3><p id="perfilPublicoDisponibilidad"></p><h3>Reseñas de clientes</h3><div id="perfilPublicoResenas"><p>Aún no hay reseñas verificadas.</p></div><div class="perfil-publico-acciones"><button type="button" id="perfilPublicoFavorito">♡ Guardar en favoritos</button><button type="button" id="perfilPublicoCompartir">Compartir perfil</button><button type="button" id="perfilPublicoSolicitar">Solicitar contratación</button></div></div></div></section>
+<section id="registro" class="join"><div><p class="eyebrow">PARA MÚSICOS</p><h2>Haz que tu música llegue más lejos.</h2><p>Crea o actualiza tu perfil profesional. Los perfiles requieren aprobación para aparecer en el catálogo.</p></div><form id="lead"><h3>Mi perfil profesional</h3><label>Nombre artístico *<input name="name" required maxlength="100"></label><label>WhatsApp *<input name="phone" required type="tel"></label><label>Alcaldía o municipio *<input name="zone" list="zonasMexico" required maxlength="100" placeholder="Escribe tu alcaldía o municipio"></label><datalist id="zonasMexico"><option>Álvaro Obregón, CDMX</option>
+<option>Azcapotzalco, CDMX</option>
+<option>Benito Juárez, CDMX</option>
+<option>Coyoacán, CDMX</option>
+<option>Cuajimalpa de Morelos, CDMX</option>
+<option>Cuauhtémoc, CDMX</option>
+<option>Gustavo A. Madero, CDMX</option>
+<option>Iztacalco, CDMX</option>
+<option>Iztapalapa, CDMX</option>
+<option>La Magdalena Contreras, CDMX</option>
+<option>Miguel Hidalgo, CDMX</option>
+<option>Milpa Alta, CDMX</option>
+<option>Tláhuac, CDMX</option>
+<option>Tlalpan, CDMX</option>
+<option>Venustiano Carranza, CDMX</option>
+<option>Xochimilco, CDMX</option>
+<option>Acolman, Edomex</option>
+<option>Aculco, Edomex</option>
+<option>Almoloya de Alquisiras, Edomex</option>
+<option>Almoloya de Juárez, Edomex</option>
+<option>Almoloya del Río, Edomex</option>
+<option>Amanalco, Edomex</option>
+<option>Amatepec, Edomex</option>
+<option>Amecameca, Edomex</option>
+<option>Apaxco, Edomex</option>
+<option>Atenco, Edomex</option>
+<option>Atizapán, Edomex</option>
+<option>Atizapán de Zaragoza, Edomex</option>
+<option>Atlacomulco, Edomex</option>
+<option>Atlautla, Edomex</option>
+<option>Axapusco, Edomex</option>
+<option>Ayapango, Edomex</option>
+<option>Calimaya, Edomex</option>
+<option>Capulhuac, Edomex</option>
+<option>Chalco, Edomex</option>
+<option>Chapa de Mota, Edomex</option>
+<option>Chapultepec, Edomex</option>
+<option>Chiautla, Edomex</option>
+<option>Chicoloapan, Edomex</option>
+<option>Chiconcuac, Edomex</option>
+<option>Chimalhuacán, Edomex</option>
+<option>Coacalco de Berriozábal, Edomex</option>
+<option>Coatepec Harinas, Edomex</option>
+<option>Cocotitlán, Edomex</option>
+<option>Coyotepec, Edomex</option>
+<option>Cuautitlán, Edomex</option>
+<option>Cuautitlán Izcalli, Edomex</option>
+<option>Donato Guerra, Edomex</option>
+<option>Ecatepec de Morelos, Edomex</option>
+<option>Ecatzingo, Edomex</option>
+<option>El Oro, Edomex</option>
+<option>Huehuetoca, Edomex</option>
+<option>Hueypoxtla, Edomex</option>
+<option>Huixquilucan, Edomex</option>
+<option>Isidro Fabela, Edomex</option>
+<option>Ixtapaluca, Edomex</option>
+<option>Ixtapan de la Sal, Edomex</option>
+<option>Ixtapan del Oro, Edomex</option>
+<option>Ixtlahuaca, Edomex</option>
+<option>Jaltenco, Edomex</option>
+<option>Jilotepec, Edomex</option>
+<option>Jilotzingo, Edomex</option>
+<option>Jiquipilco, Edomex</option>
+<option>Jocotitlán, Edomex</option>
+<option>Joquicingo, Edomex</option>
+<option>Juchitepec, Edomex</option>
+<option>La Paz, Edomex</option>
+<option>Lerma, Edomex</option>
+<option>Luvianos, Edomex</option>
+<option>Malinalco, Edomex</option>
+<option>Melchor Ocampo, Edomex</option>
+<option>Metepec, Edomex</option>
+<option>Mexicaltzingo, Edomex</option>
+<option>Morelos, Edomex</option>
+<option>Naucalpan de Juárez, Edomex</option>
+<option>Nextlalpan, Edomex</option>
+<option>Nezahualcóyotl, Edomex</option>
+<option>Nicolás Romero, Edomex</option>
+<option>Nopaltepec, Edomex</option>
+<option>Ocoyoacac, Edomex</option>
+<option>Ocuilan, Edomex</option>
+<option>Otumba, Edomex</option>
+<option>Otzoloapan, Edomex</option>
+<option>Otzolotepec, Edomex</option>
+<option>Ozumba, Edomex</option>
+<option>Papalotla, Edomex</option>
+<option>Polotitlán, Edomex</option>
+<option>Rayón, Edomex</option>
+<option>San Antonio la Isla, Edomex</option>
+<option>San Felipe del Progreso, Edomex</option>
+<option>San José del Rincón, Edomex</option>
+<option>San Martín de las Pirámides, Edomex</option>
+<option>San Mateo Atenco, Edomex</option>
+<option>San Simón de Guerrero, Edomex</option>
+<option>Santo Tomás, Edomex</option>
+<option>Soyaniquilpan de Juárez, Edomex</option>
+<option>Sultepec, Edomex</option>
+<option>Tecámac, Edomex</option>
+<option>Tejupilco, Edomex</option>
+<option>Temamatla, Edomex</option>
+<option>Temascalapa, Edomex</option>
+<option>Temascalcingo, Edomex</option>
+<option>Temascaltepec, Edomex</option>
+<option>Temoaya, Edomex</option>
+<option>Tenancingo, Edomex</option>
+<option>Tenango del Aire, Edomex</option>
+<option>Tenango del Valle, Edomex</option>
+<option>Teoloyucan, Edomex</option>
+<option>Teotihuacán, Edomex</option>
+<option>Tepetlaoxtoc, Edomex</option>
+<option>Tepetlixpa, Edomex</option>
+<option>Tepotzotlán, Edomex</option>
+<option>Tequixquiac, Edomex</option>
+<option>Texcaltitlán, Edomex</option>
+<option>Texcalyacac, Edomex</option>
+<option>Texcoco, Edomex</option>
+<option>Tezoyuca, Edomex</option>
+<option>Tianguistenco, Edomex</option>
+<option>Timilpan, Edomex</option>
+<option>Tlalmanalco, Edomex</option>
+<option>Tlalnepantla de Baz, Edomex</option>
+<option>Tlatlaya, Edomex</option>
+<option>Toluca, Edomex</option>
+<option>Tonanitla, Edomex</option>
+<option>Tonatico, Edomex</option>
+<option>Tultepec, Edomex</option>
+<option>Tultitlán, Edomex</option>
+<option>Valle de Bravo, Edomex</option>
+<option>Valle de Chalco Solidaridad, Edomex</option>
+<option>Villa de Allende, Edomex</option>
+<option>Villa del Carbón, Edomex</option>
+<option>Villa Guerrero, Edomex</option>
+<option>Villa Victoria, Edomex</option>
+<option>Xalatlaco, Edomex</option>
+<option>Xonacatlán, Edomex</option>
+<option>Zacazonapan, Edomex</option>
+<option>Zacualpan, Edomex</option>
+<option>Zinacantepec, Edomex</option>
+<option>Zumpahuacán, Edomex</option>
+<option>Zumpango, Edomex</option></datalist><label>Género principal *<select name="genre" required><option value="">Selecciona tu género principal</option><option>Mariachi</option>
+<option>Norteño</option>
+<option>Banda sinaloense</option>
+<option>Banda de viento</option>
+<option>Duranguense</option>
+<option>Tierra caliente</option>
+<option>Grupero</option>
+<option>Grupo versátil</option>
+<option>Cumbia</option>
+<option>Salsa</option>
+<option>Merengue</option>
+<option>Sonidero</option>
+<option>Regional mexicano</option>
+<option>Ranchero</option>
+<option>Huapango</option>
+<option>Corridos</option>
+<option>Corridos tumbados</option>
+<option>Reguetón</option>
+<option>Urbano latino</option>
+<option>Trap</option>
+<option>Hip-hop / Rap</option>
+<option>Pop</option>
+<option>Rock</option>
+<option>Rock en español</option>
+<option>Rock alternativo</option>
+<option>Metal</option>
+<option>Indie</option>
+<option>Electrónica</option>
+<option>DJ</option>
+<option>House</option>
+<option>Techno</option>
+<option>EDM</option>
+<option>Jazz</option>
+<option>Blues</option>
+<option>Reggae</option>
+<option>Funk</option>
+<option>Disco</option>
+<option>Acústico</option>
+<option>Balada</option>
+<option>Trova</option>
+<option>Bolero</option>
+<option>Romántica</option>
+<option>Clásica</option>
+<option>Ópera</option>
+<option>Coral</option>
+<option>Infantil</option>
+<option>Son jarocho</option>
+<option>Son cubano</option>
+<option>Flamenco</option>
+<option>World music</option>
+<option>Otro</option></select></label><label>Precio por evento (MXN)<input name="eventPrice" type="number" min="10" max="1000000" step="1" placeholder="Ej. 2500"></label><label>Precio por hora (MXN)<input name="hourlyPrice" type="number" min="10" max="1000000" step="1" placeholder="Ej. 800"></label><label>Condiciones de contratación y tarifas<textarea name="pricingNotes" maxlength="500"></textarea></label><label>Enlace a video *<input name="video" type="url" required placeholder="https://..."></label><label>Descripción artística<textarea name="bio" maxlength="1500"></textarea></label><label>Experiencia y trayectoria<textarea name="experience" maxlength="1500"></textarea></label><label>Repertorio musical<textarea name="repertoire" placeholder="Una canción por línea"></textarea></label><label>Integrantes<textarea name="members" placeholder="Un integrante por línea"></textarea></label><label>Equipo de sonido e iluminación<textarea name="equipment" maxlength="1500"></textarea></label><label>Servicios que ofreces<textarea name="services" placeholder="Un servicio por línea"></textarea></label><label>Fotografías del artista<input type="file" name="photo_files" accept="image/*" multiple><small>Selecciona varias fotografías.</small></label><div id="misFotosMusico"><h4>Mis fotografías</h4><div id="listaMisFotos"></div></div><label class="check"><input type="checkbox" name="emergency">Acepto oportunidades de emergencia.</label><label class="check"><input type="checkbox" name="consent" required>Acepto que MiMuR me contacte para el piloto.</label><button class="btn" type="submit">Guardar mi perfil →</button><p id="leadMsg" role="status"></p></form></section></main>
+<footer><a class="logo" href="#inicio">MiMu<span>R</span></a><span>© 2026 MiMuR · Piloto · CDMX</span></footer><nav class="bottom-nav" aria-label="Navegación principal"><button type="button" data-view="inicio" aria-current=page><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10l9-7 9 7v11H3z M9 21v-8h6v8" stroke-linecap="round" stroke-linejoin="round"/></svg>Inicio</button><button type="button" data-view="explorar" ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 21l-6-6 M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0" stroke-linecap="round" stroke-linejoin="round"/></svg>Explorar</button><button type="button" data-view="solicitudes" ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v16H3z M3 10h18 M7 2v6 M17 2v6" stroke-linecap="round" stroke-linejoin="round"/></svg>Solicitudes</button><button type="button" data-view="favoritos" ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21L3 12C-2 4 8 0 12 7c4-7 14-3 9 5z" stroke-linecap="round" stroke-linejoin="round"/></svg>Favoritos</button><button type="button" data-view="cuenta" ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8 M4 22v-3a8 8 0 0 1 16 0v3" stroke-linecap="round" stroke-linejoin="round"/></svg>Cuenta</button></nav>
+<dialog id="accountDialog"><button type="button" id="closeAccount" class="close" aria-label="Cerrar">×</button><p class="eyebrow">MI MIMUR</p><h2>Tu música, tu cuenta.</h2><p>Inicia sesión o crea tu cuenta.</p><form id="authForm"><h3>Crear cuenta o iniciar sesión</h3><label>Correo electrónico<input name="email" type="email" required autocomplete="email" placeholder="tu@correo.com"></label><label>Contraseña<input name="password" type="password" required autocomplete="current-password" placeholder="Ingresa tu contraseña" aria-describedby="passwordRequirements"></label><div id="passwordRequirements" class="small"><strong>Requisitos para crear una cuenta:</strong><ul><li>Mínimo 12 caracteres.</li><li>Una letra mayúscula.</li><li>Una letra minúscula.</li><li>Un número.</li><li>Un símbolo especial.</li></ul><small>Si ya tienes una cuenta, utiliza tu contraseña actual.</small></div><div class="actions"><button class="btn" id="signUp" type="button">Crear cuenta</button><button class="btn secondary" id="signIn" type="button">Iniciar sesión</button><button class="btn secondary" id="signOut" type="button" hidden>Cerrar sesión</button></div><p id="authMsg" role="status" aria-live="polite"></p></form></dialog>
+<dialog id="request"><form id="requestForm"><button type="button" id="close" class="close" aria-label="Cerrar">×</button><p class="eyebrow">SOLICITUD DE EVENTO</p><h2 id="requestTitle">Solicitar músico</h2><p class="small">Envía una solicitud para recibir cotizaciones de músicos compatibles.</p><input type="hidden" name="musicianId"><label>Tu nombre *<input name="customer" required></label><label>WhatsApp *<input name="phone" required type="tel"></label><label>Fecha del evento *<input name="date" required type="date"></label><label>Hora de inicio del evento *<input name="eventTime" type="time" required><small>Horario de Ciudad de México.</small></label><label>Duración de la presentación *<select name="duration" id="eventDuration" required><option value="">Selecciona la duración</option><option value="30">30 minutos</option><option value="45">45 minutos</option><option value="50">50 minutos</option><option value="60">1 hora</option><option value="90">1 hora y 30 minutos</option><option value="120">2 horas</option><option value="180">3 horas</option><option value="240">4 horas</option><option value="300">5 horas</option><option value="360">6 horas</option><option value="480">8 horas</option><option value="custom">Personalizar duración</option></select></label><div id="customDurationContainer" hidden><label>Duración personalizada en minutos *<input name="customDuration" id="customDuration" type="number" min="1" max="1440" step="1" disabled></label></div><p id="eventTimeSummary" class="small" aria-live="polite"></p><label>Alcaldía o municipio del evento *<input name="eventZone" list="zonasEvento" required maxlength="100"></label><datalist id="zonasEvento"><option>Álvaro Obregón, CDMX</option>
+<option>Azcapotzalco, CDMX</option>
+<option>Benito Juárez, CDMX</option>
+<option>Coyoacán, CDMX</option>
+<option>Cuajimalpa de Morelos, CDMX</option>
+<option>Cuauhtémoc, CDMX</option>
+<option>Gustavo A. Madero, CDMX</option>
+<option>Iztacalco, CDMX</option>
+<option>Iztapalapa, CDMX</option>
+<option>La Magdalena Contreras, CDMX</option>
+<option>Miguel Hidalgo, CDMX</option>
+<option>Milpa Alta, CDMX</option>
+<option>Tláhuac, CDMX</option>
+<option>Tlalpan, CDMX</option>
+<option>Venustiano Carranza, CDMX</option>
+<option>Xochimilco, CDMX</option>
+<option>Acolman, Edomex</option>
+<option>Aculco, Edomex</option>
+<option>Almoloya de Alquisiras, Edomex</option>
+<option>Almoloya de Juárez, Edomex</option>
+<option>Almoloya del Río, Edomex</option>
+<option>Amanalco, Edomex</option>
+<option>Amatepec, Edomex</option>
+<option>Amecameca, Edomex</option>
+<option>Apaxco, Edomex</option>
+<option>Atenco, Edomex</option>
+<option>Atizapán, Edomex</option>
+<option>Atizapán de Zaragoza, Edomex</option>
+<option>Atlacomulco, Edomex</option>
+<option>Atlautla, Edomex</option>
+<option>Axapusco, Edomex</option>
+<option>Ayapango, Edomex</option>
+<option>Calimaya, Edomex</option>
+<option>Capulhuac, Edomex</option>
+<option>Chalco, Edomex</option>
+<option>Chapa de Mota, Edomex</option>
+<option>Chapultepec, Edomex</option>
+<option>Chiautla, Edomex</option>
+<option>Chicoloapan, Edomex</option>
+<option>Chiconcuac, Edomex</option>
+<option>Chimalhuacán, Edomex</option>
+<option>Coacalco de Berriozábal, Edomex</option>
+<option>Coatepec Harinas, Edomex</option>
+<option>Cocotitlán, Edomex</option>
+<option>Coyotepec, Edomex</option>
+<option>Cuautitlán, Edomex</option>
+<option>Cuautitlán Izcalli, Edomex</option>
+<option>Donato Guerra, Edomex</option>
+<option>Ecatepec de Morelos, Edomex</option>
+<option>Ecatzingo, Edomex</option>
+<option>El Oro, Edomex</option>
+<option>Huehuetoca, Edomex</option>
+<option>Hueypoxtla, Edomex</option>
+<option>Huixquilucan, Edomex</option>
+<option>Isidro Fabela, Edomex</option>
+<option>Ixtapaluca, Edomex</option>
+<option>Ixtapan de la Sal, Edomex</option>
+<option>Ixtapan del Oro, Edomex</option>
+<option>Ixtlahuaca, Edomex</option>
+<option>Jaltenco, Edomex</option>
+<option>Jilotepec, Edomex</option>
+<option>Jilotzingo, Edomex</option>
+<option>Jiquipilco, Edomex</option>
+<option>Jocotitlán, Edomex</option>
+<option>Joquicingo, Edomex</option>
+<option>Juchitepec, Edomex</option>
+<option>La Paz, Edomex</option>
+<option>Lerma, Edomex</option>
+<option>Luvianos, Edomex</option>
+<option>Malinalco, Edomex</option>
+<option>Melchor Ocampo, Edomex</option>
+<option>Metepec, Edomex</option>
+<option>Mexicaltzingo, Edomex</option>
+<option>Morelos, Edomex</option>
+<option>Naucalpan de Juárez, Edomex</option>
+<option>Nextlalpan, Edomex</option>
+<option>Nezahualcóyotl, Edomex</option>
+<option>Nicolás Romero, Edomex</option>
+<option>Nopaltepec, Edomex</option>
+<option>Ocoyoacac, Edomex</option>
+<option>Ocuilan, Edomex</option>
+<option>Otumba, Edomex</option>
+<option>Otzoloapan, Edomex</option>
+<option>Otzolotepec, Edomex</option>
+<option>Ozumba, Edomex</option>
+<option>Papalotla, Edomex</option>
+<option>Polotitlán, Edomex</option>
+<option>Rayón, Edomex</option>
+<option>San Antonio la Isla, Edomex</option>
+<option>San Felipe del Progreso, Edomex</option>
+<option>San José del Rincón, Edomex</option>
+<option>San Martín de las Pirámides, Edomex</option>
+<option>San Mateo Atenco, Edomex</option>
+<option>San Simón de Guerrero, Edomex</option>
+<option>Santo Tomás, Edomex</option>
+<option>Soyaniquilpan de Juárez, Edomex</option>
+<option>Sultepec, Edomex</option>
+<option>Tecámac, Edomex</option>
+<option>Tejupilco, Edomex</option>
+<option>Temamatla, Edomex</option>
+<option>Temascalapa, Edomex</option>
+<option>Temascalcingo, Edomex</option>
+<option>Temascaltepec, Edomex</option>
+<option>Temoaya, Edomex</option>
+<option>Tenancingo, Edomex</option>
+<option>Tenango del Aire, Edomex</option>
+<option>Tenango del Valle, Edomex</option>
+<option>Teoloyucan, Edomex</option>
+<option>Teotihuacán, Edomex</option>
+<option>Tepetlaoxtoc, Edomex</option>
+<option>Tepetlixpa, Edomex</option>
+<option>Tepotzotlán, Edomex</option>
+<option>Tequixquiac, Edomex</option>
+<option>Texcaltitlán, Edomex</option>
+<option>Texcalyacac, Edomex</option>
+<option>Texcoco, Edomex</option>
+<option>Tezoyuca, Edomex</option>
+<option>Tianguistenco, Edomex</option>
+<option>Timilpan, Edomex</option>
+<option>Tlalmanalco, Edomex</option>
+<option>Tlalnepantla de Baz, Edomex</option>
+<option>Tlatlaya, Edomex</option>
+<option>Toluca, Edomex</option>
+<option>Tonanitla, Edomex</option>
+<option>Tonatico, Edomex</option>
+<option>Tultepec, Edomex</option>
+<option>Tultitlán, Edomex</option>
+<option>Valle de Bravo, Edomex</option>
+<option>Valle de Chalco Solidaridad, Edomex</option>
+<option>Villa de Allende, Edomex</option>
+<option>Villa del Carbón, Edomex</option>
+<option>Villa Guerrero, Edomex</option>
+<option>Villa Victoria, Edomex</option>
+<option>Xalatlaco, Edomex</option>
+<option>Xonacatlán, Edomex</option>
+<option>Zacazonapan, Edomex</option>
+<option>Zacualpan, Edomex</option>
+<option>Zinacantepec, Edomex</option>
+<option>Zumpahuacán, Edomex</option>
+<option>Zumpango, Edomex</option></datalist><label>Presupuesto total (MXN) *<input name="budget" type="number" min="1" max="2147483647" step="1" required></label><label>Detalles<textarea name="details" maxlength="800"></textarea></label><button class="btn" type="submit">Enviar solicitud</button><p id="requestMsg" role="status"></p></form></dialog>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="app.js"></script>
+</body>
+</html>
