@@ -24,6 +24,45 @@ async function cargarMusicosAprobados(){
  if(perfilAbierto){const m=catalogo.find(x=>x.id===perfilAbierto);if(m)abrirPerfilPublicoMusico(m,false);else cerrarPerfil();}
  else if(location.hash.startsWith('#musico-')){const m=catalogo.find(x=>'#musico-'+encodeURIComponent(x.id)===location.hash);if(m)abrirPerfilPublicoMusico(m);}
 }
+function coincideGeneroMusical(musico, filtro) {
+  const normalizar = v =>
+    String(v || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .trim()
+      .toLowerCase();
+
+  const generos = (musico.genres || []).map(normalizar);
+  const seleccionado = normalizar(filtro);
+
+  if (!seleccionado) return true;
+
+  const categorias = {
+    solistas: [
+      'solista',
+      'acustico',
+      'trova',
+      'balada',
+      'bolero',
+      'romantica'
+    ],
+    'rock-pop': [
+      'rock',
+      'pop',
+      'rock en español',
+      'rock alternativo',
+      'indie'
+    ]
+  };
+
+  if (categorias[seleccionado]) {
+    return generos.some(g =>
+      categorias[seleccionado].includes(g)
+    );
+  }
+
+  return generos.includes(seleccionado);
+}
 function render(){
  const norm=v=>String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toLowerCase();
  const q=norm($('q')?.value),g=norm($('genre')?.value),z=norm($('zone')?.value);
